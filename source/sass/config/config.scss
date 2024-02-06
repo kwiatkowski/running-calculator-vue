@@ -1,0 +1,89 @@
+$container-max-widths: (
+    sm: 540px,
+    md: 720px,
+    lg: 960px,
+    xl: 100%
+) !default;
+
+$grid-breakpoints: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+) !default;
+
+$grid-columns: 12 !default;
+$grid-gutter-width: 30px !default;
+
+$colors: (
+    gray_light: #ededed,
+    gray_superlight: #f5f5f5,
+    first: #272822,
+    second: #392929,
+    status_progress: #2d87b0,
+    status_progress_ultra_light: lighten(#2d87b0, 50%),
+    error_background: #fcebed,
+    days_left_0: #fcebed,
+    days_left_1: #fef8e5,
+);
+
+$fonts: (
+    'family': (
+        first: 'Open Sans',
+    ),
+    'size': (
+        xs: 12px,
+        s: 14px,
+        m: 14px,
+        l: 20px,
+        xl: 24px,
+        xxl: 36px,
+        xxxl: 42px,
+    ),
+    'color': (
+        light: #ffffff,
+        dark: #272822,
+        first: #77838f,
+    ),
+);
+
+$button: (
+    'default': (
+        // 'color': #fff,
+        // 'color-hover': #fff,
+        // 'background': #93a739,
+        // 'background-hover': #d9dfe3,
+        'font-family': 'Open Sans',
+        'font-weight': 400,
+        'text-transform': uppercase,
+    ),
+    'color': (
+        // name, background, color
+        ('btn', #93a739, #fff),
+        ('btn--second', #272822, #fff),
+        ('btn--success', #2fce7f, #ffffff),
+        ('btn--error', #ce2f45, #ffffff),
+        ('btn--warning', #fde74c, #ffffff),
+        ('btn--info', #5bc0eb, #ffffff),
+        ('btn--light', #eceff1, #77838f),
+        ('btn--dark', #77838f, #eceff1),
+        ('btn--link', transparent, #77838f),
+    ),
+    'size': (
+        // name, font-size, padding
+        ('btn', 12px, 10px 8px),
+    ),
+    'radius': (
+        // name, radius
+        ('btn--rad-0', 0),
+    ),
+);
+
+:root {
+    // multiselect
+    --ms-radius: 2px;
+    --ms-max-height: 15rem;
+    --ms-py: 4.5px;
+    --ms-font-size: 14px;
+}

@@ -1,0 +1,14 @@
+{
+    "todos": {
+        "list": {
+            "columns": {
+                "lp": "Lp.",
+                "due_date": "Data wykonania",
+                "date": "Data utworzenia",
+                "name": "Nazwa",
+                "status": "Status",
+                "story_points": ""
+            }
+        }
+    }
+}

@@ -1,0 +1,29 @@
+/*
+ * tables
+ */
+
+table
+    width: 100%
+
+    th,
+    td
+        text-align: left
+        vertical-align: middle
+        padding: 10px
+        border-bottom: 1px solid color(gray_light)
+
+    th
+        font-weight: 700
+        font-size: 13px
+
+    td
+        &.td--table-empty
+            text-align: center
+            padding-top: 50px
+            padding-bottom: 50px
+
+    tbody
+        tr
+            &:hover
+                background: color(gray_superlight)
+                +transition

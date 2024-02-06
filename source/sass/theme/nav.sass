@@ -1,0 +1,23 @@
+// menu
+.menu
+	display: none
+	text-align: right
+
+	+media-breakpoint-up(md)
+		display: block
+
+	@at-root #{&}__link
+		display: inline-block
+		padding: 10px
+		line-height: 1
+		font-size: 18px
+		color: map-get($colors, first)
+
+	@at-root #{&}__item
+		display: inline-block
+		margin: 0 10px
+
+		&.menu__item--is-active
+
+			.menu__link
+				color: map-get($colors, second)
