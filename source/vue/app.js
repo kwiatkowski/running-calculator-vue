@@ -10,10 +10,10 @@ import setupAxios from '~/setup/setup-axios'
 import setupI18n from './setup/setup-i18n'
 
 // app store
-import StoreTodos from '~/store/Main/list.js'
+import StoreCalc from '~/store/Calc/list.js'
 
 // app register store module
-store.registerModule('todos', StoreTodos)
+store.registerModule('calc', StoreCalc)
 
 const app = createApp(AppRunningCalculator)
 

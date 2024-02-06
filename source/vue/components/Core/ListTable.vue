@@ -1,8 +1,7 @@
 <template>
     <div
     :class="[
-        'list__table-wrap',
-        'list__table-wrap--' + rowsPerPage,
+        'list__table-wrap'
     ]"
     v-loader="{
         loader: loader
@@ -14,8 +13,8 @@
                     <th
                     v-for="(column, index) in columns"
                     :key="index"
-                    :class="'todos-th--' + column.name"
-                    v-text="$t('todos.list.columns.' + column.name)"
+                    :class="'calc-th--' + column.name"
+                    v-text="$t('calc.list.columns.' + column.name)"
                     ></th>
                 </tr>
             </thead>
@@ -26,11 +25,9 @@
                     v-for="(item, index) in data"
                     :key="index"
                     >
-                        <TodoListItem
+                        <CalcListItem
                         :item="item"
                         :index="index"
-                        :currentPage="currentPage"
-                        :rowsPerPage="rowsPerPage"
                         />
                     </template>
                 </template>
@@ -48,11 +45,11 @@
 </template>
 
 <script>
-import TodoListItem from '~/components/Todo/TodoListItem.vue'
+import CalcListItem from '~/components/Calc/CalcListItem.vue'
 
 export default {
     components: {
-        TodoListItem
+        CalcListItem
     },
     props: {
         loader: {
@@ -66,14 +63,6 @@ export default {
         data: {
             type: Array,
             default: null
-        },
-        currentPage: {
-            type: Number,
-            default: 1
-        },
-        rowsPerPage: {
-            type: Number,
-            default: 10
         }
     }
 }

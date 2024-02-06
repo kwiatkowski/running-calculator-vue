@@ -1,13 +1,17 @@
 {
-    "todos": {
+    "calc": {
         "list": {
             "columns": {
-                "lp": "Lp.",
-                "due_date": "Data wykonania",
-                "date": "Data utworzenia",
-                "name": "Nazwa",
-                "status": "Status",
-                "story_points": ""
+                "ord": "Lp.",
+                "date_run": "Data biegu",
+                "distance": "Dystans",
+                "duration": "Czas trwania",
+                "stride_length": "Długość kroku",
+                "average_heart_rate": "Średnie tętno",
+                "v02max": "V02Max",
+                "cadence": "Kadencja",
+                "average_pace": "Średnie tempo",
+                "average_speed": "Średnia prędkość"
             }
         }
     }

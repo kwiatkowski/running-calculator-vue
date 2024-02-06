@@ -1,12 +1,17 @@
 {
-    "todos": {
+    "calc": {
         "list": {
             "columns": {
-                "lp": "Lp.",
-                "date": "Data utworzenia",
-                "name": "Nazwa",
-                "status": "Status",
-                "story_points": ""
+                "ord": "Ord.",
+                "date_run": "Date run",
+                "distance": "Distance",
+                "duration": "Duration",
+                "stride_length": "Stride length",
+                "average_heart_rate": "Average heart rate",
+                "v02max": "V02Max",
+                "cadence": "Cadence",
+                "average_pace": "Average pace",
+                "average_speed": "Average speed"
             }
         }
     }
