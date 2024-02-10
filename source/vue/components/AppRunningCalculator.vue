@@ -1,13 +1,22 @@
 <template>
     <div class="app--vue">
         <div class="list">
-            <CalcListHeader
+            <ListHeader
             :loader="listLoader"
-            :filterByYears="filterYears"
-            :filterByYearsOptions="filterYearsOptions"
-            @changeYears="handleChangeFilterYears($event)"
             @refreshList="refreshList()"
-            />
+            >
+                <template v-slot:filters>
+                    <Multiselect
+                    v-if="filterYearsOptions"
+                    class="multiselect--status"
+                    placeholder="Wybierz rok"
+                    v-model="localFilterYears"
+                    :options="filterYearsOptions"
+                    :disabled="listLoader.isLoading || (listLoader && listLoader.hasOwnProperty('isLoading') && listLoader.isLoading)"
+                    @change="handleChangeFilterYears"
+                    />
+                </template>
+            </ListHeader>
 
             <CalcListTable
             :loader="listLoader"
@@ -21,12 +30,22 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 
-import CalcListHeader from '~/components/Calc/CalcListHeader.vue'
+import ListHeader from '~/components/Core/ListHeader.vue'
 import CalcListTable from '~/components/Calc/CalcListTable.vue'
 
 export default {
     components: {
-        CalcListHeader, CalcListTable
+        ListHeader, CalcListTable
+    },
+    data() {
+        return {
+            localFilterYears: this.filterYears
+        }
+    },
+    watch: {
+        filterYears() {
+            this.localFilterYears = this.filterYears
+        }
     },
     computed: {
         ...mapState('calc', [
@@ -68,6 +87,9 @@ export default {
                     return
                 }
             }
+        },
+        onChangeYears(event) {
+            this.$emit('change-years', event)
         }
     },
     mounted() {
