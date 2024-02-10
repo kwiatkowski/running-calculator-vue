@@ -14,23 +14,23 @@
         ></td>
 
         <td class="calc-td--distance">
-            {{ item.acf.distance }}
+            {{ item.distance }}
         </td>
 
         <td class="calc-td--duration">
-            {{ item.acf.duration }}
+            {{ item.duration }}
         </td>
 
         <td class="calc-td--stride_length">
-            {{ item.acf.stride_length }}
+            {{ item.stride_length }}
         </td>
 
         <td class="calc-td--average_heart_rate">
-            {{ item.acf.average_heart_rate }}
+            {{ item.average_heart_rate }}
         </td>
 
         <td class="calc-td--v02max">
-            {{ item.acf.v02max }}
+            {{ item.v02max }}
         </td>
 
         <td
@@ -69,9 +69,9 @@ export default {
     },
     methods: {
         calculateSpeedPaceAndCadence() {
-            let duration = this.item.acf.duration
-            let distance = this.item.acf.distance
-            let strideLength = this.item.acf.stride_length
+            let duration = this.item.duration
+            let distance = this.item.distance
+            let strideLength = this.item.stride_length
 
             // Split the time into hours, minutes, and seconds
             let [hours, minutes, seconds] = duration.split(':').map(Number)
