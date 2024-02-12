@@ -1,5 +1,7 @@
 <template>
     <div class="list__header">
+        <slot name="gruped"></slot>
+
         <slot name="filters"></slot>
 
         <button

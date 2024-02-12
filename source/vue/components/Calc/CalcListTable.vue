@@ -15,10 +15,10 @@
                 </tr>
             </thead>
 
-            <tbody v-if="groupedData !== null && (loader && loader.hasOwnProperty('isLoading') && !loader.isLoading)">
+            <tbody v-if="dataDisplay !== null && (loader && loader.hasOwnProperty('isLoading') && !loader.isLoading)">
                 <CalcListGroup
-                v-if="groupedData.length > 0"
-                v-for="(group, groupIndex) in groupedData"
+                v-if="dataDisplay.length > 0"
+                v-for="(group, groupIndex) in dataDisplay"
                 :columns="columns"
                 :data="group"
                 :groupIndex="groupIndex"
@@ -52,30 +52,44 @@ export default {
         data: {
             type: Array,
             default: null
+        },
+        filterYears: {
+            type: Number,
+            default: null
+        },
+        groupBy: {
+            type: String,
+            default: null
         }
     },
     computed: {
-        groupedData() {
-            if (!this.data) return [];
+        dataDisplay() {
+            if (!this.data) return []
 
-            // Grouping data by month
-            const grouped = this.data.reduce((result, item) => {
-                const month = new Date(item.date).toLocaleString('default', { month: 'long', year: 'numeric' });
+            let filteredData = this.filterYears
+                ? this.data.filter(item => new Date(item.date).getFullYear() === this.filterYears)
+                : this.data
 
-                if (!result[month]) {
-                    result[month] = {
-                        month,
-                        items: [],
+            if (this.groupBy) {
+                const groupedData = filteredData.reduce((result, item) => {
+                    const keyValue = new Date(item.date).toLocaleString('default', { [this.groupBy]: 'long', year: 'numeric' });
+
+                    if (!result[keyValue]) {
+                        result[keyValue] = {
+                            head: keyValue,
+                            items: []
+                        }
                     }
-                }
 
-                result[month].items.push(item)
+                    result[keyValue].items.push(item)
 
-                return result
-            }, {})
+                    return result
+                }, {})
 
-            // Transforming object into an array
-            return Object.values(grouped)
+                return Object.values(groupedData)
+            } else {
+                return [{ head: 'All', items: filteredData }]
+            }
         }
     },
     methods: {
@@ -83,7 +97,7 @@ export default {
             let length = 0
 
             for (let i = 0; i < groupIndex; i++) {
-                length += this.groupedData[i].items.length
+                length += this.dataDisplay[i].items.length
             }
 
             return length

@@ -5,6 +5,18 @@
             :loader="listLoader"
             @refreshList="refreshList()"
             >
+                <template v-slot:gruped>
+                    <Multiselect
+                    v-if="groupByOptions"
+                    class="multiselect--status"
+                    placeholder="Grupuj po"
+                    v-model="localGroupBy"
+                    :options="groupByOptions"
+                    :disabled="listLoader.isLoading || (listLoader && listLoader.hasOwnProperty('isLoading') && listLoader.isLoading)"
+                    @change="handleChangeGroupBy"
+                    />
+                </template>
+
                 <template v-slot:filters>
                     <Multiselect
                     v-if="filterYearsOptions"
@@ -22,6 +34,8 @@
             :loader="listLoader"
             :columns="listColumns"
             :data="list"
+            :filterYears="localFilterYears"
+            :groupBy="localGroupBy"
             />
         </div>
     </div>
@@ -39,22 +53,26 @@ export default {
     },
     data() {
         return {
-            localFilterYears: this.filterYears
+            localFilterYears: this.filterYears,
+            localGroupBy: this.groupBy,
         }
     },
     watch: {
-        filterYears() {
-            this.localFilterYears = this.filterYears
+        filterYears(payload) {
+            this.localFilterYears = payload
+        },
+        groupBy(payload) {
+            this.localGroupBy = payload
         }
     },
     computed: {
         ...mapState('calc', [
-            'listLoader', 'list', 'listColumns', 'filterYears', 'filterYearsOptions'
+            'listLoader', 'list', 'listColumns', 'filterYears', 'filterYearsOptions', 'groupBy', 'groupByOptions'
         ])
     },
     methods: {
         ...mapMutations('calc', [
-            'filterListByYear'
+            'setListFilterByYear', 'setListGroupBy'
         ]),
         ...mapActions('calc', [
             'getListCalc'
@@ -62,10 +80,12 @@ export default {
         init() {
             this.getListCalc({})
                 .finally(() => {
-                    let filter = this.getLocalStorageFilter()
+                    if (this.getLocalStorageFilter()) {
+                        this.handleChangeFilterYears(this.getLocalStorageFilter())
+                    }
 
-                    if (filter && 'filterByYear' in filter) {
-                        this.handleChangeFilterYears(filter.filterByYear)
+                    if (this.getLocalStorageGroupBy()) {
+                        this.handleChangeGroupBy(this.getLocalStorageGroupBy())
                     }
                 })
         },
@@ -74,22 +94,31 @@ export default {
         },
         handleChangeFilterYears(payload) {
             this.setLocalStorageFilter(payload)
-            this.filterListByYear(payload)
+            this.setListFilterByYear(payload)
+        },
+        handleChangeGroupBy(payload) {
+            this.setLocalStorageGroupBy(payload)
+            this.setListGroupBy(payload)
         },
         setLocalStorageFilter(payload) {
-            localStorage.setItem('trening/list', JSON.stringify({ filterByYear: payload }))
+            localStorage.setItem('trening/filter', payload)
         },
         getLocalStorageFilter() {
-            if (localStorage.getItem('trening/list')) {
-                try {
-                    return JSON.parse(localStorage.getItem('trening/list'))
-                } catch (e) {
-                    return
-                }
+            if (localStorage.getItem('trening/filter')) {
+                return parseInt(localStorage.getItem('trening/filter'))
+            } else {
+                return null
             }
         },
-        onChangeYears(event) {
-            this.$emit('change-years', event)
+        setLocalStorageGroupBy(payload) {
+            localStorage.setItem('trening/groupBy', payload)
+        },
+        getLocalStorageGroupBy() {
+            if (localStorage.getItem('trening/groupBy')) {
+                return localStorage.getItem('trening/groupBy')
+            } else {
+                return null
+            }
         }
     },
     mounted() {

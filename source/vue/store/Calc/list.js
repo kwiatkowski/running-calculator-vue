@@ -41,6 +41,8 @@ export default {
         ],
         filterYears: null,
         filterYearsOptions: [],
+        groupBy: null,
+        groupByOptions: ['month', 'year'],
     },
     mutations: {
         ...Loader.mutations,
@@ -50,25 +52,11 @@ export default {
             state.list = payload
             state.filterYearsOptions = yearsArray
         },
-        filterListByYear(state, selectedYear) {
-            if (!selectedYear) {
-                state.filterYears = null
-                state.list = [...state.originalList]
-
-                return
-            }
-
-            state.filterYears = selectedYear
-
-            if (!state.originalList) {
-                state.originalList = state.list.slice()
-            }
-
-            state.list = state.originalList.filter(item => {
-                const itemYear = new Date(item.date).getFullYear()
-
-                return itemYear === selectedYear
-            })
+        setListFilterByYear(state, payload) {
+            state.filterYears = payload
+        },
+        setListGroupBy(state, payload) {
+            state.groupBy = payload
         }
     },
     actions: {

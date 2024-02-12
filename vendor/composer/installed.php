@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => 'roots/bedrock',
+        'pretty_version' => '1.0.0+no-version-set',
+        'version' => '1.0.0.0',
+        'reference' => NULL,
+        'type' => 'project',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        'roots/bedrock' => array(
+            'pretty_version' => '1.0.0+no-version-set',
+            'version' => '1.0.0.0',
+            'reference' => NULL,
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'sass/bootstrap' => array(
+            'pretty_version' => '5.3.2',
+            'version' => '5.3.2.0',
+            'reference' => 'main',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../sass/bootstrap',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'sass/sass-core' => array(
+            'pretty_version' => '1.3',
+            'version' => '1.3.0.0',
+            'reference' => 'master',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../sass/sass-core',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);

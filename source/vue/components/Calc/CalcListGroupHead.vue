@@ -3,7 +3,7 @@
         <td
         :colspan="columns.length"
         class="group-title"
-        v-html="groupData.month + ' (' + groupData.items.length + ')'"
+        v-html="groupData.head + ' (' + groupData.items.length + ')'"
         ></td>
     </tr>
 </template>
