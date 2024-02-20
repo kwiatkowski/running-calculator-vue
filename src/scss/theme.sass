@@ -16,12 +16,12 @@ html, body
     display: grid
     grid-template-columns: 3fr 1fr
     grid-template-areas: "list sidebar"
-    gap: 20px
+    gap: 30px
 
     .app__sidebar
         grid-area: sidebar
         text-align: left
-        margin-top: 60px
+        margin-top: 45px
 
     .app__list
         grid-area: list
@@ -30,7 +30,6 @@ html, body
     display: flex
     justify-content: flex-end
     align-items: center
-    padding: 10px
     min-height: 45px
 
 .section__title
@@ -80,3 +79,6 @@ html, body
 
     &__item
         margin: 10px 0
+
+    &__item-separator
+        margin: 30px 0 10px

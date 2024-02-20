@@ -15,13 +15,26 @@
             },
             "group": {
                 "head": "Wszystkie"
+            },
+            "group_by": {
+                "placeholder": "Grupuj po"
+            },
+            "filter_by": {
+                "placeholder": "Wybierz rok"
             }
         }
+    },
+    "type_run_distance": {
+        "10km": "10 km",
+        "half_marathon": "Półmaraton",
+        "marathon": "Maraton"
     },
     "statistics": {
         "title": "Statytyki",
         "count_training_sessions": "Ilość treningów",
+        "total_distance": "Całkowity dystans",
         "longest_distance": "Najdłuższy dystans",
-        "fastest_average_pace": "Najszybsze średnie tempo"
+        "fastest_average_pace": "Najszybsze średnie tempo",
+        "fastest_time": "Najszybszy czas"
     }
 }

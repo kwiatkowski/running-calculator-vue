@@ -10,7 +10,7 @@
                         <Multiselect
                         v-if="groupByOptions"
                         class="multiselect--status"
-                        placeholder="Grupuj po"
+                        :placeholder="$t('calc.list.group_by.placeholder')"
                         v-model="localGroupBy"
                         :options="groupByOptions"
                         :disabled="listLoader.isLoading || (listLoader && listLoader.hasOwnProperty('isLoading') && listLoader.isLoading)"
@@ -24,7 +24,7 @@
                         <Multiselect
                         v-if="filterYearsOptions"
                         class="multiselect--status"
-                        placeholder="Wybierz rok"
+                        :placeholder="$t('calc.list.filter_by.placeholder')"
                         v-model="localFilterYears"
                         :options="filterYearsOptions"
                         :disabled="listLoader.isLoading || (listLoader && listLoader.hasOwnProperty('isLoading') && listLoader.isLoading)"
@@ -150,7 +150,6 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 10px;
     font-size: 14px;
 }
 </style>
