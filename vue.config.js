@@ -2,7 +2,7 @@ const webpack = require('webpack')
 const path = require('path')
 
 module.exports = {
-  publicPath: '/running-calculator/',
+  publicPath: '/running-calculator/web/',
   lintOnSave: false,
   outputDir: 'web',
   devServer: {
