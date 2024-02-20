@@ -1,0 +1,27 @@
+{
+    "calc": {
+        "list": {
+            "columns": {
+                "ord": "Lp.",
+                "date_run": "Data biegu",
+                "distance": "Dystans",
+                "duration": "Czas trwania",
+                "stride_length": "Długość kroku",
+                "average_heart_rate": "Średnie tętno",
+                "v02max": "V02Max",
+                "cadence": "Kadencja",
+                "average_pace": "Średnie tempo",
+                "average_speed": "Średnia prędkość"
+            },
+            "group": {
+                "head": "Wszystkie"
+            }
+        }
+    },
+    "statistics": {
+        "title": "Statytyki",
+        "count_training_sessions": "Ilość treningów",
+        "longest_distance": "Najdłuższy dystans",
+        "fastest_average_pace": "Najszybsze średnie tempo"
+    }
+}

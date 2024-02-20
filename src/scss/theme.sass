@@ -1,0 +1,82 @@
+
+$font-family: map-get($fonts, 'family')
+$font-color: map-get($fonts, 'color')
+$font-size: map-get($fonts, 'size')
+
+html, body
+    color: map-get($colors, first)
+    background-color: map-get($font-color, white)
+    font-family: map-get($font-family, first), sans-serif
+    font-size: map-get($font-size, l)
+    line-height: 1.5
+    font-style: normal
+    font-weight: 300
+
+.app
+    display: grid
+    grid-template-columns: 3fr 1fr
+    grid-template-areas: "list sidebar"
+    gap: 20px
+
+    .app__sidebar
+        grid-area: sidebar
+        text-align: left
+        margin-top: 60px
+
+    .app__list
+        grid-area: list
+
+.list__header
+    display: flex
+    justify-content: flex-end
+    align-items: center
+    padding: 10px
+    min-height: 45px
+
+.section__title
+    font-size: 18px
+    font-weight: 700
+    line-height: 1.2
+    margin: 0 0 20px
+
+/*
+ * multiselect
+ */
+
+.multiselect
+    margin: 0 5px 0 0
+
+    &__wrap
+        margin: 0 5px 0 0
+
+    .multiselect-dropdown
+        overflow-y: auto
+
+    &.multiselect--rows-per-page
+        display: inline-block
+        margin: 0 0 0 5px
+        width: 60px
+
+        .multiselect-single-label
+            padding-right: 0
+
+    &.multiselect--status
+        width: 200px
+
+    &.multiselect--type
+        width: 200px
+
+
+/*
+ * statistics
+ */
+
+.statistics
+    position: relative
+    background: color(gray_superlight)
+    padding: 20px
+    position: relative
+    min-height: 175px
+
+    &__item
+        margin: 10px 0
