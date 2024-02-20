@@ -109,9 +109,9 @@ export default {
                 return '-'
             }
 
-            const maxDistance = Math.max(...this.list.map(entry => entry.distance))
+            const maxDistance = Math.max(...this.list.map(entry => entry.distance)) / 1000
 
-            return `${maxDistance} m`
+            return `${maxDistance} km`
         },
         getFastestAveragePace() {
             if (!this.list || this.list.length === 0) {
