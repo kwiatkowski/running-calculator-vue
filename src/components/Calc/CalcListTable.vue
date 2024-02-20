@@ -70,26 +70,33 @@ export default {
                 ? this.data.filter(item => new Date(item.date).getFullYear() === this.filterYears)
                 : this.data
 
-            if (this.groupBy) {
-                const groupedData = filteredData.reduce((result, item) => {
-                    const keyValue = new Date(item.date).toLocaleString('default', { [this.groupBy]: 'long', year: 'numeric' });
+                if (this.groupBy) {
+                    const groupedData = filteredData.reduce((result, item) => {
+                        const keyValue = new Date(item.date).toLocaleString('default', { [this.groupBy]: 'long', year: 'numeric' })
 
-                    if (!result[keyValue]) {
-                        result[keyValue] = {
-                            head: keyValue,
-                            items: []
+                        if (!result[keyValue]) {
+                            result[keyValue] = {
+                                head: keyValue,
+                                items: []
+                            }
                         }
-                    }
 
-                    result[keyValue].items.push(item)
+                        result[keyValue].items.push(item)
 
                     return result
                 }, {})
 
-                return Object.values(groupedData)
+                const sortedData = Object.values(groupedData).sort((a, b) => {
+                    const yearA = new Date(a.head).getFullYear()
+                    const yearB = new Date(b.head).getFullYear()
+
+                    return yearB - yearA
+                })
+
+                return sortedData
             } else {
                 return [{
-                    head: true,
+                    head: false,
                     items: filteredData
                 }]
             }

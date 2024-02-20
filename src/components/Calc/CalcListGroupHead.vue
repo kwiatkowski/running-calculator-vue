@@ -1,10 +1,21 @@
 <template>
-    <tr v-if="groupData.items.length > 0">
+    <tr v-if="groupData.head && groupData.items.length > 0">
         <td
         :colspan="columns.length"
-        class="group-title"
-        v-html="(groupData.head === true ? $t('calc.list.group.head') : groupData.head) + ' (' + groupData.items.length + ')'"
-        ></td>
+        class="training-td--group-head"
+        >
+            <div class="statistics">
+                <strong>{{ groupTitle }}</strong>
+
+                <div class="statistics__item">
+                    {{ $t('statistics.count_training_sessions') }}: <strong>{{ groupTitleWithKilometers }}</strong>
+                </div>
+
+                <div class="statistics__item">
+                    {{ $t('statistics.total_distance') }}: <strong>{{ calculateTotalDistance() / 1000 }} km</strong>
+                </div>
+            </div>
+        </td>
     </tr>
 </template>
 
@@ -18,6 +29,25 @@ export default {
         groupData: {
             type: Object,
             default: null
+        },
+        groupDataPrevious: {
+            type: Object,
+            default: null
+        }
+    },
+    computed: {
+        groupTitle() {
+            return this.groupData.head === true ? this.$t('calc.list.group.head') : this.groupData.head
+        },
+        groupTitleWithKilometers() {
+            const totalDistance = this.calculateTotalDistance(this.groupData.items)
+
+            return this.groupData.items.length
+        }
+    },
+    methods: {
+        calculateTotalDistance() {
+            return this.groupData.items.reduce((total, item) => total + item.distance, 0)
         }
     }
 }

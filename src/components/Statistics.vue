@@ -1,6 +1,6 @@
 <template>
     <div class="app__sidebar">
-        <div class="statistics">
+        <div class="statistics statistics--sidebar">
             <div
             class="section__title"
             v-html="$t('statistics.title')"
