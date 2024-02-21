@@ -1,5 +1,9 @@
 # calculator
 
+## Demo
+
+[https://kwiatkowski.co/running-calculator/](https://kwiatkowski.co/running-calculator/).
+
 ## Project setup
 ```
 yarn install
