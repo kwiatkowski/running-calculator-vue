@@ -1,8 +1,7 @@
 import axios from 'axios'
 
-// https://kwiatkowski.co/wp-json/wp/v2/training?per_page=99999&orderby=date&order=desc
 const api = axios.create({
-    baseURL: 'https://kwiatkowski.co/wp-json/wp/v2/',
+    baseURL: process.env.VUE_APP_API,
 })
 
 export default {
