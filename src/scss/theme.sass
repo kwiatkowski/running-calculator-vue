@@ -12,6 +12,18 @@ html, body
     font-style: normal
     font-weight: 300
 
+*::-webkit-scrollbar
+    width: 5px
+
+*::-webkit-scrollbar-track
+    background: #fff
+ 
+*::-webkit-scrollbar-thumb
+    background: #cccccc
+
+*::-webkit-scrollbar-thumb:hover
+    background: #aeaeae
+
 .app
     display: grid
     grid-template-columns: 3fr 1fr
@@ -96,3 +108,15 @@ html, body
 
 .training-td--group-head
     padding: 0
+
+
+/*
+ * statistics
+ */
+
+.list
+    &__table-wrap
+        overflow-y: auto
+        height: calc(100vh - 45px)
+
+
