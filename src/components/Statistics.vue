@@ -39,6 +39,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import moment from 'moment'
 
 export default {
@@ -53,22 +55,9 @@ export default {
         }
     },
     computed: {
-        distances() {
-            return [
-                {
-                    name: '10km',
-                    value: 10000
-                },
-                {
-                    name: 'half_marathon',
-                    value: 21097
-                },
-                {
-                    name: 'marathon',
-                    value: 42195
-                }
-            ]
-        },
+        ...mapState('training', [
+            'distances'
+        ])
     },
     methods: {
         getCountTrainingSessions() {
