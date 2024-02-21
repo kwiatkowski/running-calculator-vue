@@ -2,7 +2,7 @@
 
 ## Demo
 
-[https://kwiatkowski.co/running-calculator/](https://kwiatkowski.co/running-calculator/){:target="_blank"}
+[https://kwiatkowski.co/running-calculator/](https://kwiatkowski.co/running-calculator/)
 
 ## Project setup
 ```
