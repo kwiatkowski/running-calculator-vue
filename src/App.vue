@@ -43,10 +43,17 @@
             />
         </div>
 
-        <Statistics
-        :loader="listLoader"
-        :list="list"
-        />
+        <div class="app__sidebar">
+            <Statistics
+            :loader="listLoader"
+            :list="list"
+            />
+
+            <StatisticsShoe
+            :loader="listLoader"
+            :list="list"
+            />
+        </div>
     </div>
 </template>
 
@@ -54,12 +61,13 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 import Statistics from '~/components/Statistics.vue'
+import StatisticsShoe from '~/components/StatisticsShoe.vue'
 import ListHeader from '~/components/Core/ListHeader.vue'
 import CalcListTable from '~/components/Calc/CalcListTable.vue'
 
 export default {
     components: {
-        Statistics, ListHeader, CalcListTable
+        Statistics, StatisticsShoe, ListHeader, CalcListTable
     },
     data() {
         return {
@@ -76,15 +84,15 @@ export default {
         }
     },
     computed: {
-        ...mapState('calc', [
+        ...mapState('training', [
             'listLoader', 'list', 'listColumns', 'filterYears', 'filterYearsOptions', 'groupBy', 'groupByOptions'
         ])
     },
     methods: {
-        ...mapMutations('calc', [
+        ...mapMutations('training', [
             'setListFilterByYear', 'setListGroupBy'
         ]),
-        ...mapActions('calc', [
+        ...mapActions('training', [
             'getListCalc'
         ]),
         init() {

@@ -8,10 +8,10 @@ import setupAxios from '~/setup/setup-axios'
 import setupI18n from './setup/setup-i18n'
 
 // app store
-import StoreCalc from '~/store/Calc/list.js'
+import StoreTraining from '~/store/Training/training.js'
 
 // app register store module
-store.registerModule('calc', StoreCalc)
+store.registerModule('training', StoreTraining)
 
 const app = createApp(App)
 

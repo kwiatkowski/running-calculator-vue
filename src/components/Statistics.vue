@@ -1,40 +1,38 @@
 <template>
-    <div class="app__sidebar">
-        <div class="statistics statistics--sidebar">
-            <div
-            class="section__title"
-            v-html="$t('statistics.title')"
-            ></div>
+    <div class="statistics statistics--sidebar">
+        <div
+        class="section__title"
+        v-html="$t('statistics.title')"
+        ></div>
+
+        <div class="statistics__item">
+            {{ $t('statistics.count_training_sessions') }}: <strong>{{ getCountTrainingSessions() }}</strong>
+        </div>
+
+        <div class="statistics__item">
+            {{ $t('statistics.total_distance') }}: <strong>{{ getTotalDistance() }}</strong>
+        </div>
+
+        <div class="statistics__item">
+            {{ $t('statistics.longest_distance') }}: <strong>{{ getLongestDistance() }}</strong>
+        </div>
+
+        <div class="statistics__item">
+            {{ $t('statistics.fastest_average_pace') }}: <strong>{{ getFastestAveragePace() }}</strong>
+        </div>
+
+        <div
+        class="statistics__item-separator"
+        v-for="distance in distances"
+        :key="distance">
+            <strong>{{ $t(`type_run_distance.${distance.name}`) }}</strong> ({{ getCountTrainingSessionsForDistance(distance.value) }})
 
             <div class="statistics__item">
-                {{ $t('statistics.count_training_sessions') }}: <strong>{{ getCountTrainingSessions() }}</strong>
+                {{ $t('statistics.fastest_average_pace') }}: <strong>{{ getFastestAveragePaceForDistance(distance.value) }}</strong>
             </div>
 
             <div class="statistics__item">
-                {{ $t('statistics.total_distance') }}: <strong>{{ getTotalDistance() }}</strong>
-            </div>
-
-            <div class="statistics__item">
-                {{ $t('statistics.longest_distance') }}: <strong>{{ getLongestDistance() }}</strong>
-            </div>
-
-            <div class="statistics__item">
-                {{ $t('statistics.fastest_average_pace') }}: <strong>{{ getFastestAveragePace() }}</strong>
-            </div>
-
-            <div
-            class="statistics__item-separator"
-            v-for="distance in distances"
-            :key="distance">
-                <strong>{{ $t(`type_run_distance.${distance.name}`) }}</strong> ({{ getCountTrainingSessionsForDistance(distance.value) }})
-
-                <div class="statistics__item">
-                    {{ $t('statistics.fastest_average_pace') }}: <strong>{{ getFastestAveragePaceForDistance(distance.value) }}</strong>
-                </div>
-
-                <div class="statistics__item">
-                    {{ $t('statistics.fastest_time') }}: <strong>{{ getTimeToRunForDistance(distance.value) }}</strong>
-                </div>
+                {{ $t('statistics.fastest_time') }}: <strong>{{ getTimeToRunForDistance(distance.value) }}</strong>
             </div>
         </div>
     </div>
