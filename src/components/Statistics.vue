@@ -14,6 +14,10 @@
         </div>
 
         <div class="statistics__item">
+            {{ $t('statistics.total_duration') }}: <strong>{{ getTotalDuration() }}</strong>
+        </div>
+
+        <div class="statistics__item">
             {{ $t('statistics.longest_distance') }}: <strong>{{ getLongestDistance() }}</strong>
         </div>
 
@@ -90,6 +94,29 @@ export default {
             const totalDistanceInKm = totalDistanceInMeters / 1000
 
             return `${totalDistanceInKm} km`
+        },
+        getTotalDuration() {
+            if (!this.list || this.list.length === 0) {
+                return '-'
+            }
+
+            const durations = this.list.map(item => item.duration)
+
+            // convert each time to number of seconds
+            const totalSeconds = durations.reduce((total, duration) => {
+                const [hours, minutes, seconds] = duration.split(':').map(Number)
+
+                return total + hours * 3600 + minutes * 60 + seconds
+            }, 0)
+
+            // create a moment.js object based on the number of seconds
+            const totalDuration = moment.duration(totalSeconds, 'seconds')
+
+            // format the sum of times as a decimal
+            const formattedTotalDuration = totalDuration.asHours().toFixed(1)
+            // const formattedTotalDuration = moment.utc(totalDuration.asMilliseconds()).format('HH:mm:ss')
+
+            return `${formattedTotalDuration} godz.`
         },
         getLongestDistance() {
             if (!this.list || this.list.length === 0) {

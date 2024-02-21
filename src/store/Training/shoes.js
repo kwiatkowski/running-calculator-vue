@@ -20,7 +20,22 @@ export default {
 
             return TrainingAPI.getTrainingShoes({})
                 .then((response) => {
-                    commit('setShoes', response.data)
+                    let shoes = response.data
+
+                    shoes.forEach((item) => {
+                        delete item.description
+                        delete item.link
+                        delete item.taxonomy
+                        delete item.parent
+                        delete item.meta
+                        delete item.acf
+                        delete item.yoast_head
+                        delete item.yoast_head
+                        delete item.yoast_head_json
+                        delete item._links
+                    })
+
+                    commit('setShoes', shoes)
                     commit('loadSuccess', { name: 'shoesLoader' })
                 })
                 .catch((error) => {

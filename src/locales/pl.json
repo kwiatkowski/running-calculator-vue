@@ -33,6 +33,7 @@
         "title": "Statytyki",
         "count_training_sessions": "Ilość treningów",
         "total_distance": "Całkowity dystans",
+        "total_duration": "Całkowity czas trwania",
         "longest_distance": "Najdłuższy dystans",
         "fastest_average_pace": "Najszybsze średnie tempo",
         "fastest_time": "Najszybszy czas"

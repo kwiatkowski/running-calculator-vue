@@ -49,7 +49,7 @@
             :list="list"
             />
 
-            <StatisticsShoe
+            <StatisticsShoes
             :loader="listLoader"
             :list="list"
             />
@@ -61,13 +61,13 @@
 import { mapState, mapMutations, mapActions } from 'vuex'
 
 import Statistics from '~/components/Statistics.vue'
-import StatisticsShoe from '~/components/StatisticsShoe.vue'
+import StatisticsShoes from '~/components/StatisticsShoes.vue'
 import ListHeader from '~/components/Core/ListHeader.vue'
 import CalcListTable from '~/components/Calc/CalcListTable.vue'
 
 export default {
     components: {
-        Statistics, StatisticsShoe, ListHeader, CalcListTable
+        Statistics, StatisticsShoes, ListHeader, CalcListTable
     },
     data() {
         return {
