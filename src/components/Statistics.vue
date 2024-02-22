@@ -10,15 +10,15 @@
         </div>
 
         <div class="statistics__item">
-            {{ $t('statistics.total_distance') }}: <strong>{{ getTotalDistance() }}</strong>
+            {{ $t('statistics.total_distance') }}: <strong>{{ $filters.formatDistance(getTotalDistance(), 'km', true) }}</strong>
+        </div>
+
+        <div class="statistics__item">
+            {{ $t('statistics.longest_distance') }}: <strong>{{ $filters.formatDistance(getLongestDistance(), 'km', true) }}</strong>
         </div>
 
         <div class="statistics__item">
             {{ $t('statistics.total_duration') }}: <strong>{{ getTotalDuration() }}</strong>
-        </div>
-
-        <div class="statistics__item">
-            {{ $t('statistics.longest_distance') }}: <strong>{{ getLongestDistance() }}</strong>
         </div>
 
         <div class="statistics__item">
@@ -86,14 +86,15 @@ export default {
             return `${runsAboveMinDistance.length}`
         },
         getTotalDistance() {
-            if (!this.list || this.list.length === 0) {
-                return '-'
-            }
+            let totalDistance = null
 
-            const totalDistanceInMeters = this.list.reduce((sum, entry) => sum + entry.distance, 0)
-            const totalDistanceInKm = totalDistanceInMeters / 1000
+            this.list.forEach((item) => {
+                if (item.distance) {
+                    totalDistance += item.distance
+                }
+            })
 
-            return `${totalDistanceInKm} km`
+            return totalDistance
         },
         getTotalDuration() {
             if (!this.list || this.list.length === 0) {
@@ -119,13 +120,13 @@ export default {
             return `${formattedTotalDuration} godz.`
         },
         getLongestDistance() {
-            if (!this.list || this.list.length === 0) {
-                return '-'
+            if (this.list.length === 0) {
+                return null
             }
 
-            const maxDistance = Math.max(...this.list.map(entry => entry.distance)) / 1000
+            let maxDistance = Math.max(...this.list.map(entry => entry.distance))
 
-            return `${maxDistance} km`
+            return maxDistance
         },
         getFastestAveragePace() {
             if (!this.list || this.list.length === 0) {

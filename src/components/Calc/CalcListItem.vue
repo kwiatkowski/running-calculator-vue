@@ -9,7 +9,7 @@
 
         <td
         class="calc-td--distance"
-        v-html="item.distance"
+        v-html="$filters.formatDistance(item.distance, 'km')"
         ></td>
 
         <td

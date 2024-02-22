@@ -36,6 +36,7 @@
         "total_duration": "Całkowity czas trwania",
         "longest_distance": "Najdłuższy dystans",
         "fastest_average_pace": "Najszybsze średnie tempo",
-        "fastest_time": "Najszybszy czas"
+        "fastest_time": "Najszybszy czas",
+        "wear": "Zużycie"
     }
 }

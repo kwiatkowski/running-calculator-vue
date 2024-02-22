@@ -10,25 +10,25 @@
         v-for="(shoe, shoeIndex) in shoes"
         :key="shoeIndex"
         >
+            <strong>{{ shoe.name }}</strong>
+
             <div class="statistics__item">
-                Ilość treningów: <strong>{{ shoe.count }}</strong>
+                {{ $t('statistics.count_training_sessions') }}: <strong>{{ getTrainingCount(shoe.count) }}</strong>
             </div>
 
             <div class="statistics__item">
-                Całkowity dystans: <strong>{{ $filters.formatDistance(getTrainingShoeTotalDistance(shoe.id), 'km', true) }} </strong>
+                {{ $t('statistics.total_distance') }}: <strong>{{ $filters.formatDistance(getTotalDistance(shoe.id), 'km', true) }}</strong>
             </div>
 
             <div class="statistics__item">
-                Zużycie: <strong>{{ getTrainingShoeUsagePercentage(shoe.id, true) }}</strong>
+                {{ $t('statistics.wear') }}: <strong>{{ getUsagePercentage(shoe, true) }}</strong>
             </div>
         </div>
-
-        {{  }}
     </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
     props: {
@@ -47,44 +47,46 @@ export default {
         ])
     },
     methods: {
-        ...mapActions('training/shoes', [
-            'getTrainingShoes'
-        ]),
-        getTrainingShoeTotalDistance(shoeId) {
+        getTrainingCount(count) {
+            if (!this.shoes || this.shoes.length === 0 || count === 0) {
+                return '-'
+            }
+
+            return count
+        },
+        getTotalDistance(shoeId) {
             let totalDistance = null
 
-            this.list.forEach((activity) => {
-                if (activity.training_shoes.includes(shoeId)) {
-                    totalDistance += activity.distance
+            this.list.forEach((item) => {
+                if (item.training_shoes.includes(shoeId)) {
+                    totalDistance += item.distance
                 }
             })
 
             return totalDistance
         },
-        getTrainingShoeUsagePercentage(shoeId, withUnit = false) {
-            if (withUnit && (!this.list || this.list.length === 0)) {
+        getUsagePercentage(shoe, withUnit = false) {
+            if (withUnit && (!this.list || this.list.length === 0 || shoe.count === 0)) {
                 return '-'
             }
 
             const maxDistance = 800
 
-            const totalDistance = this.$filters.formatDistance(this.getTrainingShoeTotalDistance(shoeId), 'km')
+            const totalDistance = this.$filters.formatDistance(this.getTotalDistance(shoe.id), 'km')
 
             if (totalDistance >= maxDistance) {
-                return 100
+                return `${100}%`
             }
 
             const completedDistance = Math.min(totalDistance, maxDistance)
 
             let totalUsage = (completedDistance / maxDistance) * 100
 
-            return Math.min(100, totalUsage).toFixed(0)
+            totalUsage = Math.min(100, totalUsage).toFixed(0)
 
-            return withUnit ? `${totalUsage} %` : totalUsage
+            return withUnit ? `${totalUsage}%` : totalUsage
+
         }
-    },
-    mounted() {
-        this.getTrainingShoes({})
     }
 }
 </script>

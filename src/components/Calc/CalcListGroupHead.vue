@@ -12,7 +12,7 @@
                 </div>
 
                 <div class="statistics__item">
-                    {{ $t('statistics.total_distance') }}: <strong>{{ calculateTotalDistance() / 1000 }} km</strong>
+                    {{ $t('statistics.total_distance') }}: <strong>{{ $filters.formatDistance(getTotalDistance(), 'km', true) }}</strong>
                 </div>
 
                 <div class="statistics__item">
@@ -42,14 +42,20 @@ export default {
             return this.groupData.head === true ? this.$t('calc.list.group.head') : this.groupData.head
         },
         groupTitleWithKilometers() {
-            const totalDistance = this.calculateTotalDistance(this.groupData.items)
-
             return this.groupData.items.length
         }
     },
     methods: {
-        calculateTotalDistance() {
-            return this.groupData.items.reduce((total, item) => total + item.distance, 0)
+        getTotalDistance() {
+            let totalDistance = null
+
+            this.groupData.items.forEach((item) => {
+                if (item.distance) {
+                    totalDistance += item.distance
+                }
+            })
+
+            return totalDistance
         },
         calculateTotalDuration() {
             const durations = this.groupData.items.map(item => item.duration)

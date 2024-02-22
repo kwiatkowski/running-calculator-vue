@@ -95,7 +95,12 @@ export default {
         ...mapActions('training', [
             'getListCalc'
         ]),
+        ...mapActions('training/shoes', [
+            'getTrainingShoes'
+        ]),
         init() {
+            this.getTrainingShoes({})
+
             this.getListCalc({})
                 .finally(() => {
                     if (this.getLocalStorageFilter()) {
