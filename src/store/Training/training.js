@@ -50,6 +50,10 @@ export default {
         groupByOptions: ['month', 'year'],
         distances: [
             {
+                name: '5km',
+                value: 5000
+            },
+            {
                 name: '10km',
                 value: 10000
             },

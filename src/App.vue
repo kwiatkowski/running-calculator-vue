@@ -54,6 +54,8 @@
             :list="list"
             />
         </div>
+
+        <div class="app__footer">v0.25</div>
     </div>
 </template>
 

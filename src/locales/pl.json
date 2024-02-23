@@ -25,6 +25,7 @@
         }
     },
     "type_run_distance": {
+        "5km": "5 km",
         "10km": "10 km",
         "half_marathon": "Półmaraton",
         "marathon": "Maraton"

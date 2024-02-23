@@ -27,8 +27,8 @@ html, body
 .app
     display: grid
     grid-template-columns: 3fr 1fr
-    grid-template-areas: "list sidebar"
-    gap: 30px
+    grid-template-areas: "list sidebar" "footer footer"
+    gap: 0 30px
 
     .app__sidebar
         grid-area: sidebar
@@ -37,6 +37,11 @@ html, body
 
     .app__list
         grid-area: list
+
+    .app__footer
+        grid-area: footer
+        text-align: right
+        padding: 18px 10px 6px
 
 .list__header
     display: flex
@@ -117,6 +122,6 @@ html, body
 .list
     &__table-wrap
         overflow-y: auto
-        height: calc(100vh - 45px)
+        height: calc(100vh - 90px)
 
 
