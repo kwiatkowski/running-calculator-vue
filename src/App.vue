@@ -55,7 +55,7 @@
             />
         </div>
 
-        <div class="app__footer">v0.25</div>
+        <div class="app__footer">v0.26</div>
     </div>
 </template>
 
