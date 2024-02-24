@@ -108,7 +108,9 @@
             />
         </div>
 
-        <div class="app__footer">v0.31</div>
+        <div class="app__footer">
+            v{{ appVersion }}
+        </div>
     </div>
 </template>
 
@@ -126,6 +128,7 @@ export default {
     },
     data() {
         return {
+            appVersion: process.env.VUE_APP_VERSION,
             localFilterYears: this.filterYears,
             localFilterType: this.filterType,
             localFilterDistance: this.filterDistance,
