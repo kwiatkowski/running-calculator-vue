@@ -108,7 +108,7 @@
             />
         </div>
 
-        <div class="app__footer">v0.28</div>
+        <div class="app__footer">v0.31</div>
     </div>
 </template>
 
@@ -129,7 +129,7 @@ export default {
             localFilterYears: this.filterYears,
             localFilterType: this.filterType,
             localFilterDistance: this.filterDistance,
-            localGroupBy: this.groupBy,
+            localGroupBy: this.groupBy
         }
     },
     watch: {

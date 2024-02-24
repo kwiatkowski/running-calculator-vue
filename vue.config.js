@@ -1,6 +1,8 @@
 const webpack = require('webpack')
 const path = require('path')
 
+// process.env.VUE_APP_VERSION = require('./package.json').version
+
 module.exports = {
   publicPath: '/training/web/',
   lintOnSave: false,
@@ -16,8 +18,6 @@ module.exports = {
     },
     plugins: [
       new webpack.DefinePlugin({
-        'process.env.VUE_APP_TITLE': JSON.stringify(process.env.VUE_APP_TITLE),
-        'process.env.VUE_APP_FAVICON': JSON.stringify(process.env.VUE_APP_FAVICON),
         __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: true,
       }),
     ],
