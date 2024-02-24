@@ -3,7 +3,8 @@
         "list": {
             "columns": {
                 "ord": "Lp.",
-                "date_run": "Data biegu",
+                "date_run": "Data",
+                "type": "Rodzaj",
                 "distance": "Dystans",
                 "duration": "Czas trwania",
                 "stride_length": "Długość kroku",
@@ -17,11 +18,27 @@
                 "head": "Wszystkie"
             },
             "group_by": {
-                "placeholder": "Grupuj po"
+                "placeholder": "Grupuj według",
+                "options": {
+                    "month": "Miesiąca",
+                    "year": "Roku"
+                }
             },
-            "filter_by": {
-                "placeholder": "Wybierz rok"
+            "filter_by_distance": {
+                "placeholder": "Dystans zawiera"
+            },
+            "filter_by_type": {
+                "placeholder": "Typ"
+            },
+            "filter_by_years": {
+                "placeholder": "Rok"
             }
+        },
+        "type": {
+            "calm": "Spokojny",
+            "running_around": "Rozbieganie",
+            "verification": "Sprawdzenie",
+            "competition": "Zawody"
         }
     },
     "type_run_distance": {

@@ -20,6 +20,9 @@ export default {
                 name: 'date_run'
             },
             {
+                name: 'type'
+            },
+            {
                 name: 'distance'
             },
             {
@@ -46,6 +49,32 @@ export default {
         ],
         filterYears: null,
         filterYearsOptions: [],
+        filterType: null,
+        filterTypeOptions: [
+            'calm',
+            'running_around',
+            'verification',
+            'competition'
+        ],
+        filterDistance: null,
+        filterDistanceOptions: [
+            {
+                name: '5km',
+                value: 5000
+            },
+            {
+                name: '10km',
+                value: 10000
+            },
+            {
+                name: 'half_marathon',
+                value: 21097
+            },
+            {
+                name: 'marathon',
+                value: 42195
+            }
+        ],
         groupBy: null,
         groupByOptions: ['month', 'year'],
         distances: [
@@ -78,6 +107,12 @@ export default {
         setListFilterByYear(state, payload) {
             state.filterYears = payload
         },
+        setListFilterByType(state, payload) {
+            state.filterType = payload
+        },
+        setListFilterByDistance(state, payload) {
+            state.filterDistance = payload
+        },
         setListGroupBy(state, payload) {
             state.groupBy = payload
         }
@@ -103,6 +138,7 @@ export default {
                         delete item.modified
                         delete item.modified_gmt
                         delete item.date_gmt
+                        delete item.training_shoes
 
                         item.distance = item.acf.distance
                         item.duration = item.acf.duration

@@ -33,7 +33,7 @@ html, body
     .app__sidebar
         grid-area: sidebar
         text-align: left
-        margin-top: 45px
+        margin-top: 55px
 
     .app__list
         grid-area: list
@@ -44,10 +44,23 @@ html, body
         padding: 18px 10px 6px
 
 .list__header
-    display: flex
-    justify-content: flex-end
+    display: grid
+    grid-template-columns: auto 1fr auto
+    grid-template-areas: "grouping filtering actions"
+    gap: 5px
     align-items: center
-    min-height: 45px
+    padding: 10px 0
+
+    &-grouping
+        grid-area: grouping
+
+    &-filtering
+        grid-area: filtering
+        text-align: right
+
+    &-actions
+        grid-area: actions
+        text-align: right
 
 .section__title
     font-size: 18px
@@ -62,25 +75,35 @@ html, body
 .multiselect
     margin: 0 5px 0 0
 
-    &__wrap
-        margin: 0 5px 0 0
+    &.multiselect--inline
+        width: 200px
+        display: inline-block
+
+        & + .multiselect--inline
+            margin-left: 5px
+
+    &.multiselect--years
+        width: 130px
+
+    &.multiselect--type
+        width: 180px
+
+    &.multiselect--pad-left
+        margin-left: 5px
+
+    .multiselect-wrapper
+        min-height: 32px
+        
+        .multiselect-multiple-label,
+        .multiselect-single-label,
+        .multiselect-placeholder
+            line-height: 32px
 
     .multiselect-dropdown
         overflow-y: auto
 
-    &.multiselect--rows-per-page
-        display: inline-block
-        margin: 0 0 0 5px
-        width: 60px
-
-        .multiselect-single-label
-            padding-right: 0
-
-    &.multiselect--status
-        width: 200px
-
-    &.multiselect--type
-        width: 200px
+    .multiselect-option
+        font-size: 14px
 
 
 /*
@@ -122,6 +145,24 @@ html, body
 .list
     &__table-wrap
         overflow-y: auto
-        height: calc(100vh - 90px)
+        height: calc(100vh - 100px)
 
+.calc-th--distance,
+.calc-th--duration,
+.calc-th--stride_length,
+.calc-th--average_heart_rate,
+.calc-th--v02max,
+.calc-th--cadence,
+.calc-th--average_pace,
+.calc-th--average_speed
+    text-align: right
 
+.calc-td--distance,
+.calc-td--duration,
+.calc-td--stride_length,
+.calc-td--average_heart_rate,
+.calc-td--v02max,
+.calc-td--cadence,
+.calc-td--average_pace,
+.calc-td--average_speed
+    text-align: right

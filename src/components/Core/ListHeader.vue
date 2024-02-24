@@ -4,13 +4,15 @@
 
         <slot name="filters"></slot>
 
-        <button
-        class="btn"
-        :disabled="loader.isLoading || (loader && loader.hasOwnProperty('isLoading') && loader.isLoading)"
-        @click="clickRefreshList()"
-        >
-            <i class="icon-arrows-ccw" />
-        </button>
+        <div class="list__header-actions">
+            <button
+            class="btn"
+            :disabled="loader.isLoading || (loader && loader.hasOwnProperty('isLoading') && loader.isLoading)"
+            @click="clickRefreshList()"
+            >
+                <i class="icon-arrows-ccw" />
+            </button>
+        </div>
     </div>
 </template>
 

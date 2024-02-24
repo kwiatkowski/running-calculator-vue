@@ -58,7 +58,7 @@ export default {
             let totalDistance = null
 
             this.list.forEach((item) => {
-                if (item.training_shoes.includes(shoeId)) {
+                if (item.shoe === shoeId) {
                     totalDistance += item.distance
                 }
             })

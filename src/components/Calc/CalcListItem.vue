@@ -8,6 +8,11 @@
         ></td>
 
         <td
+        class="calc-td--date-run"
+        v-html="$t('calc.type.' + item.type)"
+        ></td>
+
+        <td
         class="calc-td--distance"
         v-html="$filters.formatDistance(item.distance, 'km')"
         ></td>

@@ -57,6 +57,14 @@ export default {
             type: Number,
             default: null
         },
+        filterType: {
+            type: String,
+            default: null
+        },
+        filterDistance: {
+            type: Number,
+            default: null
+        },
         groupBy: {
             type: String,
             default: null
@@ -66,9 +74,17 @@ export default {
         dataDisplay() {
             if (!this.data) return []
 
-            let filteredData = this.filterYears
-                ? this.data.filter(item => new Date(item.date).getFullYear() === this.filterYears)
-                : this.data
+                let filteredData = this.filterYears
+                    ? this.data.filter(item => new Date(item.date).getFullYear() === this.filterYears)
+                    : this.data
+
+                if (this.filterType) {
+                    filteredData = filteredData.filter(item => item.type === this.filterType)
+                }
+
+                if (this.filterDistance) {
+                    filteredData = filteredData.filter(item => item.distance >= this.filterDistance)
+                }
 
                 if (this.groupBy) {
                     const groupedData = filteredData.reduce((result, item) => {
