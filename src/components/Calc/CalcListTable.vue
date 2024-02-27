@@ -21,6 +21,7 @@
                 v-for="(group, groupIndex) in dataDisplay"
                 :columns="columns"
                 :data="group"
+                :data-previous="groupIndex < dataDisplay.length ? dataDisplay[groupIndex + 1] : null"
                 :groupIndex="groupIndex"
                 :previousGroupLength="getPreviousGroupLength(groupIndex)"
                 />
@@ -127,6 +128,13 @@ export default {
             }
 
             return length
+        },
+        getPreviousMonthData(groupIndex) {
+            if (groupIndex > 0) {
+                return this.previousMonthData[groupIndex - 1] || null
+            }
+
+            return null
         }
     }
 }

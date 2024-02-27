@@ -98,13 +98,14 @@
 
         <div class="app__sidebar">
             <Statistics
-            :loader="listLoader"
-            :list="list"
-            />
-
-            <StatisticsShoes
-            :loader="listLoader"
-            :list="list"
+            :title="$t('statistics.titles.general')"
+            :config="{
+                basic: ['totalDistance', 'longestDistance', 'totalDuration', 'fastestAveragePace'],
+                advanced: ['averageStrideLength', 'averageVO2Max', 'averageCadence', 'averageHeartRate', 'averageSpeed'],
+            }"
+            :data="list"
+            :distances="distances"
+            :shoes="shoes"
             />
         </div>
 
@@ -117,14 +118,13 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 
-import Statistics from '~/components/Statistics.vue'
-import StatisticsShoes from '~/components/StatisticsShoes.vue'
+import Statistics from '~/components/Training/Statistics.vue'
 import ListHeader from '~/components/Core/ListHeader.vue'
 import CalcListTable from '~/components/Calc/CalcListTable.vue'
 
 export default {
     components: {
-        Statistics, StatisticsShoes, ListHeader, CalcListTable
+        Statistics, ListHeader, CalcListTable
     },
     data() {
         return {
@@ -150,8 +150,11 @@ export default {
         }
     },
     computed: {
+        ...mapState('training/shoes', [
+            'shoes'
+        ]),
         ...mapState('training', [
-            'listLoader', 'list', 'listColumns',
+            'listLoader', 'list', 'listColumns', 'distances',
             'filterYears', 'filterYearsOptions', 'filterType', 'filterTypeOptions', 'filterDistance', 'filterDistanceOptions',
             'groupBy', 'groupByOptions'
         ])

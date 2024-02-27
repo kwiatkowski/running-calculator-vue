@@ -48,13 +48,21 @@
         "marathon": "Maraton"
     },
     "statistics": {
-        "title": "Statytyki",
-        "count_training_sessions": "Ilość treningów",
+        "titles": {
+            "general": "Statystyki ogólne",
+            "distances": "Dystanse",
+            "shoes": "Buty"
+        },
         "total_distance": "Całkowity dystans",
-        "total_duration": "Całkowity czas trwania",
         "longest_distance": "Najdłuższy dystans",
+        "total_duration": "Całkowity czas trwania",
         "fastest_average_pace": "Najszybsze średnie tempo",
         "fastest_time": "Najszybszy czas",
-        "wear": "Zużycie"
+        "wear": "Zużycie",
+        "average_stride_length": "Średnia Długość Kroku",
+        "average_vo2max": "Średni VO2 max",
+        "average_cadence": "Średnia Kadencja",
+        "average_heart_rate": "Średnie Tętno",
+        "average_speed": "Średnia Prędkość"
     }
 }

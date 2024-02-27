@@ -1,5 +1,8 @@
+import 'moment-duration-format'
+import moment from 'moment'
+
 export function formatDistance(value, unit = 'm', showUnit = false ) {
-    if (showUnit && (value === '-' || value === null || value === undefined)) {
+    if (value === null && showUnit) {
         return '-'
     }
 

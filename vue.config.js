@@ -16,7 +16,7 @@ module.exports = {
     },
     plugins: [
       new webpack.DefinePlugin({
-        'process.env': JSON.stringify(process.env),
+        // 'process.env': JSON.stringify(process.env),
         'process.env.VUE_APP_VERSION': JSON.stringify(require('./package.json').version),
         __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: true,
       }),
