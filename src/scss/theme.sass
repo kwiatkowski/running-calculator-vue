@@ -24,6 +24,16 @@ html, body
 *::-webkit-scrollbar-thumb:hover
     background: #aeaeae
 
+.percent
+    font-size: 90%
+    vertical-align: middle
+
+    &--increase
+        color: color(increase)
+
+    &--decrease
+        color: color(decrease)
+
 .app
     display: grid
     grid-template-columns: 3fr 1fr
@@ -41,7 +51,7 @@ html, body
     .app__footer
         grid-area: footer
         text-align: right
-        padding: 18px 10px 6px
+        padding: 44px 10px 6px
 
 .list__header
     display: grid

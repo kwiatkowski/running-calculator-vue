@@ -21,11 +21,8 @@ $colors: (
     gray_superlight: #f5f5f5,
     first: #272822,
     second: #392929,
-    status_progress: #2d87b0,
-    status_progress_ultra_light: lighten(#2d87b0, 50%),
-    error_background: #fcebed,
-    days_left_0: #fcebed,
-    days_left_1: #fef8e5,
+    increase: green,
+    decrease: red
 );
 
 $fonts: (

@@ -18,9 +18,10 @@
                 >
                     {{ $t(`statistics.${camelToSnake(item)}`) }}: <strong>{{ this[item] }}</strong>
 
-                    <span v-if="dataPrevious && item === 'totalDistance' && this[item + 'Previous']">
-                        ({{ getTotalDistanceChangePercentage(this[item + 'Previous'], this[item]) }})
-                    </span>
+                    <span
+                    v-if="dataPrevious && item === 'totalDistance' && this[item + 'Previous']"
+                    v-html="' ' + getTotalDistanceChangePercentage(this[item + 'Previous'], this[item])"
+                    ></span>
                 </div>
             </div>
 
@@ -374,19 +375,19 @@ export default {
 
         // todo:
         getTotalDistanceChangePercentage(previous, current) {
-            const previousDistance = parseFloat(previous);
-            const currentDistance = parseFloat(current);
+            const previousDistance = parseFloat(previous)
+            const currentDistance = parseFloat(current)
 
             if (previousDistance === 0) {
-                return '100%';
+                return '100%'
             }
 
-            const changePercentage = ((currentDistance - previousDistance) / previousDistance) * 100;
+            const changePercentage = ((currentDistance - previousDistance) / previousDistance) * 100
 
-            const symbol = changePercentage >= 0 ? '+' : '-';
-            const formattedChangePercentage = `${symbol}${Math.abs(changePercentage).toFixed(2)}%`;
+            const symbol = changePercentage >= 0 ? '+' : '-'
+            const formattedChangePercentage = `<span class="percent percent--${changePercentage >= 0 ? 'increase' : 'decrease' }">${symbol}${Math.abs(changePercentage).toFixed(2)}%</span>`
 
-            return formattedChangePercentage;
+            return formattedChangePercentage
         }
     }
 }

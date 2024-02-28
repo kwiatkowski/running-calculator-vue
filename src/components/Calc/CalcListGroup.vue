@@ -13,8 +13,9 @@
 
             <div class="statistics__actions">
                 <button
+                class="btn"
                 @click="clickTreningToggle"
-                v-html="showTraining ? 'Zwiń' : 'Rozwiń'"
+                v-html="'<i class=\'icon-angle-' + (showTraining ? 'up' : 'down') + '\'></i>'"
                 ></button>
             </div>
         </td>

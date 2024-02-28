@@ -10,7 +10,7 @@
             :disabled="loader.isLoading || (loader && loader.hasOwnProperty('isLoading') && loader.isLoading)"
             @click="clickRefreshList()"
             >
-                <i class="icon-arrows-ccw" />
+                <i class="icon-arrows-cw" />
             </button>
         </div>
     </div>
