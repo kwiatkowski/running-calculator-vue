@@ -53,6 +53,7 @@
             "distances": "Dystanse",
             "shoes": "Buty"
         },
+        "training_sessions": "Ilość treningów",
         "total_distance": "Całkowity dystans",
         "longest_distance": "Najdłuższy dystans",
         "total_duration": "Całkowity czas trwania",

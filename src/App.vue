@@ -100,7 +100,9 @@
             <Statistics
             :title="$t('statistics.titles.general')"
             :config="{
-                basic: ['totalDistance', 'longestDistance', 'totalDuration', 'fastestAveragePace'],
+                isExpandable: false,
+                isExpand: false,
+                basic: ['trainingSessions', 'totalDistance', 'longestDistance', 'totalDuration', 'fastestAveragePace'],
                 advanced: ['averageStrideLength', 'averageVO2Max', 'averageCadence', 'averageHeartRate', 'averageSpeed'],
             }"
             :data="list"

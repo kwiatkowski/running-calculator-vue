@@ -1,94 +1,124 @@
 <template>
     <div class="statistics">
-        <div
-        v-if="title && data && config"
-        class="statistics__title"
-        v-html="`${title} (${countTrainingSessions})`"
-        ></div>
-
-        <template v-if="data && config">
+        <div class="statistics__header">
             <div
-            class="statistics__items statistics__items--basic"
-            v-if="config.basic"
+            v-if="title && data && config"
+            class="statistics__title"
+            >
+                {{ title }}
+
+                <div
+                class="statistics__item statistics__item-inline"
+                v-if="!statisticsExpand && config.basic"
+                >
+                    <template
+                    v-for="(item, itemKey) in config.basic"
+                    :key="itemKey"
+                    >
+                        <span>{{ this[item] }}</span>
+
+                        <template v-if="config.basic.length - 1 != itemKey"> | </template>
+                    </template>
+                </div>
+            </div>
+
+            <div class="statistics__actions">
+                <button
+                v-if="config.isExpandable"
+                class="btn btn--link"
+                @click="clickStatisticsExpandToggle"
+                v-html="'<i class=\'icon-' + (statisticsExpand ? 'minus' : 'plus') + '\'></i>'"
+                ></button>
+
+                <slot name="custom-action"></slot>
+            </div>
+        </div>
+
+        <template v-if="statisticsExpand">
+            <template v-if="data && config">
+                <div
+                class="statistics__items statistics__items--basic"
+                v-if="config.basic"
+                >
+                    <div
+                    class="statistics__item"
+                    v-for="(item, itemKey) in config.basic"
+                    :key="itemKey"
+                    >
+                        {{ $t(`statistics.${camelToSnake(item)}`) }}: <strong>{{ this[item] }}</strong>
+
+                        <span
+                        v-if="dataPrevious && item === 'totalDistance' && this[item + 'Previous']"
+                        v-html="' ' + getTotalDistanceChangePercentage(this[item + 'Previous'], this[item])"
+                        ></span>
+                    </div>
+                </div>
+
+                <div
+                class="statistics__items statistics__items--advanced"
+                v-if="config.advanced"
+                >
+                    <div
+                    class="statistics__item"
+                    v-for="(item, itemKey) in config.advanced"
+                    :key="itemKey"
+                    >
+                        {{ $t(`statistics.${camelToSnake(item)}`) }}: <strong>{{ this[item] }}</strong>
+                    </div>
+                </div>
+            </template>
+
+            <div
+            v-if="distances"
+            class="statistics__items"
             >
                 <div
-                class="statistics__item"
-                v-for="(item, itemKey) in config.basic"
-                :key="itemKey"
-                >
-                    {{ $t(`statistics.${camelToSnake(item)}`) }}: <strong>{{ this[item] }}</strong>
+                class="statistics__title"
+                v-html="$t('statistics.titles.distances')"
+                ></div>
 
-                    <span
-                    v-if="dataPrevious && item === 'totalDistance' && this[item + 'Previous']"
-                    v-html="' ' + getTotalDistanceChangePercentage(this[item + 'Previous'], this[item])"
-                    ></span>
+                <div
+                class="statistics__item-separator"
+                v-for="(distance, distanceIndex) in distances"
+                :key="distanceIndex">
+                    <strong>{{ $t(`type_run_distance.${distance.name}`) }}</strong> ({{ getCountTrainingSessionsForDistance(distance.value) }})
+
+                    <div class="statistics__item">
+                        {{ $t('statistics.fastest_average_pace') }}: <strong>{{ getFastestAveragePaceForDistance(distance.value) }}</strong>
+                    </div>
+
+                    <div class="statistics__item">
+                        {{ $t('statistics.fastest_time') }}: <strong>{{ getTimeToRunForDistance(distance.value) }}</strong>
+                    </div>
                 </div>
             </div>
 
             <div
-            class="statistics__items statistics__items--advanced"
-            v-if="config.advanced"
+            v-if="shoes"
+            class="statistics__items"
             >
                 <div
-                class="statistics__item"
-                v-for="(item, itemKey) in config.advanced"
-                :key="itemKey"
+                class="statistics__title"
+                v-html="$t('statistics.titles.shoes')"
+                ></div>
+
+                <div
+                class="statistics__item-separator"
+                v-for="(shoe, shoeIndex) in shoes"
+                :key="shoeIndex"
                 >
-                    {{ $t(`statistics.${camelToSnake(item)}`) }}: <strong>{{ this[item] }}</strong>
+                    <strong>{{ shoe.name }}</strong> ({{ getCountTrainingSessionsForShoes(shoe.count) }})
+
+                    <div class="statistics__item">
+                        {{ $t('statistics.total_distance') }}: <strong>{{ $filters.formatDistance(getTotalDistanceForShoes(shoe.id), 'km', true) }}</strong>
+                    </div>
+
+                    <div class="statistics__item">
+                        {{ $t('statistics.wear') }}: <strong>{{ getUsagePercentageShoes(shoe, true) }}</strong>
+                    </div>
                 </div>
             </div>
         </template>
-
-        <div
-        v-if="distances"
-        class="statistics__items"
-        >
-            <div
-            class="statistics__title"
-            v-html="$t('statistics.titles.distances')"
-            ></div>
-
-            <div
-            class="statistics__item-separator"
-            v-for="(distance, distanceIndex) in distances"
-            :key="distanceIndex">
-                <strong>{{ $t(`type_run_distance.${distance.name}`) }}</strong> ({{ getCountTrainingSessionsForDistance(distance.value) }})
-
-                <div class="statistics__item">
-                    {{ $t('statistics.fastest_average_pace') }}: <strong>{{ getFastestAveragePaceForDistance(distance.value) }}</strong>
-                </div>
-
-                <div class="statistics__item">
-                    {{ $t('statistics.fastest_time') }}: <strong>{{ getTimeToRunForDistance(distance.value) }}</strong>
-                </div>
-            </div>
-        </div>
-
-        <div
-        v-if="shoes"
-        class="statistics__items"
-        >
-            <div
-            class="statistics__title"
-            v-html="$t('statistics.titles.shoes')"
-            ></div>
-
-            <div
-            class="statistics__item-separator"
-            v-for="(shoe, shoeIndex) in shoes"
-            :key="shoeIndex"
-            >
-                <strong>{{ shoe.name }}</strong> ({{ getCountTrainingSessionsForShoes(shoe.count) }})
-
-                <div class="statistics__item">
-                    {{ $t('statistics.total_distance') }}: <strong>{{ $filters.formatDistance(getTotalDistanceForShoes(shoe.id), 'km', true) }}</strong>
-                </div>
-
-                <div class="statistics__item">
-                    {{ $t('statistics.wear') }}: <strong>{{ getUsagePercentageShoes(shoe, true) }}</strong>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -123,8 +153,13 @@ export default {
             default: null
         }
     },
+    data() {
+        return {
+            statisticsExpand: this.config.isExpandable && !this.config.isExpand ? false : true
+        }
+    },
     computed: {
-        countTrainingSessions() {
+        trainingSessions() {
             if (!this.data || this.data.length === 0) {
                 return '-'
             }
@@ -256,6 +291,9 @@ export default {
         }
     },
     methods: {
+        clickStatisticsExpandToggle() {
+            this.statisticsExpand = !this.statisticsExpand
+        },
         camelToSnake(str) {
             if (typeof str !== 'string') {
                 return str

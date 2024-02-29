@@ -4,20 +4,22 @@
             <Statistics
             :title="data.head ? data.head : null"
             :config="{
-                basic: ['totalDistance', 'longestDistance', 'totalDuration', 'fastestAveragePace'],
+                isExpandable: true,
+                isExpand: false,
+                basic: ['trainingSessions', 'totalDistance', 'longestDistance', 'totalDuration', 'fastestAveragePace'],
                 advanced: ['averageStrideLength', 'averageVO2Max', 'averageCadence', 'averageHeartRate', 'averageSpeed'],
             }"
             :data="data.items"
             :dataPrevious="dataPrevious && dataPrevious.items ? dataPrevious.items : null"
-            />
-
-            <div class="statistics__actions">
-                <button
-                class="btn"
-                @click="clickTreningToggle"
-                v-html="'<i class=\'icon-angle-' + (showTraining ? 'up' : 'down') + '\'></i>'"
-                ></button>
-            </div>
+            >
+                <template v-slot:custom-action>
+                    <button
+                    class="btn btn--link"
+                    @click="clickTreningToggle"
+                    v-html="'<i class=\'icon-angle-' + (showTraining ? 'up' : 'down') + '\'></i>'"
+                    ></button>
+                </template>
+            </Statistics>
         </td>
     </tr>
 
