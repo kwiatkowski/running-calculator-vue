@@ -3,15 +3,6 @@ $font-family: map-get($fonts, 'family')
 $font-color: map-get($fonts, 'color')
 $font-size: map-get($fonts, 'size')
 
-html, body
-    color: map-get($colors, first)
-    background-color: map-get($font-color, white)
-    font-family: map-get($font-family, first), sans-serif
-    font-size: map-get($font-size, l)
-    line-height: 1.5
-    font-style: normal
-    font-weight: 300
-
 *::-webkit-scrollbar
     width: 5px
 
@@ -24,6 +15,63 @@ html, body
 *::-webkit-scrollbar-thumb:hover
     background: #aeaeae
 
+html, body
+    color: map-get($colors, first)
+    background-color: map-get($font-color, white)
+    font-family: map-get($font-family, first), sans-serif
+    font-size: map-get($font-size, l)
+    line-height: 1.5
+    font-style: normal
+    font-weight: 300
+    height: 100%
+
+
+/*
+ * app layout
+ */
+
+.app
+    display: grid
+    grid-template-columns: 3fr 1fr
+    grid-template-rows: 50px auto 70px
+    grid-template-areas: "header header" "content sidebar" "footer footer"
+    gap: 0 30px
+    min-height: 100vh
+
+    .app__header
+        grid-area: header
+        text-align: left
+        height: 50px
+        display: flex
+        align-items: center
+
+    .app__sidebar
+        grid-area: sidebar
+        text-align: left
+        margin-top: 95px
+
+    .app__content
+        grid-area: content
+        text-align: left
+
+    .app__footer
+        grid-area: footer
+        text-align: right
+        padding: 44px 10px 6px
+        height: 70px
+
+.content
+    padding: 0 10px
+
+/*
+ * app navigation
+ */
+
+.app__nav
+    .app__nav-link
+        display: inline-block
+        padding: 5px 10px
+
 .percent
     font-size: 90%
     vertical-align: middle
@@ -33,25 +81,6 @@ html, body
 
     &--decrease
         color: color(decrease)
-
-.app
-    display: grid
-    grid-template-columns: 3fr 1fr
-    grid-template-areas: "list sidebar" "footer footer"
-    gap: 0 30px
-
-    .app__sidebar
-        grid-area: sidebar
-        text-align: left
-        margin-top: 95px
-
-    .app__list
-        grid-area: list
-
-    .app__footer
-        grid-area: footer
-        text-align: right
-        padding: 44px 10px 6px
 
 .list__header
     display: grid
@@ -173,7 +202,7 @@ html, body
 .list
     &__table-wrap
         overflow-y: auto
-        height: calc(100vh - 125px)
+        height: calc(100vh - 174px)
 
 .calc-th--distance,
 .calc-th--duration,

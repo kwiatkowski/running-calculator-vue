@@ -1,6 +1,6 @@
 {
   "name": "vue-boilerplate-template",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve --mode development",
@@ -22,6 +22,7 @@
     "vue-eventer": "^1.0.0",
     "vue-i18n": "^9.9.1",
     "vue-multiselect": "^2.1.8",
+    "vue-router": "^4.0.13",
     "webpack": "^5.90.1"
   },
   "devDependencies": {

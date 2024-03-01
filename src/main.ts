@@ -1,6 +1,8 @@
 import { createApp } from "vue"
 import App from "~/App.vue"
 
+import router from '~/routes/router'
+
 import * as filters from '~/filters/filters'
 
 // general setup
@@ -24,6 +26,7 @@ Object.keys(filters).forEach(key => {
     }
 })
 
+app.use(router)
 app.use(store)
 app.use(setupI18n)
 
