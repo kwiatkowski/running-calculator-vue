@@ -14,10 +14,9 @@
                 </tr>
             </thead>
 
-            <tbody v-if="getLastThreeVerificationRuns !== null">
+            <tbody v-if="lastThreeVerificationRuns !== null">
                 <ListItem
-                v-if="getLastThreeVerificationRuns"
-                v-for="(item, itemIndex) in getLastThreeVerificationRuns"
+                v-for="(item, itemIndex) in lastThreeVerificationRuns"
                 :key="itemIndex"
                 :item="item"
                 :index="itemIndex"
@@ -111,10 +110,17 @@ export default {
             selectedHour: null,
             selectedMinutes: null,
             selectedSeconds: null,
-            result: null
+            result: null,
+            lastThreeVerificationRuns: []
         }
     },
     watch: {
+        list() {
+            this.lastThreeVerificationRuns = this.list
+                .filter(item => (item.type === 'verification' || item.type === 'competition') && (!this.selectedDistance || item.distance > this.selectedDistance))
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 3)
+        },
         selectedDistance() {
             this.calculatePace()
         },
@@ -127,35 +133,25 @@ export default {
         selectedSeconds() {
             this.calculatePace()
         },
-        getLastThreeVerificationRuns: {
-            handler(newRuns, oldRuns) {
-                if (newRuns.length >= 3) {
-                    const lastRun = moment.duration(newRuns[0].duration)
-                    const secondLastRun = moment.duration(newRuns[1].duration)
+        lastThreeVerificationRuns() {
+            if (this.lastThreeVerificationRuns.length >= 3) {
+                const lastRun = moment.duration(this.lastThreeVerificationRuns[0].duration)
+                const secondLastRun = moment.duration(this.lastThreeVerificationRuns[1].duration)
 
-                    const timeDifferenceInSeconds = secondLastRun.asSeconds() - lastRun.asSeconds()
+                const timeDifferenceInSeconds = secondLastRun.asSeconds() - lastRun.asSeconds()
 
-                    const updatedLastRun = lastRun.subtract(timeDifferenceInSeconds, 'seconds')
+                const updatedLastRun = lastRun.subtract(timeDifferenceInSeconds, 'seconds')
 
-                    this.selectedHour = Math.floor(updatedLastRun.asHours())
-                    this.selectedMinutes = Math.floor(updatedLastRun.minutes())
-                    this.selectedSeconds = Math.floor(updatedLastRun.seconds())
-                }
-            },
-            immediate: true
+                this.selectedHour = Math.floor(updatedLastRun.asHours())
+                this.selectedMinutes = Math.floor(updatedLastRun.minutes())
+                this.selectedSeconds = Math.floor(updatedLastRun.seconds())
+            }
         }
     },
     computed: {
         ...mapState('training', [
             'list', 'listColumns'
-        ]),
-        getLastThreeVerificationRuns() {
-            const filteredData = this.list
-                .filter(item => (item.type === 'verification' || item.type === 'competition') && (!this.selectedDistance || item.distance > this.selectedDistance))
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
-
-            return filteredData.slice(0, 3)
-        }
+        ])
     },
     methods: {
         calculatePace() {
@@ -179,6 +175,11 @@ export default {
             this.minutesOptions.push(i)
             this.secondsOptions.push(i)
         }
+
+        this.lastThreeVerificationRuns = this.list
+            .filter(item => (item.type === 'verification' || item.type === 'competition') && (!this.selectedDistance || item.distance > this.selectedDistance))
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .slice(0, 3)
 
         this.selectedDistance = 10000
         this.selectedHour = 0
