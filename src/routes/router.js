@@ -6,15 +6,15 @@ import PlanRun from '~/components/PlanRun/PlanRun.vue'
 
 const routes = [
     {
-        path: '/',
+        path: '/training/',
         component: List
     },
     {
-        path: '/charts',
+        path: '/training/charts',
         component: Charts
     },
     {
-        path: '/plan-run',
+        path: '/training/plan-run',
         component: PlanRun
     }
 ]
