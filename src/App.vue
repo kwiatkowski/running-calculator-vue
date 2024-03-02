@@ -3,21 +3,21 @@
         <div class="app__header">
             <nav class="app__nav">
                 <router-link
-                to="/training/"
+                to="/"
                 class="app__nav-link"
                 >
                     list
                 </router-link>
 
                 <router-link
-                to="/training/charts"
+                to="/charts"
                 class="app__nav-link"
                 >
                     charts
                 </router-link>
 
                 <router-link
-                to="/training/plan-run"
+                to="/plan-run"
                 class="app__nav-link"
                 >
                     plan run
