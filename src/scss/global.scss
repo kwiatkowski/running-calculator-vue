@@ -1,25 +1,18 @@
 // only configs, mixins, functions - no CSS generation
 @import "config";
-@import "mixins";
-@import "fonts";
-@import "animations";
 
 // bootstrap
-@import '../../vendor/sass/bootstrap/scss/bootstrap-grid';
-@import '../../vendor/sass/bootstrap/scss/_utilities';
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/transitions";
+@import "~bootstrap/scss/tooltip";
 
-// vendors
-@import '../../vendor/sass/sass-core/mixins';
-@import '../../vendor/sass/sass-core/reset';
-@import '../../vendor/sass/sass-core/buttons';
-// @import '../../vendor/sass/sass-core/texts'
-// @import '../../vendor/sass/sass-core/forms'
-// @import '../../vendor/sass/sass-core/animate'
-// @import '../../vendor/sass/sass-core/dev'
-// @import '../../node_modules/@vueform/multiselect/themes/default.scss'
-
-@import '../../public/assets/fontello/css/fontello';
-
+@import 'mixins';
+@import 'reset';
+@import 'buttons';
+@import "fonts";
+@import "animations";
 @import "theme";
 
 @import "modules/loader";

@@ -8,6 +8,7 @@ import Multiselect from '@vueform/multiselect'
 
 // custom directives
 import LoaderDirective from '~/directives/loader.directive'
+import TooltipDirective from '~/directives/tooltip.directive'
 
 
 export default function setupBasic(app) {
@@ -24,4 +25,5 @@ export default function setupBasic(app) {
     app.component('Multiselect', Multiselect)
 
     app.use(LoaderDirective)
+    app.use(TooltipDirective)
 }

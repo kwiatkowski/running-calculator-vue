@@ -6,11 +6,13 @@
 
         <div class="list__header-actions">
             <button
-            class="btn"
+            class="btn btn--icon"
             :disabled="loader.isLoading || (loader && loader.hasOwnProperty('isLoading') && loader.isLoading)"
             @click="clickRefreshList()"
+            v-tooltip
+            :title="$t('calc.list.actions.refresh.tooltip')"
             >
-                <i class="icon-arrows-cw" />
+                <i class="bi bi-arrow-clockwise" />
             </button>
         </div>
     </div>

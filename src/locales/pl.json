@@ -32,6 +32,17 @@
             },
             "filter_by_years": {
                 "placeholder": "Rok"
+            },
+            "actions": {
+                "refresh": {
+                    "tooltip": "Odśwież"
+                },
+                "statistics_details": {
+                    "tooltip": "Szczegółowe statatystyki treningów"
+                },
+                "training_details": {
+                    "tooltip": "Lista treningów"
+                }
             }
         },
         "type": {

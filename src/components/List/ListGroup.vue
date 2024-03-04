@@ -14,9 +14,13 @@
             >
                 <template v-slot:custom-action>
                     <button
-                    class="btn btn--link"
+                    ref="trainingButton"
+                    class="btn btn--link btn--icon"
                     @click="clickTreningToggle"
-                    v-html="'<i class=\'icon-angle-' + (showTraining ? 'up' : 'down') + '\'></i>'"
+                    v-html="'<i class=\'bi bi-arrow-' + (showTraining ? 'up' : 'down') + '-square-fill\'></i>'"
+                    v-tooltip
+                    :title="$t('calc.list.actions.training_details.tooltip')"
+                    data-bs-trigger="hover"
                     ></button>
                 </template>
             </Statistics>
@@ -37,6 +41,7 @@ import Statistics from '~/components/Core/Statistics.vue'
 import ListItem from '~/components/List/ListItem.vue'
 
 export default {
+    compatConfig: { MODE: 3 },
     components: {
         Statistics, ListItem
     },

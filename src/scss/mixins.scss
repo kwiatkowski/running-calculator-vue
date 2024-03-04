@@ -9,3 +9,29 @@
 
   @return null;
 }
+
+@mixin mediamin($breakpoint) {
+  @media (min-width: $breakpoint) {
+      @content;
+  }
+}
+
+@mixin mediamax($breakpoint) {
+  @media (max-width: $breakpoint) {
+      @content;
+  }
+}
+
+@mixin link($link, $hover) {
+  & {
+      color: $link;
+
+      &:hover {
+          color: $hover;
+      }
+  }
+}
+
+@mixin transition($p: all, $d: 300ms, $t: linear) {
+  transition: $p $d $t;
+}

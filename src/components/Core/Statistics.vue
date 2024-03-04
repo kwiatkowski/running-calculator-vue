@@ -25,9 +25,12 @@
             <div class="statistics__actions">
                 <button
                 v-if="config.isExpandable"
-                class="btn btn--link"
+                class="btn btn--link btn--icon"
                 @click="clickStatisticsExpandToggle"
-                v-html="'<i class=\'icon-' + (statisticsExpand ? 'minus' : 'plus') + '\'></i>'"
+                v-html="'<i class=\'bi bi-clipboard2-' + (statisticsExpand ? 'minus' : 'plus') + '\'></i>'"
+                v-tooltip
+                :title="$t('calc.list.actions.statistics_details.tooltip')"
+                data-bs-trigger="hover"
                 ></button>
 
                 <slot name="custom-action"></slot>
