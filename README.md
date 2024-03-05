@@ -25,7 +25,7 @@ The application needs two endpoints to work. The first one is for downloading th
 
 I have created a plugin for Wordpress that creates Post Type "training" and Taxonomies "training_shoes". The plugin is available in the repository:
 
-[[https://kwiatkowski.co/training/](https://github.com/kwiatkowski/wp-plugin-training)](https://github.com/kwiatkowski/wp-plugin-training)
+[https://github.com/kwiatkowski/wp-plugin-training](https://github.com/kwiatkowski/wp-plugin-training)
 
 Training list expects an array of objects with properties:
 ``` 
@@ -54,7 +54,7 @@ Training list expects an array of objects with properties:
 The shoe statistics list expects an array of objects with properties:
 
 ``` 
-https://example.com/wp-json/wp/v2/training_shoes
+/wp-json/wp/v2/training_shoes
 ``` 
 
 ``` 
