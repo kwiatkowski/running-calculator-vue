@@ -102,7 +102,7 @@ export default {
         }
     },
     actions: {
-        getListCalc({ state, commit }, {}) {
+        getTrainingList({ state, commit }, {}) {
             commit('loadStart', { name: 'listLoader' })
 
             return TrainingAPI.getPost({ perPage: 99999 })

@@ -107,10 +107,16 @@ export default {
     },
     data() {
         return {
-            filterYears: this.getLocalStorageFilterByYear(),
-            filterType: this.getLocalStorageFilterByType(),
-            filterDistance: this.getLocalStorageFilterByDistance(),
-            groupBy: this.getLocalStorageGroupBy()
+            localStorageKeys: {
+                filterByYear: 'filterBy/year',
+                filterByDistance: 'filterBy/distance',
+                filterByType: 'filterBy/type',
+                groupBy: 'groupBy'
+            },
+            filterYears: this.getLocalStorage('filterBy/year'),
+            filterType: this.getLocalStorage('filterBy/type'),
+            filterDistance: this.getLocalStorage('filterBy/distance'),
+            groupBy: this.getLocalStorage('groupBy')
         }
     },
     watch: {
@@ -120,100 +126,63 @@ export default {
     },
     computed: {
         ...mapState('training', [
-            'listLoader', 'list', 'listColumns', 'distances',
-            'groupByOptions', 'filterYearsOptions', 'filterTypeOptions', 'filterDistanceOptions'
+            'listLoader', 'list', 'listColumns', 'distances', 'groupByOptions', 'filterYearsOptions', 'filterTypeOptions', 'filterDistanceOptions'
         ])
     },
     methods: {
         ...mapActions('training', [
-            'getListCalc'
+            'getTrainingList'
         ]),
         ...mapActions('training/shoes', [
             'getTrainingShoes'
         ]),
-        init() {
-            this.getTrainingShoes({})
-            this.getListCalc({})
+        refreshList() {
+            this.getTrainingList({})
         },
         getDataLocalStorage() {
-            if (this.getLocalStorageFilterByDistance()) {
-                this.handleChangeFilterDistance(this.getLocalStorageFilterByDistance())
+            if (this.getLocalStorage('filterBy/year')) {
+                this.handleChangeFilterYears(this.getLocalStorage('filterBy/year'))
             }
 
-            if (this.getLocalStorageFilterByType()) {
-                this.handleChangeFilterType(this.getLocalStorageFilterByType())
+            if (this.getLocalStorage('filterBy/distance')) {
+                this.handleChangeFilterDistance(this.getLocalStorage('filterBy/distance'))
             }
 
-            if (this.getLocalStorageFilterByYear()) {
-                this.handleChangeFilterYears(this.getLocalStorageFilterByYear())
+            if (this.getLocalStorage('filterBy/type')) {
+                this.handleChangeFilterType(this.getLocalStorage('filterBy/type'))
             }
 
-            if (this.getLocalStorageGroupBy()) {
-                this.handleChangeGroupBy(this.getLocalStorageGroupBy())
+            if (this.getLocalStorage('groupBy')) {
+                this.handleChangeGroupBy(this.getLocalStorage('groupBy'))
             }
-        },
-        refreshList() {
-            this.init()
         },
         handleChangeFilterYears(payload) {
             this.filterYears = payload
 
-            payload ? this.setLocalStorageFilterByYear(payload) : localStorage.removeItem('trening/filterBy/year')
+            payload ? this.setLocalStorage('filterBy/year', payload) : localStorage.removeItem(`training/filterBy/year`)
         },
         handleChangeFilterType(payload) {
             this.filterType = payload
 
-            payload ? this.setLocalStorageFilterByType(payload) : localStorage.removeItem('trening/filterBy/type')
+            payload ? this.setLocalStorage('filterBy/type', payload) : localStorage.removeItem(`training/filterBy/type`)
         },
         handleChangeFilterDistance(payload) {
             this.filterDistance = payload
-            
-            payload ? this.setLocalStorageFilterByDistance(payload) : localStorage.removeItem('trening/filterBy/distance')
+
+            payload ? this.setLocalStorage('filterBy/distance', payload) : localStorage.removeItem(`training/filterBy/distance`)
         },
         handleChangeGroupBy(payload) {
             this.groupBy = payload
 
-            payload ? this.setLocalStorageGroupBy(payload) : localStorage.removeItem('trening/groupBy')
+            payload ? this.setLocalStorage('groupBy', payload) : localStorage.removeItem(`training/filterBy/groupBy`)
         },
-        setLocalStorageFilterByYear(payload) {
-            localStorage.setItem('trening/filterBy/year', payload)
+        setLocalStorage(key, payload) {
+            localStorage.setItem(`training/${key}`, JSON.stringify(payload))
         },
-        getLocalStorageFilterByYear() {
-            if (localStorage.getItem('trening/filterBy/year')) {
-                return parseInt(localStorage.getItem('trening/filterBy/year'))
-            } else {
-                return null
-            }
-        },
-        setLocalStorageFilterByDistance(payload) {
-            localStorage.setItem('trening/filterBy/distance', payload)
-        },
-        getLocalStorageFilterByDistance() {
-            if (localStorage.getItem('trening/filterBy/distance')) {
-                return parseInt(localStorage.getItem('trening/filterBy/distance'))
-            } else {
-                return null
-            }
-        },
-        setLocalStorageFilterByType(payload) {
-            localStorage.setItem('trening/filterBy/type', payload)
-        },
-        getLocalStorageFilterByType() {
-            if (localStorage.getItem('trening/filterBy/type')) {
-                return localStorage.getItem('trening/filterBy/type')
-            } else {
-                return null
-            }
-        },
-        setLocalStorageGroupBy(payload) {
-            localStorage.setItem('trening/groupBy', payload)
-        },
-        getLocalStorageGroupBy() {
-            if (localStorage.getItem('trening/groupBy')) {
-                return localStorage.getItem('trening/groupBy')
-            } else {
-                return null
-            }
+        getLocalStorage(key) {
+            const value = localStorage.getItem('training/' + key)
+
+            return value ? JSON.parse(value) : null
         }
     }
 }

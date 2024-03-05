@@ -73,14 +73,14 @@ export default {
     },
     methods: {
         ...mapActions('training', [
-            'getListCalc'
+            'getTrainingList'
         ]),
         ...mapActions('training/shoes', [
             'getTrainingShoes'
         ]),
         init() {
             this.getTrainingShoes({})
-            this.getListCalc({})
+            this.getTrainingList({})
         }
     },
     mounted() {
