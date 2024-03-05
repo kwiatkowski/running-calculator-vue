@@ -25,11 +25,12 @@ The application needs two endpoints to work. The first one is for downloading th
 
 I have created a plugin for Wordpress that creates Post Type "training" and Taxonomies "training_shoes". The plugin is available in the repository:
 
-[https://kwiatkowski.co/training/](https://github.com/kwiatkowski/wp-plugin-training)
+[[https://kwiatkowski.co/training/](https://github.com/kwiatkowski/wp-plugin-training)](https://github.com/kwiatkowski/wp-plugin-training)
 
 Training list expects an array of objects with properties:
-
-https://example.com/wp-json/wp/v2/training?per_page=99999&orderby=date&order=desc
+``` 
+/wp-json/wp/v2/training?per_page=99999&orderby=date&order=desc
+``` 
 
 ``` 
 [
@@ -52,7 +53,9 @@ https://example.com/wp-json/wp/v2/training?per_page=99999&orderby=date&order=des
 
 The shoe statistics list expects an array of objects with properties:
 
+``` 
 https://example.com/wp-json/wp/v2/training_shoes
+``` 
 
 ``` 
 [
