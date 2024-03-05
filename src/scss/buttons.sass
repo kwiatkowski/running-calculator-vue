@@ -1,11 +1,11 @@
 $button-default: map-get($button, 'default')
 $button-color: map-get($button, 'color')
 $button-size: map-get($button, 'size')
-$button-radius: map-get($button, 'radius')
 
 .btn
     margin: 0
     border: 0 none
+    border-radius: map-get($button, 'radius')
     font-family: map-get($button-default, 'font-family')
     font-size: map-get($button-default, 'font-size')
     font-weight: map-get($button-default, 'font-weight')
@@ -24,10 +24,12 @@ $button-radius: map-get($button, 'radius')
     &.btn--wide
         width: 100%
 
+    & + .btn
+        margin-left: 5px
+
 // colors
 
 @each $color in $button-color
-
     .#{nth($color, 1)}
         background: #{nth($color, 2)} !important
         color: #{nth($color, 3)} !important
@@ -53,15 +55,10 @@ $button-radius: map-get($button, 'radius')
 
 
 
-// radius
-
-@each $name, $radius in $button-radius
-
-    .#{$name}
-        border-radius: #{$radius}
-
-
-
-.btn--icon
+.btn.btn--icon
     font-size: 16px
     padding: 8px
+
+    &:hover
+        background: #77838f !important
+        color: #fff !important

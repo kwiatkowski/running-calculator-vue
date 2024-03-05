@@ -1,86 +1,73 @@
 <template>
     <div class="content">
-        <div>Trzy ostatnie biegi sprawdzające lub zawody dla wybranego dystansu:</div>
+        <div class="form__row">
+            {{ $t('plan_run.text_last') }}
 
-        <table class="list__table">
-            <thead v-if="listColumns !== null && listColumns.length > 0">
-                <tr>
-                    <th
-                    v-for="(column, index) in listColumns"
-                    :key="index"
-                    :class="'calc-th--' + column.name"
-                    v-text="$t('calc.list.columns.' + column.name)"
-                    ></th>
-                </tr>
-            </thead>
+            <Multiselect
+            v-if="distanceOptions"
+            class="multiselect--inline"
+            v-model="selectedDistance"
+            :options="distanceOptions"
+            :canClear="false"
+            :canDeselect="false"
+            :disabled="listLoader && listLoader.isLoading"
+            />
+            m
+        </div>
+    </div>
 
-            <tbody v-if="lastThreeVerificationRuns !== null">
-                <ListItem
-                v-for="(item, itemIndex) in lastThreeVerificationRuns"
-                :key="itemIndex"
-                :item="item"
-                :index="itemIndex"
-                />
-            </tbody>
-        </table>
+    <ListTable
+    :loader="listLoader"
+    :columns="listColumns"
+    :data="lastThreeVerificationRuns"
+    />
 
-        <div class="section__title">1. Kalkulator tempa biegu</div>
+    <div class="content">
+        <div class="section__title">1. {{ $t('plan_run.calculate_pace.title') }}</div>
 
-        <div>
-            <p>Wykorzystaj Kalkulator Tempa Biegu, aby precyzyjnie określić tempo, jakie musisz utrzymywać podczas biegu, aby osiągnąć zamierzony wynik na wybranym dystansie.</p>
+        <p>{{ $t('plan_run.calculate_pace.text') }}</p>
 
-            <form @submit.prevent="calculatePace">
-                <div class="form__row">
-                    <label for="distance">Dystans (w kilometrach): </label>
-                    <Multiselect
-                    v-if="distanceOptions"
-                    class="multiselect--inline multiselect--pad-left"
-                    v-model="selectedDistance"
-                    :options="distanceOptions"
-                    :canClear="false"
-                    :canDeselect="false"
-                    />
-                </div>
+        <div class="form__row">
+            <label class="form__label">{{ $t('plan_run.calculate_pace.planned_time') }}</label>
 
-                <label>Planowany wynik</label>
+            <Multiselect
+            v-if="hoursOptions"
+            class="multiselect--inline"
+            v-model="selectedHour"
+            :options="hoursOptions"
+            :canClear="false"
+            :canDeselect="false"
+            :disabled="listLoader && listLoader.isLoading"
+            />
+            godz
 
-                <div class="form__row">
-                    <Multiselect
-                    v-if="hoursOptions"
-                    class="multiselect--inline multiselect--pad-left"
-                    v-model="selectedHour"
-                    :options="hoursOptions"
-                    :canClear="false"
-                    :canDeselect="false"
-                    />
-                    godz
+            <Multiselect
+            v-if="minutesOptions"
+            class="multiselect--inline"
+            v-model="selectedMinutes"
+            :options="minutesOptions"
+            :canClear="false"
+            :canDeselect="false"
+            :disabled="listLoader && listLoader.isLoading"
+            />
+            min
 
-                    <Multiselect
-                    v-if="minutesOptions"
-                    class="multiselect--inline multiselect--pad-left"
-                    v-model="selectedMinutes"
-                    :options="minutesOptions"
-                    :canClear="false"
-                    :canDeselect="false"
-                    />
-                    min
+            <Multiselect
+            v-if="secondsOptions"
+            class="multiselect--inline"
+            v-model="selectedSeconds"
+            :options="minutesOptions"
+            :canClear="false"
+            :canDeselect="false"
+            :disabled="listLoader && listLoader.isLoading"
+            />
+            sek
+        </div>
 
-                    <Multiselect
-                    v-if="secondsOptions"
-                    class="multiselect--inline multiselect--pad-left"
-                    v-model="selectedSeconds"
-                    :options="minutesOptions"
-                    :canClear="false"
-                    :canDeselect="false"
-                    />
-                    sek
-                </div>
-            </form>
+        <div class="form__row mt2">
+            {{ $t('plan_run.calculate_pace.running_pace') }}
 
-            <div>
-                Twoje tempo biegu wynosi:
-                <strong v-html="result ? result : '-'"></strong>
-            </div>
+            <strong v-html="result ? result : '-'"></strong>
         </div>
 
         <!--
@@ -94,18 +81,18 @@ import { mapState } from 'vuex'
 
 import moment from 'moment'
 
-import ListItem from '~/components/List/ListItem.vue'
+import ListTable from '~/components/List/ListTable.vue'
 
 export default {
     components: {
-        ListItem
+        ListTable
     },
     data() {
         return {
             distanceOptions: [1000, 5000, 10000, 15000, 21097, 42195],
-            hoursOptions: [],
-            minutesOptions: [],
-            secondsOptions: [],
+            hoursOptions: Array.from({ length: 24 }, (_, i) => i),
+            minutesOptions: Array.from({ length: 60 }, (_, i) => i),
+            secondsOptions: Array.from({ length: 60 }, (_, i) => i),
             selectedDistance: null,
             selectedHour: null,
             selectedMinutes: null,
@@ -116,13 +103,11 @@ export default {
     },
     watch: {
         list() {
-            this.lastThreeVerificationRuns = this.list
-                .filter(item => (item.type === 'verification' || item.type === 'competition') && (!this.selectedDistance || item.distance > this.selectedDistance))
-                .sort((a, b) => new Date(b.date) - new Date(a.date))
-                .slice(0, 3)
+            this.getLastVerificationRuns()
         },
         selectedDistance() {
             this.calculatePace()
+            this.getLastVerificationRuns()
         },
         selectedHour() {
             this.calculatePace()
@@ -134,6 +119,27 @@ export default {
             this.calculatePace()
         },
         lastThreeVerificationRuns() {
+            this.plannedResult()
+        }
+    },
+    computed: {
+        ...mapState('training', [
+            'listLoader', 'list', 'listColumns'
+        ])
+    },
+    methods: {
+        xxx() {
+            console.log('router xxx')
+        },
+        getLastVerificationRuns() {
+            const filteredList = this.list
+                .filter(item => (item.type === 'verification' || item.type === 'competition') && (!this.selectedDistance || item.distance > this.selectedDistance))
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 3)
+
+            this.lastThreeVerificationRuns = filteredList
+        },
+        plannedResult() {
             if (this.lastThreeVerificationRuns.length >= 3) {
                 const lastRun = moment.duration(this.lastThreeVerificationRuns[0].duration)
                 const secondLastRun = moment.duration(this.lastThreeVerificationRuns[1].duration)
@@ -146,14 +152,7 @@ export default {
                 this.selectedMinutes = Math.floor(updatedLastRun.minutes())
                 this.selectedSeconds = Math.floor(updatedLastRun.seconds())
             }
-        }
-    },
-    computed: {
-        ...mapState('training', [
-            'list', 'listColumns'
-        ])
-    },
-    methods: {
+        },
         calculatePace() {
             if (this.selectedDistance && (this.selectedHour || this.selectedMinutes || this.selectedSeconds)) {
                 const totalMinutes = (parseInt(this.selectedHour) * 60) + parseInt(this.selectedMinutes) + (parseInt(this.selectedSeconds) / 60)
@@ -167,24 +166,12 @@ export default {
         }
     },
     mounted() {
-        for (let i = 0; i < 24; i++) {
-            this.hoursOptions.push(i)
-        }
-
-        for (let i = 0; i < 60; i++) {
-            this.minutesOptions.push(i)
-            this.secondsOptions.push(i)
-        }
-
-        this.lastThreeVerificationRuns = this.list
-            .filter(item => (item.type === 'verification' || item.type === 'competition') && (!this.selectedDistance || item.distance > this.selectedDistance))
-            .sort((a, b) => new Date(b.date) - new Date(a.date))
-            .slice(0, 3)
-
         this.selectedDistance = 10000
-        this.selectedHour = 0
-        this.selectedMinutes = 0
-        this.selectedSeconds = 0
-    }
+
+        this.getLastVerificationRuns()
+    },
+    created() {
+        this.$eventBus.$on('route-change', this.xxx)
+    },
 }
 </script>

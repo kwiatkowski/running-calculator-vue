@@ -8,10 +8,10 @@
                 <Multiselect
                 v-if="groupByOptions"
                 class="multiselect--inline multiselect--pad-left"
+                v-model="groupBy"
                 :placeholder="$t('calc.list.group_by.placeholder')"
-                v-model="localGroupBy"
                 :options="groupByOptions"
-                :disabled="listLoader.isLoading || (listLoader && listLoader.hasOwnProperty('isLoading') && listLoader.isLoading)"
+                :disabled="listLoader && listLoader.isLoading"
                 @change="handleChangeGroupBy"
                 >
                     <template v-slot:singlelabel="{ value }">
@@ -32,11 +32,11 @@
                 <Multiselect
                 v-if="filterDistanceOptions"
                 class="multiselect--inline"
+                v-model="filterDistance"
                 :placeholder="$t('calc.list.filter_by_distance.placeholder')"
-                v-model="localFilterDistance"
                 :options="filterDistanceOptions"
                 label="name"
-                :disabled="listLoader.isLoading || (listLoader && listLoader.hasOwnProperty('isLoading') && listLoader.isLoading)"
+                :disabled="listLoader && listLoader.isLoading"
                 @change="handleChangeFilterDistance"
                 >
                     <template v-slot:singlelabel="{ value }">
@@ -53,10 +53,10 @@
                 <Multiselect
                 v-if="filterTypeOptions"
                 class="multiselect--inline multiselect--type"
+                v-model="filterType"
                 :placeholder="$t('calc.list.filter_by_type.placeholder')"
-                v-model="localFilterType"
                 :options="filterTypeOptions"
-                :disabled="listLoader.isLoading || (listLoader && listLoader.hasOwnProperty('isLoading') && listLoader.isLoading)"
+                :disabled="listLoader && listLoader.isLoading"
                 @change="handleChangeFilterType"
                 >
                     <template v-slot:singlelabel="{ value }">
@@ -73,48 +73,69 @@
                 <Multiselect
                 v-if="filterYearsOptions"
                 class="multiselect--inline multiselect--years"
+                v-model="filterYears"
                 :placeholder="$t('calc.list.filter_by_years.placeholder')"
-                v-model="localFilterYears"
                 :options="filterYearsOptions"
-                :disabled="listLoader.isLoading || (listLoader && listLoader.hasOwnProperty('isLoading') && listLoader.isLoading)"
+                :disabled="listLoader && listLoader.isLoading"
                 @change="handleChangeFilterYears"
                 />
             </div>
         </template>
     </ListHeader>
 
-    <CalcListTable
+    <ListTable
     :loader="listLoader"
     :columns="listColumns"
     :data="list"
-    :filterYears="localFilterYears"
-    :filterType="localFilterType"
-    :filterDistance="localFilterDistance"
-    :groupBy="localGroupBy"
+    :filterYears="filterYears"
+    :filterType="filterType"
+    :filterDistance="filterDistance"
+    :groupBy="groupBy"
     />
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 import ListHeader from '~/components/Core/ListHeader.vue'
-import CalcListTable from '~/components/List/ListTable.vue'
+import ListTable from '~/components/List/ListTable.vue'
 
 
 export default {
     components: {
-        ListHeader, CalcListTable
+        ListHeader, ListTable
     },
     data() {
         return {
-            localFilterYears: this.filterYears,
-            localFilterType: this.filterType,
-            localFilterDistance: this.filterDistance,
-            localGroupBy: this.groupBy
+            filterYears: this.getLocalStorageFilterByYear(),
+            filterType: this.getLocalStorageFilterByType(),
+            filterDistance: this.getLocalStorageFilterByDistance(),
+            groupBy: this.getLocalStorageGroupBy()
         }
     },
     watch: {
         list(payload) {
+            this.getDataLocalStorage()
+        }
+    },
+    computed: {
+        ...mapState('training', [
+            'listLoader', 'list', 'listColumns', 'distances',
+            'groupByOptions', 'filterYearsOptions', 'filterTypeOptions', 'filterDistanceOptions'
+        ])
+    },
+    methods: {
+        ...mapActions('training', [
+            'getListCalc'
+        ]),
+        ...mapActions('training/shoes', [
+            'getTrainingShoes'
+        ]),
+        init() {
+            this.getTrainingShoes({})
+            this.getListCalc({})
+        },
+        getDataLocalStorage() {
             if (this.getLocalStorageFilterByDistance()) {
                 this.handleChangeFilterDistance(this.getLocalStorageFilterByDistance())
             }
@@ -131,58 +152,28 @@ export default {
                 this.handleChangeGroupBy(this.getLocalStorageGroupBy())
             }
         },
-        filterYears(payload) {
-            this.localFilterYears = payload
-        },
-        filterType(payload) {
-            this.localFilterType = payload
-        },
-        filterDistance(payload) {
-            this.localFilterDistance = payload
-        },
-        groupBy(payload) {
-            this.localGroupBy = payload
-        }
-    },
-    computed: {
-        ...mapState('training', [
-            'listLoader', 'list', 'listColumns', 'distances',
-            'filterYears', 'filterYearsOptions', 'filterType', 'filterTypeOptions', 'filterDistance', 'filterDistanceOptions',
-            'groupBy', 'groupByOptions'
-        ])
-    },
-    methods: {
-        ...mapMutations('training', [
-            'setListFilterByYear', 'setListFilterByType', 'setListFilterByDistance', 'setListGroupBy'
-        ]),
-        ...mapActions('training', [
-            'getListCalc'
-        ]),
-        ...mapActions('training/shoes', [
-            'getTrainingShoes'
-        ]),
-        init() {
-            this.getTrainingShoes({})
-            this.getListCalc({})
-        },
         refreshList() {
             this.init()
         },
         handleChangeFilterYears(payload) {
-            this.setLocalStorageFilterByYear(payload)
-            this.setListFilterByYear(payload)
+            this.filterYears = payload
+
+            payload ? this.setLocalStorageFilterByYear(payload) : localStorage.removeItem('trening/filterBy/year')
         },
         handleChangeFilterType(payload) {
-            this.setLocalStorageFilterByType(payload)
-            this.setListFilterByType(payload)
+            this.filterType = payload
+
+            payload ? this.setLocalStorageFilterByType(payload) : localStorage.removeItem('trening/filterBy/type')
         },
         handleChangeFilterDistance(payload) {
-            this.setLocalStorageFilterByDistance(payload)
-            this.setListFilterByDistance(payload)
+            this.filterDistance = payload
+            
+            payload ? this.setLocalStorageFilterByDistance(payload) : localStorage.removeItem('trening/filterBy/distance')
         },
         handleChangeGroupBy(payload) {
-            this.setLocalStorageGroupBy(payload)
-            this.setListGroupBy(payload)
+            this.groupBy = payload
+
+            payload ? this.setLocalStorageGroupBy(payload) : localStorage.removeItem('trening/groupBy')
         },
         setLocalStorageFilterByYear(payload) {
             localStorage.setItem('trening/filterBy/year', payload)

@@ -1,5 +1,10 @@
 {
     "calc": {
+        "navigation": {
+            "list": "Lista treningów",
+            "chats": "Wykresy",
+            "plan_run": "Zaplanuj trening"
+        },
         "list": {
             "columns": {
                 "ord": "Lp.",
@@ -76,5 +81,14 @@
         "average_cadence": "Średnia Kadencja",
         "average_heart_rate": "Średnie Tętno",
         "average_speed": "Średnia Prędkość"
+    },
+    "plan_run": {
+        "text_last": "Trzy ostatnie biegi sprawdzające lub zawody dla dystansu:",
+        "calculate_pace": {
+            "title": "Kalkulator tempa biegu",
+            "text": "Wykorzystaj Kalkulator Tempa Biegu, aby precyzyjnie określić tempo, jakie musisz utrzymywać podczas biegu, aby osiągnąć zamierzony wynik na wybranym dystansie.",
+            "planned_time": "Planowany czas",
+            "running_pace": "Twoje tempo biegu powinno wynieść:"
+        }
     }
 }

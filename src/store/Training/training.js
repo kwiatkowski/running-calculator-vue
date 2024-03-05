@@ -32,13 +32,13 @@ export default {
                 name: 'stride_length'
             },
             {
+                name: 'cadence'
+            },
+            {
                 name: 'average_heart_rate'
             },
             {
                 name: 'v02max'
-            },
-            {
-                name: 'cadence'
             },
             {
                 name: 'average_pace'
@@ -47,16 +47,13 @@ export default {
                 name: 'average_speed'
             },
         ],
-        filterYears: null,
         filterYearsOptions: [],
-        filterType: null,
         filterTypeOptions: [
             'calm',
             'running_around',
             'verification',
             'competition'
         ],
-        filterDistance: null,
         filterDistanceOptions: [
             {
                 name: '5km',
@@ -75,7 +72,6 @@ export default {
                 value: 42195
             }
         ],
-        groupBy: null,
         groupByOptions: ['month', 'year'],
         distances: [
             {
@@ -103,18 +99,6 @@ export default {
 
             state.list = payload
             state.filterYearsOptions = yearsArray
-        },
-        setListFilterByYear(state, payload) {
-            state.filterYears = payload
-        },
-        setListFilterByType(state, payload) {
-            state.filterType = payload
-        },
-        setListFilterByDistance(state, payload) {
-            state.filterDistance = payload
-        },
-        setListGroupBy(state, payload) {
-            state.groupBy = payload
         }
     },
     actions: {

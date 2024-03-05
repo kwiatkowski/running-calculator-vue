@@ -28,6 +28,11 @@
         ></td>
 
         <td
+        class="calc-td--cadence"
+        v-html="item.cadence"
+        ></td>
+
+        <td
         class="calc-td--average_heart_rate"
         v-html="item.average_heart_rate"
         ></td>
@@ -35,11 +40,6 @@
         <td
         class="calc-td--v02max"
         v-html="item.v02max"
-        ></td>
-
-        <td
-        class="calc-td--cadence"
-        v-html="item.cadence"
         ></td>
 
         <td

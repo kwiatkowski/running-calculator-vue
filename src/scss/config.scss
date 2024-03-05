@@ -71,10 +71,7 @@ $button: (
         // name, font-size, padding
         ('btn', 12px, 10px 8px),
     ),
-    'radius': (
-        // name, radius
-        ('btn--rad-0', 0),
-    ),
+    'radius': 3px,
 );
 
 :root {

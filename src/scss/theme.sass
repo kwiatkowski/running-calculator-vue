@@ -148,6 +148,7 @@ html, body
     background: color(gray_superlight)
     padding: 10px
     position: relative
+    +transition
 
     .statistics__header
         display: grid
@@ -156,11 +157,12 @@ html, body
 
     .statistics__actions
         justify-self: end
+        +transition
 
     .statistics__title
         justify-self: start
         display: inline-block
-        font-size: 18px
+        font-size: 16px
         font-weight: 700
         line-height: 1
         margin: 0 10px 0 0
@@ -201,8 +203,22 @@ html, body
 
 .list
     &__table-wrap
+        position: relative
         overflow-y: auto
-        height: calc(100vh - 174px)
+        min-height: 167px !important
+        max-height: calc(100vh - 174px)
+        background: color(gray_superlight)
+
+    &__table
+        height: 100%
+
+        tr
+            .statistics__actions
+                opacity: 0
+
+            &:hover
+                .statistics__actions
+                    opacity: 1
 
 .calc-th--distance,
 .calc-th--duration,
@@ -239,3 +255,13 @@ html, body
 
 .tooltip
     margin-bottom: 2px !important
+
+.form__label
+    display: block
+    font-size: 14px
+    font-weight: 700
+    margin: 10px 0 5px
+    +transition
+
+.mt2
+    margin-top: 20px

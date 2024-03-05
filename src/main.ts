@@ -4,8 +4,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 
 import App from "~/App.vue"
 
-import router from '~/routes/router'
-
 import * as filters from '~/filters/filters'
 
 // general setup
@@ -13,6 +11,8 @@ import store from '~/setup/setup-store'
 import setupBasic from './setup/setup-basic'
 import setupAxios from '~/setup/setup-axios'
 import setupI18n from './setup/setup-i18n'
+
+import router from '~/routes/router'
 
 // app store
 import StoreTraining from '~/store/Training/training.js'

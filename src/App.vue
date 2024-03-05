@@ -5,23 +5,22 @@
                 <router-link
                 to="/training/"
                 class="app__nav-link"
-                >
-                    list
-                </router-link>
+                v-html="$t('calc.navigation.list')"
+                ></router-link>
 
+                <!--
                 <router-link
                 to="/training/charts"
                 class="app__nav-link"
-                >
-                    charts
-                </router-link>
+                v-html="$t('calc.navigation.charts')"
+                ></router-link>
+                -->
 
                 <router-link
                 to="/training/plan-run"
                 class="app__nav-link"
-                >
-                    plan run
-                </router-link>
+                v-html="$t('calc.navigation.plan_run')"
+                ></router-link>
             </nav>
         </div>
 
