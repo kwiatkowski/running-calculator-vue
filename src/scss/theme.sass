@@ -73,8 +73,7 @@ html, body
         padding: 5px 10px
 
 .percent
-    font-size: 90%
-    vertical-align: middle
+    color: #888
 
     &--increase
         color: color(increase)
@@ -170,16 +169,47 @@ html, body
     .statistics__items
         margin: 10px 0 20px
 
+        &.statistics__items--inline
+            margin: 0
+
         &:last-child
             margin-bottom: 0
 
-    .statistics__item
-        &.statistics__item-inline
+    &__item
+        &.statistics__item--inline
             display: inline-block
             font-size: 14px
             font-weight: 300
             vertical-align: top
-            padding: 2px 0 0
+            padding: 3px 0 0
+            line-height: 1
+
+            & + &:before
+                content: '|'
+                display: inline-block
+                margin: 0 5px
+                vertical-align: top
+                color: #BBB
+
+    &__value
+        font-weight: 700
+
+    &__unit
+        font-size: 90%
+        color: #888
+        vertical-align: text-top
+        display: inline-block
+        padding: 2px 0 0
+        margin: 0 0 0 4px
+        line-height: 1
+
+    &__previous
+        font-size: 90%
+        vertical-align: text-top
+        display: inline-block
+        padding: 2px 0 0
+        margin: 0 0 0 4px
+        line-height: 1
 
     &__item-separator
         margin: 10px 0

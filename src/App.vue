@@ -34,7 +34,7 @@
             :config="{
                 isExpandable: false,
                 isExpand: false,
-                basic: ['trainingSessions', 'totalDistance', 'longestDistance', 'totalDuration', 'fastestAveragePace'],
+                basic: ['trainingSessions', 'totalDuration', 'totalDistance', 'longestDistance', 'fastestAveragePace'],
                 advanced: ['averageStrideLength', 'averageVO2Max', 'averageCadence', 'averageHeartRate', 'averageSpeed'],
             }"
             :data="list"

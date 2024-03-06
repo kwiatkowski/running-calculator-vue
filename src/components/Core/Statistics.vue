@@ -1,25 +1,23 @@
 <template>
     <div class="statistics">
-        <div class="statistics__header">
+        <div
+        class="statistics__header"
+        v-if="title && data && config"
+        >
             <div
-            v-if="title && data && config"
             class="statistics__title"
+            v-html="title"
+            ></div>
+
+            <div
+            class="statistics__items statistics__items--inline"
+            v-if="!statisticsExpand && config.basic"
             >
-                {{ title }}
-
-                <div
-                class="statistics__item statistics__item-inline"
-                v-if="!statisticsExpand && config.basic"
-                >
-                    <template
-                    v-for="(item, itemKey) in config.basic"
-                    :key="itemKey"
-                    >
-                        <span>{{ this[item] }}</span>
-
-                        <template v-if="config.basic.length - 1 != itemKey"> | </template>
-                    </template>
-                </div>
+                <StatisticsItem
+                v-for="(item, itemKey) in config.basic"
+                :key="itemKey"
+                :data="this[item]"
+                />
             </div>
 
             <div class="statistics__actions">
@@ -43,31 +41,25 @@
                 class="statistics__items statistics__items--basic"
                 v-if="config.basic"
                 >
-                    <div
-                    class="statistics__item"
+                    <StatisticsItem
                     v-for="(item, itemKey) in config.basic"
                     :key="itemKey"
-                    >
-                        {{ $t(`statistics.${camelToSnake(item)}`) }}: <strong>{{ this[item] }}</strong>
-
-                        <span
-                        v-if="dataPrevious && item === 'totalDistance' && this[item + 'Previous']"
-                        v-html="' ' + getTotalDistanceChangePercentage(this[item + 'Previous'], this[item])"
-                        ></span>
-                    </div>
+                    :data="this[item]"
+                    :dataPrevious="dataPrevious && item === 'totalDistance' && this[item + 'Previous'] ? getTotalDistanceChangePercentage(this[item + 'Previous'].value, this[item].value) : null"
+                    :label="$t(`statistics.${camelToSnake(item)}`)"
+                    />
                 </div>
 
                 <div
                 class="statistics__items statistics__items--advanced"
                 v-if="config.advanced"
                 >
-                    <div
-                    class="statistics__item"
+                    <StatisticsItem
                     v-for="(item, itemKey) in config.advanced"
                     :key="itemKey"
-                    >
-                        {{ $t(`statistics.${camelToSnake(item)}`) }}: <strong>{{ this[item] }}</strong>
-                    </div>
+                    :data="this[item]"
+                    :label="$t(`statistics.${camelToSnake(item)}`)"
+                    />
                 </div>
             </template>
 
@@ -129,7 +121,12 @@
 import 'moment-duration-format'
 import moment from 'moment'
 
+import StatisticsItem from '~/components/Core/StatisticsItem.vue'
+
 export default {
+    components: {
+        StatisticsItem
+    },
     props: {
         title: {
             type: String,
@@ -164,54 +161,16 @@ export default {
     computed: {
         trainingSessions() {
             if (!this.data || this.data.length === 0) {
-                return '-'
+                return null
             }
 
-            return this.data.length
-        },
-
-
-
-        // todo:
-        totalDistance() {
-            if (this.data.length === 0) {
-                return '-'
+            return {
+                value: this.data.length
             }
-
-            let result = this.data.reduce((sum, item) => sum + item.distance, 0)
-
-            result = (result / 1000).toFixed(2)
-
-            return `${result} km`
-        },
-        totalDistancePrevious() {
-            if (!this.dataPrevious || this.dataPrevious.length === 0) {
-                return '-'
-            }
-
-            let result = this.dataPrevious.reduce((sum, item) => sum + item.distance, 0)
-
-            result = (result / 1000).toFixed(2)
-
-            return `${result} km`
-        },
-
-
-
-        longestDistance() {
-            if (this.data.length === 0) {
-                return '-'
-            }
-
-            let result = Math.max(...this.data.map(entry => entry.distance))
-
-            result = (result / 1000).toFixed(2)
-
-            return `${result} km`
         },
         totalDuration() {
             if (this.data.length === 0) {
-                return '-'
+                return null
             }
 
             const durations = this.data.map(item => item.duration)
@@ -229,68 +188,131 @@ export default {
             // format the sum of times as a decimal
             const formattedTotalDuration = totalDuration.asHours().toFixed(1)
 
-            return `${formattedTotalDuration} godz.`
+            return {
+                value: formattedTotalDuration,
+                unit: 'godz.'
+            }
+        },
+        totalDistance() {
+            if (this.data.length === 0) {
+                return null
+            }
+
+            let result = this.data.reduce((sum, item) => sum + item.distance, 0)
+
+            result = (result / 1000).toFixed(2)
+
+            return {
+                value: result,
+                unit: 'km'
+            }
+        },
+        totalDistancePrevious() {
+            if (!this.dataPrevious || this.dataPrevious.length === 0) {
+                return null
+            }
+
+            let result = this.dataPrevious.reduce((sum, item) => sum + item.distance, 0)
+
+            result = (result / 1000).toFixed(2)
+
+            return {
+                value: result,
+                unit: 'km'
+            }
+        },
+        longestDistance() {
+            if (this.data.length === 0) {
+                return null
+            }
+
+            let result = Math.max(...this.data.map(entry => entry.distance))
+
+            result = (result / 1000).toFixed(2)
+
+            return {
+                value: result,
+                unit: 'km'
+            }
         },
         fastestAveragePace() {
             if (this.data.length === 0) {
-                return '-'
+                return null
             }
 
             const fastestAveragePace = this.data.reduce((fastest, current) => {
                 return current.average_pace < fastest.average_pace ? current : fastest
             })
 
-            return fastestAveragePace.average_pace
+            return {
+                value: fastestAveragePace.average_pace,
+                unit: 'min/km'
+            }
         },
         averageStrideLength() {
             if (this.data.length === 0) {
-                return '-'
+                return null
             }
 
             const totalStrideLength = this.data.reduce((acc, activity) => acc + activity.stride_length, 0)
             const result = Math.round(totalStrideLength / this.data.length)
 
-            return `${result} cm`
+            return {
+                value: result,
+                unit: 'cm'
+            }
         },
         averageVO2Max() {
             if (this.data.length === 0) {
-                return '-'
+                return null
             }
 
             const totalVO2Max = this.data.reduce((acc, activity) => acc + activity.v02max, 0)
             const result = Math.round(totalVO2Max / this.data.length)
 
-            return `${result} ml/kg/min`
+            return {
+                value: result,
+                unit: 'ml/kg/min'
+            }
         },
         averageCadence() {
             if (this.data.length === 0) {
-                return '-'
+                return null
             }
 
             const totalCadence = this.data.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
             const result = Math.round(totalCadence / this.data.length)
 
-            return `${result} kroki/min`
+            return {
+                value: result,
+                unit: 'kroki/min'
+            }
         },
         averageHeartRate() {
             if (this.data.length === 0) {
-                return '-'
+                return null
             }
 
             const totalHeartRate = this.data.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
             const result = Math.round(totalHeartRate / this.data.length)
 
-            return `${result} uderzeń/min`
+            return {
+                value: result,
+                unit: 'uderzeń/min'
+            }
         },
         averageSpeed() {
             if (this.data.length === 0) {
-                return '-'
+                return null
             }
 
             const totalSpeed = this.data.reduce((acc, activity) => acc + parseFloat(activity.average_speed), 0)
             const result = (totalSpeed / this.data.length).toFixed(2)
 
-            return `${result} km/h`
+            return {
+                value: result,
+                unit: 'km/h'
+            }
         }
     },
     methods: {
@@ -425,10 +447,10 @@ export default {
 
             const changePercentage = ((currentDistance - previousDistance) / previousDistance) * 100
 
-            const symbol = changePercentage >= 0 ? '+' : '-'
-            const formattedChangePercentage = `<span class="percent percent--${changePercentage >= 0 ? 'increase' : 'decrease' }">${symbol}${Math.abs(changePercentage).toFixed(2)}%</span>`
-
-            return formattedChangePercentage
+            return {
+                value: changePercentage,
+                unit: '%'
+            }
         }
     }
 }

@@ -6,7 +6,7 @@
             :config="{
                 isExpandable: data.head ? true : null,
                 isExpand: false,
-                basic: ['trainingSessions', 'totalDistance', 'longestDistance', 'totalDuration', 'fastestAveragePace'],
+                basic: ['trainingSessions', 'totalDistance', 'totalDuration', 'longestDistance', 'fastestAveragePace'],
                 advanced: ['averageStrideLength', 'averageVO2Max', 'averageCadence', 'averageHeartRate', 'averageSpeed'],
             }"
             :data="data.items"
@@ -17,7 +17,7 @@
                     ref="trainingButton"
                     class="btn btn--link btn--icon"
                     @click="clickTreningToggle"
-                    v-html="'<i class=\'bi bi-arrow-' + (showTraining ? 'up' : 'down') + '-square-fill\'></i>'"
+                    v-html="'<i class=\'bi bi-person-arms-up\'></i>'"
                     v-tooltip
                     :title="$t('calc.list.actions.training_details.tooltip')"
                     data-bs-trigger="hover"

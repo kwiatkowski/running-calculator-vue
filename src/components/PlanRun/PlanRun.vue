@@ -169,9 +169,6 @@ export default {
         this.selectedDistance = 10000
 
         this.getLastVerificationRuns()
-    },
-    created() {
-        this.$eventBus.$on('route-change', this.xxx)
-    },
+    }
 }
 </script>
