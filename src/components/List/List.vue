@@ -174,7 +174,7 @@ export default {
         handleChangeGroupBy(payload) {
             this.groupBy = payload
 
-            payload ? this.setLocalStorage('groupBy', payload) : localStorage.removeItem(`training/filterBy/groupBy`)
+            payload ? this.setLocalStorage('groupBy', payload) : localStorage.removeItem(`training/groupBy`)
         },
         setLocalStorage(key, payload) {
             localStorage.setItem(`training/${key}`, JSON.stringify(payload))
