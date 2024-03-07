@@ -6,7 +6,7 @@
             :config="{
                 isExpandable: data.head ? true : null,
                 isExpand: false,
-                basic: ['trainingSessions', 'totalDistance', 'totalDuration', 'longestDistance', 'fastestAveragePace'],
+                basic: ['trainingSessions', 'totalDuration', 'totalDistance', 'longestDistance', 'fastestAveragePace'],
                 advanced: ['averageStrideLength', 'averageVO2Max', 'averageCadence', 'averageHeartRate', 'averageSpeed'],
             }"
             :data="data.items"

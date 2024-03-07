@@ -45,8 +45,8 @@
                     v-for="(item, itemKey) in config.basic"
                     :key="itemKey"
                     :data="this[item]"
-                    :dataPrevious="dataPrevious && item === 'totalDistance' && this[item + 'Previous'] ? getTotalDistanceChangePercentage(this[item + 'Previous'].value, this[item].value) : null"
-                    :label="$t(`statistics.${camelToSnake(item)}`)"
+                    :showDifference="true"
+                    :label="item"
                     />
                 </div>
 
@@ -58,7 +58,8 @@
                     v-for="(item, itemKey) in config.advanced"
                     :key="itemKey"
                     :data="this[item]"
-                    :label="$t(`statistics.${camelToSnake(item)}`)"
+                    :showDifference="true"
+                    :label="item"
                     />
                 </div>
             </template>
@@ -164,168 +165,245 @@ export default {
                 return null
             }
 
-            return {
+            const result = {
                 value: this.data.length
             }
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                result.valuePrevious = this.dataPrevious.length
+            }
+
+            return result
         },
         totalDuration() {
-            if (this.data.length === 0) {
+            if (!this.data || this.data.length === 0) {
                 return null
             }
 
-            const durations = this.data.map(item => item.duration)
-
-            // convert each time to number of seconds
-            const totalSeconds = durations.reduce((total, duration) => {
-                const [hours, minutes, seconds] = duration.split(':').map(Number)
-
-                return total + hours * 3600 + minutes * 60 + seconds
-            }, 0)
-
-            // create a moment.js object based on the number of seconds
-            const totalDuration = moment.duration(totalSeconds, 'seconds')
-
-            // format the sum of times as a decimal
-            const formattedTotalDuration = totalDuration.asHours().toFixed(1)
-
-            return {
-                value: formattedTotalDuration,
+            const result = {
+                value: this.calculateTotalDuration(this.data),
                 unit: 'godz.'
             }
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                result.valuePrevious = this.calculateTotalDuration(this.dataPrevious)
+            }
+
+            return result
         },
         totalDistance() {
             if (this.data.length === 0) {
                 return null
             }
 
-            let result = this.data.reduce((sum, item) => sum + item.distance, 0)
-
-            result = (result / 1000).toFixed(2)
-
-            return {
-                value: result,
+            const result = {
                 unit: 'km'
             }
-        },
-        totalDistancePrevious() {
-            if (!this.dataPrevious || this.dataPrevious.length === 0) {
-                return null
+
+            const distance = this.data.reduce((sum, item) => sum + item.distance, 0)
+
+            result.value = (distance / 1000).toFixed(2)
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const distancePrevious = this.dataPrevious.reduce((sum, item) => sum + item.distance, 0)
+
+                result.valuePrevious = (distancePrevious / 1000).toFixed(2)
             }
 
-            let result = this.dataPrevious.reduce((sum, item) => sum + item.distance, 0)
-
-            result = (result / 1000).toFixed(2)
-
-            return {
-                value: result,
-                unit: 'km'
-            }
+            return result
         },
         longestDistance() {
             if (this.data.length === 0) {
                 return null
             }
 
-            let result = Math.max(...this.data.map(entry => entry.distance))
-
-            result = (result / 1000).toFixed(2)
-
-            return {
-                value: result,
+            const result = {
                 unit: 'km'
             }
+
+            const distance = Math.max(...this.data.map(entry => entry.distance))
+
+            result.value = (distance / 1000).toFixed(2)
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const distancePrevious = Math.max(...this.dataPrevious.map(entry => entry.distance))
+
+                result.valuePrevious = (distancePrevious / 1000).toFixed(2)
+            }
+
+            return result
         },
+        // todo:
         fastestAveragePace() {
             if (this.data.length === 0) {
                 return null
+            }
+
+            const result = {
+                unit: 'min/km'
             }
 
             const fastestAveragePace = this.data.reduce((fastest, current) => {
                 return current.average_pace < fastest.average_pace ? current : fastest
             })
 
-            return {
-                value: fastestAveragePace.average_pace,
-                unit: 'min/km'
+            result.valueDisplay = fastestAveragePace.average_pace
+
+            const [hours, minutes] = result.valueDisplay.split(':').map(Number)
+            const timeInSeconds = hours * 3600 + minutes * 60
+
+            result.value = timeInSeconds
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const fastestAveragePacePrevious = this.dataPrevious.reduce((fastest, current) => {
+                    return current.average_pace < fastest.average_pace ? current : fastest
+                })
+
+                result.valueDisplayPrevious = fastestAveragePacePrevious.average_pace
+
+                const [hoursPrevious, minutesPrevious] = result.valueDisplayPrevious.split(':').map(Number)
+                const timeInSecondsPrevious = hoursPrevious * 3600 + minutesPrevious * 60
+
+                result.valuePrevious = timeInSecondsPrevious
             }
+
+            return result
         },
         averageStrideLength() {
             if (this.data.length === 0) {
                 return null
             }
 
-            const totalStrideLength = this.data.reduce((acc, activity) => acc + activity.stride_length, 0)
-            const result = Math.round(totalStrideLength / this.data.length)
-
-            return {
-                value: result,
+            const result = {
                 unit: 'cm'
             }
+
+            const totalStrideLength = this.data.reduce((acc, activity) => acc + activity.stride_length, 0)
+
+            result.value = Math.round(totalStrideLength / this.data.length)
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const totalStrideLengthPrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.stride_length, 0)
+
+                result.valuePrevious = Math.round(totalStrideLengthPrevious / this.dataPrevious.length)
+            }
+
+            return result
         },
         averageVO2Max() {
             if (this.data.length === 0) {
                 return null
             }
 
-            const totalVO2Max = this.data.reduce((acc, activity) => acc + activity.v02max, 0)
-            const result = Math.round(totalVO2Max / this.data.length)
-
-            return {
-                value: result,
+            const result = {
                 unit: 'ml/kg/min'
             }
+
+            const totalVO2Max = this.data.reduce((acc, activity) => acc + activity.v02max, 0)
+
+            result.value = Math.round(totalVO2Max / this.data.length)
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const totalVO2MaxPrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.v02max, 0)
+
+                result.valuePrevious = Math.round(totalVO2MaxPrevious / this.dataPrevious.length)
+            }
+
+            return result
         },
         averageCadence() {
             if (this.data.length === 0) {
                 return null
             }
 
-            const totalCadence = this.data.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
-            const result = Math.round(totalCadence / this.data.length)
-
-            return {
-                value: result,
+            const result = {
                 unit: 'kroki/min'
             }
+
+            const totalCadence = this.data.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
+
+            result.value = Math.round(totalCadence / this.data.length)
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const totalCadencePrevious = this.dataPrevious.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
+
+                result.valuePrevious = Math.round(totalCadencePrevious / this.dataPrevious.length)
+            }
+
+            return result
         },
         averageHeartRate() {
             if (this.data.length === 0) {
                 return null
             }
 
-            const totalHeartRate = this.data.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
-            const result = Math.round(totalHeartRate / this.data.length)
-
-            return {
-                value: result,
+            const result = {
                 unit: 'uderzeń/min'
             }
+
+            const totalHeartRate = this.data.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
+
+            result.value = Math.round(totalHeartRate / this.data.length)
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const totalHeartRatePrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
+
+                result.valuePrevious = Math.round(totalHeartRatePrevious / this.dataPrevious.length)
+            }
+
+            return result
         },
         averageSpeed() {
             if (this.data.length === 0) {
                 return null
             }
 
-            const totalSpeed = this.data.reduce((acc, activity) => acc + parseFloat(activity.average_speed), 0)
-            const result = (totalSpeed / this.data.length).toFixed(2)
-
-            return {
-                value: result,
+            const result = {
                 unit: 'km/h'
             }
+
+            const totalSpeed = this.data.reduce((acc, activity) => acc + parseFloat(activity.average_speed), 0)
+
+            result.value = (totalSpeed / this.data.length).toFixed(2)
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const totalSpeedPrevious = this.dataPrevious.reduce((acc, activity) => acc + parseFloat(activity.average_speed), 0)
+
+                result.valuePrevious = Math.round(totalSpeedPrevious / this.dataPrevious.length)
+            }
+
+            return result
         }
     },
     methods: {
         clickStatisticsExpandToggle() {
             this.statisticsExpand = !this.statisticsExpand
         },
-        camelToSnake(str) {
-            if (typeof str !== 'string') {
-                return str
+        calculateTotalDuration(data) {
+            if (!data || data.length === 0) {
+                return {
+                    value: null
+                }
             }
 
-            return str.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()
+            const durations = data.map(item => item.duration)
+
+            const totalSeconds = durations.reduce((total, duration) => {
+                const [hours, minutes, seconds] = duration.split(':').map(Number)
+
+                return total + hours * 3600 + minutes * 60 + seconds
+            }, 0)
+
+            const totalDuration = moment.duration(totalSeconds, 'seconds')
+            const formattedTotalDuration = totalDuration.asHours().toFixed(1)
+
+            return formattedTotalDuration
         },
+
+
+
+
+
         getCountTrainingSessionsForDistance(minDistance) {
             if (!this.data || this.data.length === 0) {
                 return '-'
@@ -433,24 +511,6 @@ export default {
 
             return withUnit ? `${totalUsage}%` : totalUsage
 
-        },
-
-
-        // todo:
-        getTotalDistanceChangePercentage(previous, current) {
-            const previousDistance = parseFloat(previous)
-            const currentDistance = parseFloat(current)
-
-            if (previousDistance === 0) {
-                return '100%'
-            }
-
-            const changePercentage = ((currentDistance - previousDistance) / previousDistance) * 100
-
-            return {
-                value: changePercentage,
-                unit: '%'
-            }
         }
     }
 }
