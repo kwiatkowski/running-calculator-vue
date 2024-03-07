@@ -23,7 +23,7 @@
         ></span>
 
         <span
-        v-if="showDifference && percentageDifference"
+        v-if="showDifference && percentageDifference != null"
         :class="[
             'statistics__previous',
             'percent',
@@ -63,7 +63,7 @@ export default {
 
                 const result = (((current - previous) / previous) * 100).toFixed(2)
 
-                return result
+                return result === '0.00' ? 0 : result
             } else {
                 return null
             }

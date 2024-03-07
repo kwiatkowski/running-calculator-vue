@@ -79,9 +79,10 @@
                 :key="distanceIndex">
                     <strong>{{ $t(`type_run_distance.${distance.name}`) }}</strong> ({{ getCountTrainingSessionsForDistance(distance.value) }})
 
-                    <div class="statistics__item">
-                        {{ $t('statistics.fastest_average_pace') }}: <strong>{{ getFastestAveragePaceForDistance(distance.value) }}</strong>
-                    </div>
+                    <StatisticsItem
+                    :data="getFastestAveragePaceForDistance(distance.value)"
+                    :label="'fastest_average_pace'"
+                    />
 
                     <div class="statistics__item">
                         {{ $t('statistics.fastest_time') }}: <strong>{{ getTimeToRunForDistance(distance.value) }}</strong>
@@ -105,13 +106,15 @@
                 >
                     <strong>{{ shoe.name }}</strong> ({{ getCountTrainingSessionsForShoes(shoe.count) }})
 
-                    <div class="statistics__item">
-                        {{ $t('statistics.total_distance') }}: <strong>{{ $filters.formatDistance(getTotalDistanceForShoes(shoe.id), 'km', true) }}</strong>
-                    </div>
+                    <StatisticsItem
+                    :data="getTotalDistanceForShoes(shoe.id)"
+                    :label="'total_distance'"
+                    />
 
-                    <div class="statistics__item">
-                        {{ $t('statistics.wear') }}: <strong>{{ getUsagePercentageShoes(shoe, true) }}</strong>
-                    </div>
+                    <StatisticsItem
+                    :data="getUsagePercentageShoes(shoe)"
+                    :label="'wear'"
+                    />
                 </div>
             </div>
         </template>
@@ -192,7 +195,7 @@ export default {
             return result
         },
         totalDistance() {
-            if (this.data.length === 0) {
+            if (!this.data || this.data.length === 0) {
                 return null
             }
 
@@ -213,7 +216,7 @@ export default {
             return result
         },
         longestDistance() {
-            if (this.data.length === 0) {
+            if (!this.data || this.data.length === 0) {
                 return null
             }
 
@@ -233,9 +236,8 @@ export default {
 
             return result
         },
-        // todo:
         fastestAveragePace() {
-            if (this.data.length === 0) {
+            if (!this.data || this.data.length === 0) {
                 return null
             }
 
@@ -270,7 +272,7 @@ export default {
             return result
         },
         averageStrideLength() {
-            if (this.data.length === 0) {
+            if (!this.data || this.data.length === 0) {
                 return null
             }
 
@@ -291,13 +293,11 @@ export default {
             return result
         },
         averageVO2Max() {
-            if (this.data.length === 0) {
+            if (!this.data || this.data.length === 0) {
                 return null
             }
 
-            const result = {
-                unit: 'ml/kg/min'
-            }
+            const result = {}
 
             const totalVO2Max = this.data.reduce((acc, activity) => acc + activity.v02max, 0)
 
@@ -312,13 +312,11 @@ export default {
             return result
         },
         averageCadence() {
-            if (this.data.length === 0) {
+            if (!this.data || this.data.length === 0) {
                 return null
             }
 
-            const result = {
-                unit: 'kroki/min'
-            }
+            const result = {}
 
             const totalCadence = this.data.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
 
@@ -333,13 +331,11 @@ export default {
             return result
         },
         averageHeartRate() {
-            if (this.data.length === 0) {
+            if (!this.data || this.data.length === 0) {
                 return null
             }
 
-            const result = {
-                unit: 'uderzeń/min'
-            }
+            const result = {}
 
             const totalHeartRate = this.data.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
 
@@ -354,7 +350,7 @@ export default {
             return result
         },
         averageSpeed() {
-            if (this.data.length === 0) {
+            if (!this.data || this.data.length === 0) {
                 return null
             }
 
@@ -420,7 +416,7 @@ export default {
         },
         getFastestAveragePaceForDistance(minDistance) {
             if (!this.data || this.data.length === 0) {
-                return '-'
+                return null
             }
 
             // filter runs above minimum distance
@@ -438,7 +434,12 @@ export default {
                 return paceInSeconds < minPaceInSeconds ? entry.average_pace : minPace
             }, runsAboveMinDistance[0].average_pace)
 
-            return fastestPace
+            const result = {
+                unit: 'min/km',
+                value: fastestPace
+            }
+
+            return result
         },
         getTimeToRunForDistance(minDistance) {
             if (!this.data || this.data.length === 0) {
@@ -480,6 +481,14 @@ export default {
             return count
         },
         getTotalDistanceForShoes(shoeId) {
+            if (!this.data || this.data.length === 0) {
+                return null
+            }
+
+            const result = {
+                unit: 'km'
+            }
+
             let totalDistance = null
 
             this.data.forEach((item) => {
@@ -488,19 +497,25 @@ export default {
                 }
             })
 
-            return totalDistance
+            result.value = (totalDistance / 1000).toFixed(2)
+
+            return result
         },
-        getUsagePercentageShoes(shoe, withUnit = false) {
-            if (withUnit && (!this.data || this.data.length === 0 || shoe.count === 0)) {
-                return '-'
+        getUsagePercentageShoes(shoe) {
+            if (!this.data || this.data.length === 0) {
+                return null
             }
 
-            const maxDistance = 800
+            const result = {
+                unit: '%'
+            }
 
-            const totalDistance = this.$filters.formatDistance(this.getTotalDistanceForShoes(shoe.id), 'km')
+            const maxDistance = 1000
+
+            const totalDistance = this.getTotalDistanceForShoes(shoe.id).value
 
             if (totalDistance >= maxDistance) {
-                return `${100}%`
+                result.value = 100
             }
 
             const completedDistance = Math.min(totalDistance, maxDistance)
@@ -509,8 +524,9 @@ export default {
 
             totalUsage = Math.min(100, totalUsage).toFixed(0)
 
-            return withUnit ? `${totalUsage}%` : totalUsage
+            result.value = totalUsage
 
+            return result
         }
     }
 }

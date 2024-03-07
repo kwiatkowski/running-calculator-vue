@@ -10,8 +10,16 @@
                     v-for="(column, index) in columns"
                     :key="index"
                     :class="'calc-th--' + column.name"
-                    v-text="$t('calc.list.columns.' + column.name)"
-                    ></th>
+                    >
+                        {{ $t('calc.list.columns.' + column.name) }}
+
+                        <span
+                        class="th__more"
+                        v-if="column.unit"
+                        >
+                            (<span class="statistics__unit">{{ column.unit }}</span>)
+                        </span>
+                    </th>
                 </tr>
             </thead>
 

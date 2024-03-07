@@ -23,13 +23,15 @@ export default {
                 name: 'type'
             },
             {
-                name: 'distance'
+                name: 'distance',
+                unit: 'km'
             },
             {
                 name: 'duration'
             },
             {
-                name: 'stride_length'
+                name: 'stride_length',
+                unit: 'cm'
             },
             {
                 name: 'cadence'
@@ -41,10 +43,12 @@ export default {
                 name: 'v02max'
             },
             {
-                name: 'average_pace'
+                name: 'average_pace',
+                unit: 'min/km'
             },
             {
-                name: 'average_speed'
+                name: 'average_speed',
+                unit: 'km/h'
             },
         ],
         filterYearsOptions: [],

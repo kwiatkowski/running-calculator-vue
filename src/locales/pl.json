@@ -12,12 +12,12 @@
                 "type": "Rodzaj",
                 "distance": "Dystans",
                 "duration": "Czas trwania",
-                "stride_length": "Długość kroku",
-                "average_heart_rate": "Średnie tętno",
+                "stride_length": "Dł. kroku",
+                "average_heart_rate": "Śr. tętno",
                 "v02max": "V02Max",
                 "cadence": "Kadencja",
-                "average_pace": "Średnie tempo",
-                "average_speed": "Średnia prędkość"
+                "average_pace": "Śr. tempo",
+                "average_speed": "Śr. prędkość"
             },
             "group": {
                 "head": "Wszystkie"
@@ -77,7 +77,7 @@
         "fastest_time": "Najszybszy czas",
         "wear": "Zużycie",
         "average_stride_length": "Średnia Długość Kroku",
-        "average_vo2max": "Średni VO2 max",
+        "average_vo2max": "Średni VO2max",
         "average_cadence": "Średnia Kadencja",
         "average_heart_rate": "Średnie Tętno",
         "average_speed": "Średnia Prędkość"
