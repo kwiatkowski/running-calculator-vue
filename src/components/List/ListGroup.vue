@@ -17,7 +17,7 @@
                     ref="trainingButton"
                     class="btn btn--link btn--icon"
                     @click="clickTreningToggle"
-                    v-html="'<i class=\'bi bi-person-arms-up\'></i>'"
+                    v-html="'<i class=\'bi bi bi-caret-' + (showTraining ? 'up' : 'down') + '-fill\'></i>'"
                     v-tooltip
                     :title="$t('calc.list.actions.training_details.tooltip')"
                     data-bs-trigger="hover"
@@ -27,13 +27,25 @@
         </td>
     </tr>
 
-    <ListItem
-    v-if="showTraining"
-    v-for="(item, itemIndex) in data.items"
-    :key="itemIndex"
-    :item="item"
-    :index="globalIndex(itemIndex, groupIndex)"
-    />
+    <tr v-if="data.head">
+        <td
+        class="td--clear"
+        colspan="11"
+        >
+            <Transition name="slidedown">
+                <div v-if="showTraining">
+                    <table class="list__table">
+                        <ListItem
+                        v-for="(item, itemIndex) in data.items"
+                        :key="itemIndex"
+                        :item="item"
+                        :index="globalIndex(itemIndex, groupIndex)"
+                        />
+                    </table>
+                </div>
+            </Transition>
+        </td>
+    </tr>
 </template>
 
 <script>
@@ -41,7 +53,6 @@ import Statistics from '~/components/Core/Statistics.vue'
 import ListItem from '~/components/List/ListItem.vue'
 
 export default {
-    compatConfig: { MODE: 3 },
     components: {
         Statistics, ListItem
     },

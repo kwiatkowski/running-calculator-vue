@@ -9,7 +9,7 @@
                     <th
                     v-for="(column, index) in columns"
                     :key="index"
-                    :class="'calc-th--' + column.name"
+                    :class="'list-th--' + column.name"
                     >
                         {{ $t('calc.list.columns.' + column.name) }}
 

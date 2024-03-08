@@ -12,12 +12,12 @@
                 "type": "Rodzaj",
                 "distance": "Dystans",
                 "duration": "Czas trwania",
-                "stride_length": "Dł. kroku",
-                "average_heart_rate": "Śr. tętno",
+                "stride_length": "Dł kroku",
+                "average_heart_rate": "Śr tętno",
                 "v02max": "V02Max",
                 "cadence": "Kadencja",
-                "average_pace": "Śr. tempo",
-                "average_speed": "Śr. prędkość"
+                "average_pace": "Śr tempo",
+                "average_speed": "Śr prędkość"
             },
             "group": {
                 "head": "Wszystkie"

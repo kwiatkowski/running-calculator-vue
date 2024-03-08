@@ -9,22 +9,24 @@
             v-html="title"
             ></div>
 
-            <div
-            class="statistics__items statistics__items--inline"
-            v-if="!statisticsExpand && config.basic"
-            >
-                <StatisticsItem
-                v-for="(item, itemKey) in config.basic"
-                :key="itemKey"
-                :data="this[item]"
-                />
-            </div>
+            <Transition name="fade">
+                <div
+                class="statistics__items statistics__items--inline"
+                v-if="!statisticsExpand && config.basic"
+                >
+                    <StatisticsItem
+                    v-for="(item, itemKey) in config.basic"
+                    :key="itemKey"
+                    :data="this[item]"
+                    />
+                </div>
+            </Transition>
 
             <div class="statistics__actions">
                 <button
                 v-if="config.isExpandable"
                 class="btn btn--link btn--icon"
-                @click="clickStatisticsExpandToggle"
+                @click.stop="clickStatisticsExpandToggle"
                 v-html="'<i class=\'bi bi-clipboard2-' + (statisticsExpand ? 'minus' : 'plus') + '\'></i>'"
                 v-tooltip
                 :title="$t('calc.list.actions.statistics_details.tooltip')"
@@ -35,89 +37,91 @@
             </div>
         </div>
 
-        <template v-if="statisticsExpand">
-            <template v-if="data && config">
+        <Transition name="slidedown">
+            <div v-if="statisticsExpand">
+                <template v-if="data && config">
+                    <div
+                    class="statistics__items statistics__items--basic"
+                    v-if="config.basic"
+                    >
+                        <StatisticsItem
+                        v-for="(item, itemKey) in config.basic"
+                        :key="itemKey"
+                        :data="this[item]"
+                        :showDifference="true"
+                        :label="item"
+                        />
+                    </div>
+
+                    <div
+                    class="statistics__items statistics__items--advanced"
+                    v-if="config.advanced"
+                    >
+                        <StatisticsItem
+                        v-for="(item, itemKey) in config.advanced"
+                        :key="itemKey"
+                        :data="this[item]"
+                        :showDifference="true"
+                        :label="item"
+                        />
+                    </div>
+                </template>
+
                 <div
-                class="statistics__items statistics__items--basic"
-                v-if="config.basic"
+                v-if="distances"
+                class="statistics__items"
                 >
-                    <StatisticsItem
-                    v-for="(item, itemKey) in config.basic"
-                    :key="itemKey"
-                    :data="this[item]"
-                    :showDifference="true"
-                    :label="item"
-                    />
+                    <div
+                    class="statistics__title"
+                    v-html="$t('statistics.titles.distances')"
+                    ></div>
+
+                    <div
+                    class="statistics__item-separator"
+                    v-for="(distance, distanceIndex) in distances"
+                    :key="distanceIndex">
+                        <strong>{{ $t(`type_run_distance.${distance.name}`) }}</strong> ({{ getCountTrainingSessionsForDistance(distance.value) }})
+
+                        <StatisticsItem
+                        :data="getFastestAveragePaceForDistance(distance.value)"
+                        :label="'fastest_average_pace'"
+                        />
+
+                        <div class="statistics__item">
+                            {{ $t('statistics.fastest_time') }}: <strong>{{ getTimeToRunForDistance(distance.value) }}</strong>
+                        </div>
+                    </div>
                 </div>
 
                 <div
-                class="statistics__items statistics__items--advanced"
-                v-if="config.advanced"
+                v-if="shoes"
+                class="statistics__items"
                 >
-                    <StatisticsItem
-                    v-for="(item, itemKey) in config.advanced"
-                    :key="itemKey"
-                    :data="this[item]"
-                    :showDifference="true"
-                    :label="item"
-                    />
-                </div>
-            </template>
+                    <div
+                    class="statistics__title"
+                    v-html="$t('statistics.titles.shoes')"
+                    ></div>
 
-            <div
-            v-if="distances"
-            class="statistics__items"
-            >
-                <div
-                class="statistics__title"
-                v-html="$t('statistics.titles.distances')"
-                ></div>
+                    <div
+                    class="statistics__item-separator"
+                    v-for="(shoe, shoeIndex) in shoes"
+                    :key="shoeIndex"
+                    >
+                        <strong>{{ shoe.name }}</strong> ({{ getCountTrainingSessionsForShoes(shoe.count) }})
 
-                <div
-                class="statistics__item-separator"
-                v-for="(distance, distanceIndex) in distances"
-                :key="distanceIndex">
-                    <strong>{{ $t(`type_run_distance.${distance.name}`) }}</strong> ({{ getCountTrainingSessionsForDistance(distance.value) }})
+                        <StatisticsItem
+                        :data="getTotalDistanceForShoes(shoe.id)"
+                        :label="'total_distance'"
+                        />
 
-                    <StatisticsItem
-                    :data="getFastestAveragePaceForDistance(distance.value)"
-                    :label="'fastest_average_pace'"
-                    />
-
-                    <div class="statistics__item">
-                        {{ $t('statistics.fastest_time') }}: <strong>{{ getTimeToRunForDistance(distance.value) }}</strong>
+                        <StatisticsItem
+                        :data="getUsagePercentageShoes(shoe)"
+                        :label="'wear'"
+                        />
                     </div>
                 </div>
             </div>
-
-            <div
-            v-if="shoes"
-            class="statistics__items"
-            >
-                <div
-                class="statistics__title"
-                v-html="$t('statistics.titles.shoes')"
-                ></div>
-
-                <div
-                class="statistics__item-separator"
-                v-for="(shoe, shoeIndex) in shoes"
-                :key="shoeIndex"
-                >
-                    <strong>{{ shoe.name }}</strong> ({{ getCountTrainingSessionsForShoes(shoe.count) }})
-
-                    <StatisticsItem
-                    :data="getTotalDistanceForShoes(shoe.id)"
-                    :label="'total_distance'"
-                    />
-
-                    <StatisticsItem
-                    :data="getUsagePercentageShoes(shoe)"
-                    :label="'wear'"
-                    />
-                </div>
-            </div>
-        </template>
+        </Transition>
     </div>
 </template>
 

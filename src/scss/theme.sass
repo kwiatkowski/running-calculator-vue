@@ -147,7 +147,6 @@ html, body
     background: color(gray_superlight)
     padding: 10px
     position: relative
-    +transition
 
     .statistics__header
         display: grid
@@ -176,6 +175,8 @@ html, body
             margin-bottom: 0
 
     &__item
+        cursor: default
+
         &.statistics__item--inline
             display: inline-block
             font-size: 14px
@@ -193,6 +194,8 @@ html, body
 
     &__value
         font-weight: 700
+        display: inline-block
+        padding-top: 2px
 
         + .statistics__unit
             margin: 0 0 0 4px
@@ -245,6 +248,9 @@ html, body
         height: 100%
 
         tr
+            &.tr--cursor
+                cursor: pointer
+
             .statistics__actions
                 opacity: 0
 
@@ -255,25 +261,67 @@ html, body
         .th__more
             font-weight: 400
 
-.calc-th--distance,
-.calc-th--duration,
-.calc-th--stride_length,
-.calc-th--average_heart_rate,
-.calc-th--v02max,
-.calc-th--cadence,
-.calc-th--average_pace,
-.calc-th--average_speed
+        .td--clear
+            padding: 0
+            border-bottom: 0
+
+.list-th--distance,
+.list-td--distance,
+.list-th--duration,
+.list-td--duration,
+.list-th--stride_length,
+.list-td--stride_length,
+.list-th--cadence,
+.list-td--cadence,
+.list-th--average_heart_rate,
+.list-td--average_heart_rate,
+.list-th--v02max,
+.list-td--v02max,
+.list-th--average_pace,
+.list-td--average_pace,
+.list-th--average_speed,
+.list-td--average_speed
     text-align: right
 
-.calc-td--distance,
-.calc-td--duration,
-.calc-td--stride_length,
-.calc-td--average_heart_rate,
-.calc-td--v02max,
-.calc-td--cadence,
-.calc-td--average_pace,
-.calc-td--average_speed
-    text-align: right
+.list-th--ord,
+.list-td--ord
+    width: 51px
+
+.list-th--date_run,
+.list-td--date_run
+    width: 90px
+
+.list-th--distance,
+.list-td--distance
+    width: 100px
+
+.list-th--duration,
+.list-td--duration
+    width: 100px
+
+.list-th--stride_length,
+.list-td--stride_length
+    width: 100px
+
+.list-th--cadence,
+.list-td--cadence
+    width: 80px
+
+.list-th--average_heart_rate,
+.list-td--average_heart_rate
+    width: 70px
+
+.list-th--v02max,
+.list-td--v02max
+    width: 70px
+
+.list-th--average_pace,
+.list-td--average_pace
+    width: 140px
+
+.list-th--average_speed,
+.list-td--average_speed
+    width: 150px
 
 
 // temp

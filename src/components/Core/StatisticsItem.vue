@@ -4,6 +4,7 @@
         'statistics__item',
         !label ? 'statistics__item--inline': null
     ]"
+    @click.stop
     >
         <span
         v-if="label"
