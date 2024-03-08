@@ -2,6 +2,7 @@
     <tr
     v-if="data.head"
     @click="clickTreningToggle"
+    class="tr--cursor"
     >
         <td colspan="11" class="training-td--group-head">
             <Statistics
