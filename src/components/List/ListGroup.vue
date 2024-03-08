@@ -1,5 +1,8 @@
 <template>
-    <tr v-if="data.head">
+    <tr
+    v-if="data.head"
+    @click="clickTreningToggle"
+    >
         <td colspan="11" class="training-td--group-head">
             <Statistics
             :title="data.head ? data.head : null"
@@ -16,7 +19,6 @@
                     <button
                     ref="trainingButton"
                     class="btn btn--link btn--icon"
-                    @click="clickTreningToggle"
                     v-html="'<i class=\'bi bi bi-caret-' + (showTraining ? 'up' : 'down') + '-fill\'></i>'"
                     v-tooltip
                     :title="$t('calc.list.actions.training_details.tooltip')"
