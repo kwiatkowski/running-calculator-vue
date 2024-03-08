@@ -63,7 +63,6 @@ The shoe statistics list expects an array of objects with properties:
         "id": 2,
         "count": 70,
         "description": "",
-        "link": "https:\/\/kwiatkowski.co\/shoe\/nike_pegasus_37\/",
         "name": "Nike Zoom Pegasus 37",
         "slug": "nike_pegasus_37",
     },
