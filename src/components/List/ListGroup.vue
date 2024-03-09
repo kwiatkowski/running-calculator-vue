@@ -30,7 +30,7 @@
         </td>
     </tr>
 
-    <tr v-if="data.head">
+    <tr v-if="data.items">
         <td
         class="td--clear"
         colspan="11"
@@ -83,7 +83,7 @@ export default {
     },
     data() {
         return {
-            showTraining: this.groupIndex > 0 ? false : true,
+            showTraining: this.groupIndex > 0 ? false : true
         }
     },
     methods: {
