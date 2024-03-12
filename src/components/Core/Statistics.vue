@@ -24,13 +24,13 @@
 
             <div class="statistics__actions">
                 <button
-                v-if="config.isExpandable"
                 class="btn btn--link btn--icon"
-                @click.stop="clickStatisticsExpandToggle"
+                v-if="config.isExpandable"
                 v-html="'<i class=\'bi bi-clipboard2-' + (statisticsExpand ? 'minus' : 'plus') + '\'></i>'"
                 v-tooltip
                 :title="$t('calc.list.actions.statistics_details.tooltip')"
                 data-bs-trigger="hover"
+                @click.stop="clickStatisticsExpandToggle"
                 ></button>
 
                 <slot name="custom-action"></slot>
@@ -66,62 +66,69 @@
                         />
                     </div>
                 </template>
-
-                <div
-                v-if="distances"
-                class="statistics__items"
-                >
-                    <div
-                    class="statistics__title"
-                    v-html="$t('statistics.titles.distances')"
-                    ></div>
-
-                    <div
-                    class="statistics__item-separator"
-                    v-for="(distance, distanceIndex) in distances"
-                    :key="distanceIndex">
-                        <strong>{{ $t(`type_run_distance.${distance.name}`) }}</strong> ({{ getCountTrainingSessionsForDistance(distance.value) }})
-
-                        <StatisticsItem
-                        :data="getFastestAveragePaceForDistance(distance.value)"
-                        :label="'fastest_average_pace'"
-                        />
-
-                        <div class="statistics__item">
-                            {{ $t('statistics.fastest_time') }}: <strong>{{ getTimeToRunForDistance(distance.value) }}</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                v-if="shoes"
-                class="statistics__items"
-                >
-                    <div
-                    class="statistics__title"
-                    v-html="$t('statistics.titles.shoes')"
-                    ></div>
-
-                    <div
-                    class="statistics__item-separator"
-                    v-for="(shoe, shoeIndex) in shoes"
-                    :key="shoeIndex"
-                    >
-                        <strong>{{ shoe.name }}</strong> ({{ getCountTrainingSessionsForShoes(shoe.count) }})
-
-                        <StatisticsItem
-                        :data="getTotalDistanceForShoes(shoe.id)"
-                        :label="'total_distance'"
-                        />
-
-                        <StatisticsItem
-                        :data="getUsagePercentageShoes(shoe)"
-                        :label="'wear'"
-                        />
-                    </div>
-                </div>
             </div>
         </Transition>
+
+        <div
+        v-if="distances"
+        class="statistics__items"
+        >
+            <div
+            class="statistics__title"
+            v-html="$t('statistics.titles.distances')"
+            ></div>
+
+            <div
+            class="statistics__item-separator"
+            v-for="(distance, distanceIndex) in distances"
+            :key="distanceIndex">
+                <StatisticsItemTitle
+                :data="trainingSessionsForDistance(distance.value)"
+                :label="$t(`type_run_distance.${distance.name}`)"
+                />
+
+                <StatisticsItem
+                :data="fastestAveragePaceForDistance(distance.value)"
+                :label="'fastest_average_pace'"
+                />
+
+                <StatisticsItem
+                :data="fastestTimeForDistance(distance.value)"
+                :label="'fastest_time'"
+                />
+            </div>
+        </div>
+
+        <div
+        v-if="shoes"
+        class="statistics__items"
+        >
+            <div
+            class="statistics__title"
+            v-html="$t('statistics.titles.shoes')"
+            ></div>
+
+            <div
+            class="statistics__item-separator"
+            v-for="(shoe, shoeIndex) in shoes"
+            :key="shoeIndex"
+            >
+                <StatisticsItemTitle
+                :data="trainingSessionsForShoes(shoe.count)"
+                :label="shoe.name"
+                />
+
+                <StatisticsItem
+                :data="totalDistanceForShoes(shoe.id)"
+                :label="'total_distance'"
+                />
+
+                <StatisticsItem
+                :data="wearForShoes(shoe)"
+                :label="'wear'"
+                />
+            </div>
+        </div>
     </div>
 </template>
 
@@ -130,23 +137,27 @@ import 'moment-duration-format'
 import moment from 'moment'
 
 import StatisticsItem from '~/components/Core/StatisticsItem.vue'
+import StatisticsItemTitle from '~/components/Core/StatisticsItemTitle.vue'
 
 export default {
     components: {
-        StatisticsItem
+        StatisticsItem, StatisticsItemTitle
     },
     props: {
         title: {
             type: String,
-            default: null
+            default: null,
+            required: true
         },
         config: {
             type: Object,
-            default: null
+            default: null,
+            required: true
         },
         data: {
             type: Array,
-            default: null
+            default: null,
+            required: true
         },
         dataPrevious: {
             type: Array,
@@ -399,35 +410,38 @@ export default {
 
             return formattedTotalDuration
         },
-
-
-
-
-
-        getCountTrainingSessionsForDistance(minDistance) {
-            if (!this.data || this.data.length === 0) {
-                return '-'
-            }
-
-            // filter runs above minimum distance
-            const runsAboveMinDistance = this.data.filter(entry => entry.distance > minDistance)
-
-            if (runsAboveMinDistance.length === 0) {
-                return '-'
-            }
-
-            return runsAboveMinDistance.length
-        },
-        getFastestAveragePaceForDistance(minDistance) {
+        trainingSessionsForDistance(minDistance) {
             if (!this.data || this.data.length === 0) {
                 return null
             }
 
+            const result = {}
+
             // filter runs above minimum distance
             const runsAboveMinDistance = this.data.filter(entry => entry.distance > minDistance)
 
             if (runsAboveMinDistance.length === 0) {
-                return '-'
+                return result
+            }
+
+            result.value = runsAboveMinDistance.length
+
+            return result
+        },
+        fastestAveragePaceForDistance(minDistance) {
+            if (!this.data || this.data.length === 0) {
+                return null
+            }
+
+            const result = {
+                unit: 'min/km'
+            }
+
+            // filter runs above minimum distance
+            const runsAboveMinDistance = this.data.filter(entry => entry.distance > minDistance)
+
+            if (runsAboveMinDistance.length === 0) {
+                return result
             }
 
             // find fastest average pace for runs over the minimum distance
@@ -438,23 +452,22 @@ export default {
                 return paceInSeconds < minPaceInSeconds ? entry.average_pace : minPace
             }, runsAboveMinDistance[0].average_pace)
 
-            const result = {
-                unit: 'min/km',
-                value: fastestPace
-            }
+            result.value = fastestPace
 
             return result
         },
-        getTimeToRunForDistance(minDistance) {
+        fastestTimeForDistance(minDistance) {
             if (!this.data || this.data.length === 0) {
-                return '-'
+                return null
             }
+
+            const result = {}
 
             // filter runs above minimum distance
             const runsAboveMinDistance = this.data.filter(entry => entry.distance > minDistance)
 
             if (runsAboveMinDistance.length === 0) {
-                return '-'
+                return result
             }
 
             // find fastest average pace for runs over the minimum distance
@@ -475,16 +488,24 @@ export default {
             // Use moment.js to format the time
             const formattedTime = moment.utc(duration.asMilliseconds()).format('HH:mm:ss')
 
-            return formattedTime
+            result.value = formattedTime
+
+            return result
         },
-        getCountTrainingSessionsForShoes(count) {
+        trainingSessionsForShoes(count) {
             if (!this.shoes || this.shoes.length === 0 || count === 0) {
-                return '-'
+                return null
             }
 
-            return count
+            const result = {}
+
+            if (count) {
+                result.value = count
+            }
+
+            return result
         },
-        getTotalDistanceForShoes(shoeId) {
+        totalDistanceForShoes(shoeId) {
             if (!this.data || this.data.length === 0) {
                 return null
             }
@@ -505,7 +526,7 @@ export default {
 
             return result
         },
-        getUsagePercentageShoes(shoe) {
+        wearForShoes(shoe) {
             if (!this.data || this.data.length === 0) {
                 return null
             }
@@ -516,7 +537,7 @@ export default {
 
             const maxDistance = 1000
 
-            const totalDistance = this.getTotalDistanceForShoes(shoe.id).value
+            const totalDistance = this.totalDistanceForShoes(shoe.id).value
 
             if (totalDistance >= maxDistance) {
                 result.value = 100

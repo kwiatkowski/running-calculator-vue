@@ -14,11 +14,11 @@
 
         <span
         class="statistics__value"
-        v-html="data ? (data.value && data.valueDisplay ? data.valueDisplay : data.value) : '-'"
+        v-html="data && data.value ? (data.value && data.valueDisplay ? data.valueDisplay : data.value) : '-'"
         ></span>
 
         <span
-        v-if="data && data.unit"
+        v-if="data && data.value && data.unit"
         class="statistics__unit"
         v-html="data.unit"
         ></span>
@@ -39,6 +39,10 @@
 <script>
 export default {
     props: {
+        label: {
+            type: String,
+            default: null
+        },
         data: {
             type: Object,
             default: null
@@ -46,10 +50,6 @@ export default {
         showDifference: {
             type: Boolean,
             default: false
-        },
-        label: {
-            type: String,
-            default: null
         }
     },
     computed: {

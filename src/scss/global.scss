@@ -21,7 +21,7 @@
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: opacity .5s ease;
+    transition: opacity .3s ease;
 }
 
 .fade-enter-from,
@@ -31,7 +31,7 @@
 
 .slidedown-enter-active,
 .slidedown-leave-active {
-    transition: max-height .5s ease-in-out;
+    transition: max-height .3s ease-in-out;
 }
 
 .slidedown-enter-to,
