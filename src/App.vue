@@ -3,21 +3,21 @@
         <div class="app__header">
             <nav class="app__nav">
                 <router-link
-                to="/training/"
+                :to="{ name: 'list' }"
                 class="app__nav-link"
                 v-html="$t('calc.navigation.list')"
                 ></router-link>
 
                 <!--
                 <router-link
-                to="/training/charts"
+                :to="{ name: 'charts' }"
                 class="app__nav-link"
                 v-html="$t('calc.navigation.charts')"
                 ></router-link>
                 -->
 
                 <router-link
-                to="/training/plan-run"
+                :to="{ name: 'plan-run' }"
                 class="app__nav-link"
                 v-html="$t('calc.navigation.plan_run')"
                 ></router-link>
@@ -25,7 +25,7 @@
         </div>
 
         <div class="app__content">
-            <router-view></router-view>
+            <router-view />
         </div>
 
         <div class="app__sidebar">

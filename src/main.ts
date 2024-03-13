@@ -8,9 +8,9 @@ import * as filters from '~/filters/filters'
 
 // general setup
 import store from '~/setup/setup-store'
-import setupBasic from './setup/setup-basic'
+import setupBasic from '~/setup/setup-basic'
 import setupAxios from '~/setup/setup-axios'
-import setupI18n from './setup/setup-i18n'
+import setupI18n from '~/setup/setup-i18n'
 
 import router from '~/routes/router'
 

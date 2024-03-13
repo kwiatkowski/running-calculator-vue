@@ -1,4 +1,21 @@
 {
+    "app": {
+        "title_prefix": "Training"
+    },
+    "router": {
+        "list": {
+            "title": "Moje Statystyki Biegowe na liście"
+        },
+        "charts": {
+            "title": "Moje Statystyki Biegowe na wykresach"
+        },
+        "plan-run": {
+            "title": "Zaplanuj następny bieg"
+        },
+        "error-404": {
+            "title": "Błąd 404"
+        }
+    },
     "calc": {
         "navigation": {
             "list": "Lista treningów",
@@ -91,5 +108,10 @@
             "planned_time": "Planowany czas",
             "running_pace": "Twoje tempo biegu powinno wynieść:"
         }
+    },
+    "error404": {
+        "title": "Błąd 404 — Nie znaleziono strony",
+        "text": "Ups! Strona, której szukasz nie istnieje.",
+        "more": "W ciągu { counter } sekund nastąpi przekierowanie na stronę główną projektu."
     }
 }
