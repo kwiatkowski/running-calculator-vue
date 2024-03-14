@@ -12,5 +12,5 @@ export default {
             order: 'desc',
         }
     }),
-    getTrainingShoes: () => api.get('training_shoes')
+    getTrainingShoes: () => api.get('training_shoes', {}),
 }

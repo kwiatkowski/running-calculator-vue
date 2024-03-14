@@ -37,7 +37,12 @@
             </div>
         </div>
 
-        <Transition name="slidedown">
+        <Transition
+        name="slidedown"
+        v-loader:blur="{
+            loader: dataLoader,
+            ignoreError: true,
+        }">
             <div v-if="statisticsExpand">
                 <template v-if="data && config">
                     <div
@@ -79,23 +84,33 @@
             ></div>
 
             <div
-            class="statistics__item-separator"
-            v-for="(distance, distanceIndex) in distances"
-            :key="distanceIndex">
-                <StatisticsItemTitle
-                :data="trainingSessionsForDistance(distance.value)"
-                :label="$t(`type_run_distance.${distance.name}`)"
-                />
+            class="statistics__items-wrap"
+            v-loader:blur="{
+                loader: dataLoader,
+                ignoreError: true,
+            }"
+            >
+                <div v-show="false">{{ dataLoader }}</div>
 
-                <StatisticsItem
-                :data="fastestAveragePaceForDistance(distance.value)"
-                :label="'fastest_average_pace'"
-                />
+                <div
+                class="statistics__item-separator"
+                v-for="(distance, distanceIndex) in distances"
+                :key="distanceIndex">
+                    <StatisticsItemTitle
+                    :data="trainingSessionsForDistance(distance.value)"
+                    :label="$t(`type_run_distance.${distance.name}`)"
+                    />
 
-                <StatisticsItem
-                :data="fastestTimeForDistance(distance.value)"
-                :label="'fastest_time'"
-                />
+                    <StatisticsItem
+                    :data="fastestAveragePaceForDistance(distance.value)"
+                    :label="'fastest_average_pace'"
+                    />
+
+                    <StatisticsItem
+                    :data="fastestTimeForDistance(distance.value)"
+                    :label="'fastest_time'"
+                    />
+                </div>
             </div>
         </div>
 
@@ -109,24 +124,37 @@
             ></div>
 
             <div
-            class="statistics__item-separator"
-            v-for="(shoe, shoeIndex) in shoes"
-            :key="shoeIndex"
+            class="statistics__items-wrap"
+            v-loader:blur="{
+                loader: [dataLoader, shoesLoader],
+                ignoreError: true,
+            }"
             >
-                <StatisticsItemTitle
-                :data="trainingSessionsForShoes(shoe.count)"
-                :label="shoe.name"
-                />
+                <div v-show="false">
+                    {{ shoesLoader }}
+                    {{ dataLoader }}
+                </div>
 
-                <StatisticsItem
-                :data="totalDistanceForShoes(shoe.id)"
-                :label="'total_distance'"
-                />
+                <div
+                class="statistics__item-separator"
+                v-for="(shoe, shoeIndex) in shoes"
+                :key="shoeIndex"
+                >
+                    <StatisticsItemTitle
+                    :data="trainingSessionsForShoes(shoe.count)"
+                    :label="shoe.name"
+                    />
 
-                <StatisticsItem
-                :data="wearForShoes(shoe)"
-                :label="'wear'"
-                />
+                    <StatisticsItem
+                    :data="totalDistanceForShoes(shoe.id)"
+                    :label="'total_distance'"
+                    />
+
+                    <StatisticsItem
+                    :data="wearForShoes(shoe)"
+                    :label="'wear'"
+                    />
+                </div>
             </div>
         </div>
     </div>
@@ -159,6 +187,10 @@ export default {
             default: null,
             required: true
         },
+        dataLoader: {
+            type: Object,
+            default: () => ({})
+        },
         dataPrevious: {
             type: Array,
             default: null
@@ -170,6 +202,10 @@ export default {
         shoes: {
             type: Array,
             default: null
+        },
+        shoesLoader: {
+            type: Object,
+            default: () => ({})
         }
     },
     data() {
@@ -297,12 +333,12 @@ export default {
 
             const totalStrideLength = this.data.reduce((acc, activity) => acc + activity.stride_length, 0)
 
-            result.value = Math.round(totalStrideLength / this.data.length)
+            result.value = (totalStrideLength / this.data.length).toFixed(2)
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
                 const totalStrideLengthPrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.stride_length, 0)
 
-                result.valuePrevious = Math.round(totalStrideLengthPrevious / this.dataPrevious.length)
+                result.valuePrevious = (totalStrideLengthPrevious / this.dataPrevious.length).toFixed(2)
             }
 
             return result
@@ -316,12 +352,12 @@ export default {
 
             const totalVO2Max = this.data.reduce((acc, activity) => acc + activity.v02max, 0)
 
-            result.value = Math.round(totalVO2Max / this.data.length)
+            result.value = (totalVO2Max / this.data.length).toFixed(2)
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
                 const totalVO2MaxPrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.v02max, 0)
 
-                result.valuePrevious = Math.round(totalVO2MaxPrevious / this.dataPrevious.length)
+                result.valuePrevious = (totalVO2MaxPrevious / this.dataPrevious.length).toFixed(2)
             }
 
             return result
@@ -335,12 +371,12 @@ export default {
 
             const totalCadence = this.data.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
 
-            result.value = Math.round(totalCadence / this.data.length)
+            result.value = (totalCadence / this.data.length).toFixed(2)
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
                 const totalCadencePrevious = this.dataPrevious.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
 
-                result.valuePrevious = Math.round(totalCadencePrevious / this.dataPrevious.length)
+                result.valuePrevious = (totalCadencePrevious / this.dataPrevious.length).toFixed(2)
             }
 
             return result
@@ -354,12 +390,12 @@ export default {
 
             const totalHeartRate = this.data.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
 
-            result.value = Math.round(totalHeartRate / this.data.length)
+            result.value = (totalHeartRate / this.data.length).toFixed(2)
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
                 const totalHeartRatePrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
 
-                result.valuePrevious = Math.round(totalHeartRatePrevious / this.dataPrevious.length)
+                result.valuePrevious = (totalHeartRatePrevious / this.dataPrevious.length).toFixed(2)
             }
 
             return result
@@ -380,7 +416,7 @@ export default {
             if (this.dataPrevious && this.dataPrevious.length > 0) {
                 const totalSpeedPrevious = this.dataPrevious.reduce((acc, activity) => acc + parseFloat(activity.average_speed), 0)
 
-                result.valuePrevious = Math.round(totalSpeedPrevious / this.dataPrevious.length)
+                result.valuePrevious = (totalSpeedPrevious / this.dataPrevious.length).toFixed(2)
             }
 
             return result

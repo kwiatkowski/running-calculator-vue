@@ -106,49 +106,49 @@ export default {
         }
     },
     actions: {
-        getTrainingList({ state, commit }, {}) {
+        async getTrainingList({ commit }) {
             commit('loadStart', { name: 'listLoader' })
 
-            return TrainingAPI.getPost({ perPage: 99999 })
-                .then((response) => {
-                    let list = response.data
+            try {
+                const response = await TrainingAPI.getPost({ perPage: 99999 })
 
-                    list.forEach((item) => {
-                        delete item.id
-                        delete item.guid
-                        delete item.slug
-                        delete item.status
-                        delete item.type
-                        delete item.link
-                        delete item.title
-                        delete item.template
-                        delete item._links
-                        delete item.modified
-                        delete item.modified_gmt
-                        delete item.date_gmt
-                        delete item.training_shoes
+                let list = response.data
 
-                        item.distance = item.acf.distance
-                        item.duration = item.acf.duration
-                        item.stride_length = item.acf.stride_length
-                        item.average_heart_rate = item.acf.average_heart_rate
-                        item.v02max = item.acf.v02max
-                        item.shoe = item.acf.shoe
-                        item.type = item.acf.type
+                list.forEach((item) => {
+                    delete item.id
+                    delete item.guid
+                    delete item.slug
+                    delete item.status
+                    delete item.type
+                    delete item.link
+                    delete item.title
+                    delete item.template
+                    delete item._links
+                    delete item.modified
+                    delete item.modified_gmt
+                    delete item.date_gmt
+                    delete item.training_shoes
 
-                        delete item.acf
+                    item.distance = item.acf.distance
+                    item.duration = item.acf.duration
+                    item.stride_length = item.acf.stride_length
+                    item.average_heart_rate = item.acf.average_heart_rate
+                    item.v02max = item.acf.v02max
+                    item.shoe = item.acf.shoe
+                    item.type = item.acf.type
 
-                        item.cadence = calculateSpeedPaceAndCadence(item.distance, item.duration, item.stride_length).cadence
-                        item.average_pace = calculateSpeedPaceAndCadence(item.distance, item.duration).pace
-                        item.average_speed = calculateSpeedPaceAndCadence(item.distance, item.duration).speed
-                    })
+                    delete item.acf
 
-                    commit('setList', list)
-                    commit('loadSuccess', { name: 'listLoader' })
+                    item.cadence = calculateSpeedPaceAndCadence(item.distance, item.duration, item.stride_length).cadence
+                    item.average_pace = calculateSpeedPaceAndCadence(item.distance, item.duration).pace
+                    item.average_speed = calculateSpeedPaceAndCadence(item.distance, item.duration).speed
                 })
-                .catch((error) => {
-                    commit('loadError', { name: 'listLoader' })
-                })
+
+                commit('setList', list)
+                commit('loadSuccess', { name: 'listLoader' })
+            } catch (error) {
+                commit('loadError', { name: 'listLoader', error: error.response.data })
+            }
         }
     }
 }

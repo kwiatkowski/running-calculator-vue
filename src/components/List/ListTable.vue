@@ -1,6 +1,9 @@
 <template>
     <div
-    :class="['list__table-wrap']"
+    :class="[
+        'list__table-wrap',
+        type === 'full' ? 'list__table-wrap--full' : null
+    ]"
     v-loader="{ loader: loader }"
     >
         <table class="list__table">
@@ -23,21 +26,26 @@
                 </tr>
             </thead>
 
-            <tbody v-if="dataDisplay !== null && (loader && loader.hasOwnProperty('isLoading') && !loader.isLoading)">
-                <ListGroup
-                v-if="dataDisplay.length > 0"
-                v-for="(group, groupIndex) in dataDisplay"
-                :columns="columns"
-                :data="group"
-                :data-previous="groupIndex < dataDisplay.length ? dataDisplay[groupIndex + 1] : null"
-                :groupIndex="groupIndex"
-                :previousGroupLength="getPreviousGroupLength(groupIndex)"
-                />
+            <template v-if="
+            loader && loader.hasOwnProperty('isLoading') && !loader.isLoading &&
+            !(loader && loader.hasOwnProperty('isError') && loader.isError)"
+            >
+                <tbody v-if="dataDisplay !== null && (loader && loader.hasOwnProperty('isLoading') && !loader.isLoading)">
+                    <ListGroup
+                    v-if="dataDisplay.length > 0"
+                    v-for="(group, groupIndex) in dataDisplay"
+                    :columns="columns"
+                    :data="group"
+                    :data-previous="groupIndex < dataDisplay.length ? dataDisplay[groupIndex + 1] : null"
+                    :groupIndex="groupIndex"
+                    :previousGroupLength="getPreviousGroupLength(groupIndex)"
+                    />
 
-                <tr v-else>
-                    <td class="td--table-empty" :colspan="columns.length" v-html="'Brak elementów'"></td>
-                </tr>
-            </tbody>
+                    <tr v-else>
+                        <td class="td--table-empty" :colspan="columns.length" v-html="'Brak elementów'"></td>
+                    </tr>
+                </tbody>
+            </template>
         </table>
     </div>
 </template>
@@ -56,6 +64,10 @@ export default {
         },
         columns: {
             type: Array,
+            default: null
+        },
+        type: {
+            type: String,
             default: null
         },
         data: {

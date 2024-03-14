@@ -86,6 +86,7 @@
     <ListTable
     :loader="listLoader"
     :columns="listColumns"
+    :type="'full'"
     :data="list"
     :filterYears="filterYears"
     :filterType="filterType"
@@ -137,7 +138,7 @@ export default {
             'getTrainingShoes'
         ]),
         refreshList() {
-            this.getTrainingList({})
+            this.getTrainingList()
         },
         getDataLocalStorage() {
             if (this.getLocalStorage('filterBy/year')) {

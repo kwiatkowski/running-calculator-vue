@@ -21,7 +21,6 @@ const mutations = {
         state[name].items = []
     },
     loadError(state, { name, error = null }) {
-        console.log('error')
         state[name].isLoading = false
         state[name].isError = true
         state[name].initialized = true
@@ -32,7 +31,7 @@ const mutations = {
     },
     clearLoader(state, { name }) {
         state[name] = {...states}
-    },
+    }
 }
 
 export default {

@@ -38,13 +38,15 @@
                 advanced: ['averageSpeed', 'averageStrideLength', 'averageHeartRate', 'averageCadence', 'averageVO2Max'],
             }"
             :data="list"
+            :dataLoader="listLoader"
             :distances="distances"
             :shoes="shoes"
+            :shoesLoader="shoesLoader"
             />
-        </div>
 
-        <div class="app__footer">
-            v{{ appVersion }}
+            <div class="app__version">
+                v{{ appVersion }}
+            </div>
         </div>
     </div>
 </template>
@@ -65,10 +67,10 @@ export default {
     },
     computed: {
         ...mapState('training/shoes', [
-            'shoes'
+            'shoes', 'shoesLoader'
         ]),
         ...mapState('training', [
-            'list', 'distances'
+            'list', 'listLoader', 'distances'
         ])
     },
     methods: {
@@ -79,11 +81,11 @@ export default {
             'getTrainingShoes'
         ]),
         init() {
-            this.getTrainingShoes({})
-            this.getTrainingList({})
+            this.getTrainingShoes()
+            this.getTrainingList()
         }
     },
-    mounted() {
+    created() {
         this.init()
     }
 }

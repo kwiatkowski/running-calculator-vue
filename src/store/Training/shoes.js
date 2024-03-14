@@ -15,32 +15,32 @@ export default {
         }
     },
     actions: {
-        getTrainingShoes({ state, commit }, {}) {
+        async getTrainingShoes({ commit }) {
             commit('loadStart', { name: 'shoesLoader' })
 
-            return TrainingAPI.getTrainingShoes({})
-                .then((response) => {
-                    let shoes = response.data
+            try {
+                const response = await TrainingAPI.getTrainingShoes({})
 
-                    shoes.forEach((item) => {
-                        delete item.description
-                        delete item.link
-                        delete item.taxonomy
-                        delete item.parent
-                        delete item.meta
-                        delete item.acf
-                        delete item.yoast_head
-                        delete item.yoast_head
-                        delete item.yoast_head_json
-                        delete item._links
-                    })
+                let shoes = response.data
 
-                    commit('setShoes', shoes)
-                    commit('loadSuccess', { name: 'shoesLoader' })
+                shoes.forEach((item) => {
+                    delete item.description
+                    delete item.link
+                    delete item.taxonomy
+                    delete item.parent
+                    delete item.meta
+                    delete item.acf
+                    delete item.yoast_head
+                    delete item.yoast_head
+                    delete item.yoast_head_json
+                    delete item._links
                 })
-                .catch((error) => {
-                    commit('loadError', { name: 'shoesLoader' })
-                })
+
+                commit('setShoes', shoes)
+                commit('loadSuccess', { name: 'shoesLoader' })
+            } catch (error) {
+                commit('loadError', { name: 'shoesLoader', error: error.response.data })
+            }
         }
     }
 }

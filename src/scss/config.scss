@@ -17,12 +17,15 @@ $grid-columns: 12 !default;
 $grid-gutter-width: 30px !default;
 
 $colors: (
+    white: #fff,
+    black: #272822,
     gray_light: #ededed,
     gray_superlight: #f5f5f5,
     first: #272822,
     second: #392929,
     increase: #2b8937,
-    decrease: #e02121
+    decrease: #e02121,
+    overlay_error: #a73939,
 );
 
 $fonts: (
