@@ -1,5 +1,5 @@
 <template>
-    <div class="statistics">
+    <div class="statistics statistics--basic">
         <div
         class="statistics__header"
         v-if="title && data && config"
@@ -18,14 +18,17 @@
                     v-for="(item, itemKey) in config.basic"
                     :key="itemKey"
                     :data="this[item]"
+                    @click.stop
                     />
                 </div>
             </Transition>
 
-            <div class="statistics__actions">
+            <div
+            class="statistics__actions"
+            v-if="config.isExpandable"
+            >
                 <button
                 class="btn btn--link btn--icon"
-                v-if="config.isExpandable"
                 v-html="'<i class=\'bi bi-clipboard2-' + (statisticsExpand ? 'minus' : 'plus') + '\'></i>'"
                 v-tooltip
                 :title="$t('calc.list.actions.statistics_details.tooltip')"
@@ -39,122 +42,186 @@
 
         <Transition
         name="slidedown"
+        class="statistics__content"
         v-loader:blur="{
             loader: dataLoader,
             ignoreError: true,
-        }">
+        }"
+        @click.stop
+        >
             <div v-if="statisticsExpand">
                 <template v-if="data && config">
                     <div
-                    class="statistics__items statistics__items--basic"
+                    class="statistics__items"
                     v-if="config.basic"
                     >
-                        <StatisticsItem
+                        <div
+                        class="statistics__item"
                         v-for="(item, itemKey) in config.basic"
                         :key="itemKey"
-                        :data="this[item]"
-                        :showDifference="true"
-                        :label="item"
-                        />
+                        >
+                            <StatisticsItem
+                            :data="this[item]"
+                            :showDifference="true"
+                            :label="item"
+                            />
+                        </div>
                     </div>
 
                     <div
-                    class="statistics__items statistics__items--advanced"
+                    class="statistics__items"
                     v-if="config.advanced"
                     >
-                        <StatisticsItem
+                        <div
+                        class="statistics__item"
                         v-for="(item, itemKey) in config.advanced"
                         :key="itemKey"
-                        :data="this[item]"
-                        :showDifference="true"
-                        :label="item"
-                        />
+                        >
+                            <StatisticsItem
+                            :data="this[item]"
+                            :showDifference="true"
+                            :label="item"
+                            />
+                        </div>
                     </div>
                 </template>
             </div>
         </Transition>
+    </div>
 
-        <div
-        v-if="distances"
-        class="statistics__items"
-        >
+    <div
+    v-if="distances"
+    class="statistics statistics--distances"
+    >
+        <div class="statistics__header">
             <div
             class="statistics__title"
             v-html="$t('statistics.titles.distances')"
             ></div>
-
-            <div
-            class="statistics__items-wrap"
-            v-loader:blur="{
-                loader: dataLoader,
-                ignoreError: true,
-            }"
-            >
-                <div v-show="false">{{ dataLoader }}</div>
-
-                <div
-                class="statistics__item-separator"
-                v-for="(distance, distanceIndex) in distances"
-                :key="distanceIndex">
-                    <StatisticsItemTitle
-                    :data="trainingSessionsForDistance(distance.value)"
-                    :label="$t(`type_run_distance.${distance.name}`)"
-                    />
-
-                    <StatisticsItem
-                    :data="fastestAveragePaceForDistance(distance.value)"
-                    :label="'fastest_average_pace'"
-                    />
-
-                    <StatisticsItem
-                    :data="fastestTimeForDistance(distance.value)"
-                    :label="'fastest_time'"
-                    />
-                </div>
-            </div>
         </div>
 
         <div
-        v-if="shoes"
-        class="statistics__items"
+        class="statistics__content"
+        v-loader:blur="{
+            loader: dataLoader,
+            ignoreError: true,
+        }"
         >
+            <div class="statistics__items--table">
+                <div v-show="false">{{ dataLoader }}</div>
+
+                <table class="statistics__table table--clear">
+                    <thead>
+                        <tr>
+                            <td></td>
+
+                            <td class="td-statistics--fastest-average-pace-for-distance">
+                                <div
+                                class="data-box__label"
+                                v-html="$t('statistics.fastest_average_pace')"
+                                ></div>
+                            </td>
+
+                            <td class="td-statistics-fastest-time-for-distance">
+                                <div
+                                class="data-box__label"
+                                v-html="$t('statistics.fastest_time')"
+                                ></div>
+                            </td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr v-for="(distance) in distances">
+                            <td>
+                                <StatisticsItemTitle
+                                :name="$t(`type_run_distance.${distance.name}`)"
+                                :data="trainingSessionsForDistance(distance.value)"
+                                />
+                            </td>
+
+                            <td class="td-statistics--fastest-average-pace-for-distance">
+                                <StatisticsItem
+                                :data="fastestAveragePaceForDistance(distance.value)"
+                                />
+                            </td>
+
+                            <td class="td-statistics-fastest-time-for-distance">
+                                <StatisticsItem
+                                :data="fastestTimeForDistance(distance.value)"
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div
+    v-if="shoes"
+    class="statistics statistics--shoes"
+    >
+        <div class="statistics__header">
             <div
             class="statistics__title"
             v-html="$t('statistics.titles.shoes')"
             ></div>
+        </div>
 
-            <div
-            class="statistics__items-wrap"
-            v-loader:blur="{
-                loader: [dataLoader, shoesLoader],
-                ignoreError: true,
-            }"
-            >
-                <div v-show="false">
-                    {{ shoesLoader }}
-                    {{ dataLoader }}
-                </div>
+        <div
+        class="statistics__content"
+        v-loader:blur="{
+            loader: [dataLoader, shoesLoader],
+            ignoreError: true,
+        }">
+            <div class="statistics__items--table">
+                <div v-show="false">{{ dataLoader }}</div>
 
-                <div
-                class="statistics__item-separator"
-                v-for="(shoe, shoeIndex) in shoes"
-                :key="shoeIndex"
-                >
-                    <StatisticsItemTitle
-                    :data="trainingSessionsForShoes(shoe.count)"
-                    :label="shoe.name"
-                    />
+                <table class="statistics__table table--clear">
+                    <thead>
+                        <tr>
+                            <td></td>
 
-                    <StatisticsItem
-                    :data="totalDistanceForShoes(shoe.id)"
-                    :label="'total_distance'"
-                    />
+                            <td class="td-statistics--total-distance-for-shoes">
+                                <div
+                                class="data-box__label"
+                                v-html="$t('statistics.total_distance')"
+                                ></div>
+                            </td>
 
-                    <StatisticsItem
-                    :data="wearForShoes(shoe)"
-                    :label="'wear'"
-                    />
-                </div>
+                            <td class="td-statistics-wear">
+                                <div
+                                class="data-box__label"
+                                v-html="$t('statistics.wear')"
+                                ></div>
+                            </td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr v-for="(shoe) in shoes">
+                            <td>
+                                <StatisticsItemTitle
+                                :name="shoe.name"
+                                :data="trainingSessionsForShoes(shoe.count)"
+                                />
+                            </td>
+
+                            <td class="td-statistics--total-distance-for-shoes">
+                                <StatisticsItem
+                                :data="totalDistanceForShoes(shoe.id)"
+                                />
+                            </td>
+
+                            <td class="td-statistics-wear">
+                                <StatisticsItem
+                                :data="wearForShoes(shoe)"
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

@@ -1,7 +1,3 @@
-/*
- * tables
- */
-
 table
     width: 100%
 
@@ -9,18 +5,11 @@ table
     td
         text-align: left
         vertical-align: middle
-        padding: 10px
-        border-bottom: 1px solid color(gray_light)
+        padding: 5px 10px
 
     th
-        font-weight: 700
         font-size: 13px
-
-    td
-        &.td--table-empty
-            text-align: center
-            padding-top: 50px
-            padding-bottom: 50px
+        font-weight: 700
 
     thead
         tr
@@ -30,12 +19,157 @@ table
                 top: 0
                 z-index: 2
 
-    tbody
-        overflow-y: auto
+/*
+ * table statistics
+ */
 
+.table--clear
+    tr
+        td
+            padding: 5px 0
+    thead
         tr
-            background: #fff
+            td
+                height: 40px
+
+    .td-statistics--total-distance-for-shoes
+        width: 110px
+        text-align: right
+
+    .td-statistics-wear
+        width: 60px
+        text-align: right
+
+    .td-statistics--fastest-average-pace-for-distance
+        width: 105px
+        text-align: right
+
+    .td-statistics-fastest-time-for-distance
+        width: 115px
+        text-align: right
+
+/*
+ * list
+ */
+
+.list
+    height: 100%
+
+    &__table-wrap
+        position: relative
+        overflow-y: auto
+        min-height: 167px !important
+        max-height: calc(100vh - 104px)
+        background: color(gray_superlight)
+
+    &__table-wrap--full
+        height: calc(100vh - 104px)
+
+    &__table
+        tr
+            th,
+            td
+                padding: 10px
+                border-bottom: 1px solid color(gray_light)
+
+        tbody
+            td
+                &.td--table-empty
+                    text-align: center
+                    padding-top: 50px
+                    padding-bottom: 50px
+
+                &.td--group-head
+                    padding: 0
+                    background: #f5f5f5
+
+            tr
+                background: #fff
+                +transition
+
+                &:hover
+                    background: color(gray_superlight)
+
+            &.tr--cursor
+                cursor: pointer
+
+            .statistics__actions
+                opacity: 0
 
             &:hover
-                background: color(gray_superlight)
-                // +transition
+                .statistics__actions
+                    opacity: 1
+
+        .th__more
+            font-weight: 400
+
+        .td--clear
+            padding: 0
+            border-bottom: 0
+
+.list-th--distance,
+.list-td--distance,
+.list-th--duration,
+.list-td--duration,
+.list-th--stride_length,
+.list-td--stride_length,
+.list-th--cadence,
+.list-td--cadence,
+.list-th--average_heart_rate,
+.list-td--average_heart_rate,
+.list-th--v02max,
+.list-td--v02max,
+.list-th--average_pace,
+.list-td--average_pace,
+.list-th--average_speed,
+.list-td--average_speed
+    text-align: right
+
+.list-th--ord,
+.list-td--ord
+    width: 51px
+
+.list-th--date_run,
+.list-td--date_run
+    width: 90px
+
+.list-th--distance,
+.list-td--distance
+    width: 100px
+
+.list-th--duration,
+.list-td--duration
+    width: 100px
+
+.list-th--stride_length,
+.list-td--stride_length
+    width: 100px
+
+.list-th--cadence,
+.list-td--cadence
+    width: 80px
+
+.list-th--average_heart_rate,
+.list-td--average_heart_rate
+    width: 70px
+
+.list-th--v02max,
+.list-td--v02max
+    width: 70px
+
+.list-th--average_pace,
+.list-td--average_pace
+    width: 140px
+
+.list-th--average_speed,
+.list-td--average_speed
+    width: 150px
+
+.th__unit
+    display: inline-block
+    font-size: 11px
+    font-weight: 300
+    color: #888
+    vertical-align: text-top
+    line-height: 1
+    padding: 2px 0 0 0

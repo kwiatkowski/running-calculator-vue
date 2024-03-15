@@ -1,27 +1,22 @@
-<template>
-    <div
-    :class="[
-        'statistics__item',
-        !label ? 'statistics__item--inline': null
-    ]"
-    @click.stop
-    >
-        <strong
-        v-if="label"
-        class="statistics__label"
-        v-html="label"
-        ></strong>
+<template @click.stop>
+    <div class="data-box">
+        <div
+        class="data-box__value"
+        v-if="name"
+        v-html="name"
+        ></div>
 
-        <span
+        <div
+        class="data-box__unit"
         v-html="' (' + (data && data.value ? data.value : '-') + ')'"
-        ></span>
+        ></div>
     </div>
 </template>
 
 <script>
 export default {
     props: {
-        label: {
+        name: {
             type: String,
             default: null
         },

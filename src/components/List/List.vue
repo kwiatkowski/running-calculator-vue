@@ -7,7 +7,7 @@
             <div class="list__header-grouping">
                 <Multiselect
                 v-if="groupByOptions"
-                class="multiselect--inline multiselect--pad-left"
+                class="multiselect--inline"
                 v-model="groupBy"
                 :placeholder="$t('calc.list.group_by.placeholder')"
                 :options="groupByOptions"

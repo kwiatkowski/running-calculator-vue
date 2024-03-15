@@ -1,0 +1,119 @@
+.statistics
+    position: relative
+
+    .app__sidebar &
+        border-radius: 10px
+        padding-top: 20px
+
+        &.statistics--basic
+            background: #fef7ed
+
+            .statistics__title
+                background: #feae38
+
+                &:before
+                    border-top: 6px solid #c88626
+
+        &.statistics--distances
+            background: #faf8eb
+
+            .statistics__title
+                background: #c2ba34
+
+                &:before
+                    border-top: 6px solid #8a842e
+
+        &.statistics--shoes
+            background: #fef0ed
+
+            .statistics__title
+                background: #f2683e
+
+                &:before
+                    border-top: 6px solid #b5431f
+
+    & + &
+        margin-top: 15px
+
+    &__header
+        display: flex
+        justify-content: space-between
+        align-items: center
+
+        .list__table &
+            padding: 5px 10px
+
+    &__actions
+        margin-left: auto
+        +transition
+
+    &__title
+        font-weight: 700
+
+        .app__sidebar &
+            display: inline-block
+            padding: 7px 15px
+            margin: 15px 0 0 -5px
+            text-transform: uppercase
+            font-size: 11px
+            font-weight: 700
+            line-height: 1
+            color: #fff
+            position: absolute
+            z-index: 1001
+
+            &:before,
+            &::after
+                content: ''
+                display: inline-block
+                width: 0
+                height: 0
+                position: absolute
+
+            &::before
+                border-bottom: 0px solid transparent
+                border-left: 7px solid transparent
+                left: 0
+                top: 25px
+
+    &__content
+        padding: 0 10px
+
+        .app__sidebar &
+            padding-top: 30px
+            min-height: 145px
+
+    &__table
+        margin-top: -43px
+        margin-bottom: 10px
+
+    &__items
+        display: grid
+        grid-gap: 5px
+        margin-bottom: 10px
+
+        & + &
+            margin-top: 10px
+
+        .app__sidebar &
+            grid-template-columns: repeat(2, 1fr)
+
+        .list__table &
+            grid-template-columns: repeat(5, 1fr)
+
+    .statistics__items--inline
+        grid-template-columns: repeat(5, auto)
+        margin-bottom: 0
+        margin-left: 20px
+
+        .data-box
+            .data-box__value
+                font-weight: 400
+
+            & + .data-box
+                &:before
+                    content: '|'
+                    display: inline-block
+                    margin: 0 5px
+                    vertical-align: top
+                    color: #BBB

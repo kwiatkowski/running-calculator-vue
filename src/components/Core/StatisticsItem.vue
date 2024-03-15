@@ -1,38 +1,32 @@
-<template>
-    <div
-    :class="[
-        'statistics__item',
-        !label ? 'statistics__item--inline': null
-    ]"
-    @click.stop
-    >
-        <span
+<template @click.stop>
+    <div class="data-box">
+        <div
         v-if="label"
-        class="statistics__label"
-        v-html="$t(`statistics.${camelToSnake(label)}`) + ': '"
-        ></span>
+        class="data-box__label"
+        v-html="$t(`statistics.${camelToSnake(label)}`)"
+        ></div>
 
-        <span
-        class="statistics__value"
+        <div
+        class="data-box__value"
         v-html="data && data.value ? (data.value && data.valueDisplay ? data.valueDisplay : data.value) : '-'"
-        ></span>
+        ></div>
 
-        <span
+        <div
         v-if="data && data.value && data.unit"
-        class="statistics__unit"
+        class="data-box__unit"
         v-html="data.unit"
-        ></span>
+        ></div>
 
-        <span
+        <div
         v-if="showDifference && percentageDifference != null"
         :class="[
-            'statistics__previous',
+            'data-box__previous',
             'percent',
             percentageDifference > 0 ? 'percent--increase' : null,
             percentageDifference < 0 ? 'percent--decrease' : null
         ]"
         v-html="(percentageDifference > 0 ? '+' : '') + percentageDifference + '%'"
-        ></span>
+        ></div>
     </div>
 </template>
 

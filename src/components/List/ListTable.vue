@@ -20,7 +20,7 @@
                         class="th__more"
                         v-if="column.unit"
                         >
-                            (<span class="statistics__unit">{{ column.unit }}</span>)
+                            (<span class="th__unit">{{ column.unit }}</span>)
                         </span>
                     </th>
                 </tr>

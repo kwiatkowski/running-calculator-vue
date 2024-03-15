@@ -4,12 +4,15 @@
     @click="clickTreningToggle"
     class="tr--cursor"
     >
-        <td colspan="11" class="training-td--group-head">
+        <td
+        class="td--group-head"
+        colspan="11"
+        >
             <Statistics
             :title="data.head ? data.head : null"
             :config="{
                 isExpandable: data.head ? true : null,
-                isExpand: false,
+                isExpand: false, // groupIndex > 0 ? false : true,
                 basic: ['trainingSessions', 'totalDuration', 'totalDistance', 'longestDistance', 'fastestAveragePace'],
                 advanced: ['averageSpeed', 'averageStrideLength', 'averageHeartRate', 'averageCadence', 'averageVO2Max'],
             }"
