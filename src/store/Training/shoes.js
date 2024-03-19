@@ -29,11 +29,14 @@ export default {
                     delete item.taxonomy
                     delete item.parent
                     delete item.meta
-                    delete item.acf
                     delete item.yoast_head
                     delete item.yoast_head
                     delete item.yoast_head_json
                     delete item._links
+
+                    item.isUsed = item.acf.is_used
+
+                    delete item.acf
                 })
 
                 commit('setShoes', shoes)

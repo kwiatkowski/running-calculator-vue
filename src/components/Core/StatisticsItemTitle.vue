@@ -8,7 +8,7 @@
 
         <div
         class="data-box__unit"
-        v-html="' (' + (data && data.value ? data.value : '-') + ')'"
+        v-html="' (' + (data && data.value !== undefined ? data.value : '-') + ')'"
         ></div>
     </div>
 </template>

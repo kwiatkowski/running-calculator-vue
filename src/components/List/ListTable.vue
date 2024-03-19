@@ -36,7 +36,8 @@
                     v-for="(group, groupIndex) in dataDisplay"
                     :columns="columns"
                     :data="group"
-                    :data-previous="groupIndex < dataDisplay.length ? dataDisplay[groupIndex + 1] : null"
+                    :dataPrevious="groupIndex < dataDisplay.length ? dataDisplay[groupIndex + 1] : null"
+                    :dataPreviousItemShow="dataPreviousItemShow"
                     :groupIndex="groupIndex"
                     :previousGroupLength="getPreviousGroupLength(groupIndex)"
                     />
@@ -73,6 +74,10 @@ export default {
         data: {
             type: Array,
             default: null
+        },
+        dataPreviousItemShow: {
+            type: Boolean,
+            default: false
         },
         filterYears: {
             type: Number,

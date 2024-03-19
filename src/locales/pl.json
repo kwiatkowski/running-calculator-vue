@@ -98,7 +98,10 @@
         "average_vo2max": "Średni VO2max",
         "average_cadence": "Średnia Kadencja",
         "average_heart_rate": "Średnie Tętno",
-        "average_speed": "Średnia Prędkość"
+        "average_speed": "Średnia Prędkość",
+        "shoes": {
+            "withdrawn_from_use": "Wycofane z użycia"
+        }
     },
     "plan_run": {
         "text_last": "Trzy ostatnie biegi sprawdzające lub zawody dla dystansu:",
@@ -107,7 +110,9 @@
             "text": "Wykorzystaj Kalkulator Tempa Biegu, aby precyzyjnie określić tempo, jakie musisz utrzymywać podczas biegu, aby osiągnąć zamierzony wynik na wybranym dystansie.",
             "planned_time": "Planowany czas",
             "running_pace": "Twoje tempo biegu powinno wynieść:"
-        }
+        },
+        "previous_verification_singular": "Poprzednie sprawdzenie { count } dzień wcześniej",
+        "previous_verification_plural": "Poprzednie sprawdzenie { count } dni wcześniej"
     },
     "error404": {
         "title": "Błąd 404 — Nie znaleziono strony",

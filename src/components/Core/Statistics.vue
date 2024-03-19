@@ -200,8 +200,15 @@
                     </thead>
 
                     <tbody>
-                        <tr v-for="(shoe) in shoes">
-                            <td>
+                        <tr
+                        v-for="(shoe) in shoes"
+                        :class="!shoe.isUsed ? 'statistics__table-not-used' : null"
+                        >
+                            <td
+                            v-tooltip
+                            :title="!shoe.isUsed ? $t('statistics.shoes.withdrawn_from_use') : null"
+                            data-bs-trigger="hover"
+                            >
                                 <StatisticsItemTitle
                                 :name="shoe.name"
                                 :data="trainingSessionsForShoes(shoe.count)"
@@ -596,13 +603,13 @@ export default {
             return result
         },
         trainingSessionsForShoes(count) {
-            if (!this.shoes || this.shoes.length === 0 || count === 0) {
+            if (!this.shoes || this.shoes.length === 0) {
                 return null
             }
 
             const result = {}
 
-            if (count) {
+            if (count !== undefined) {
                 result.value = count
             }
 

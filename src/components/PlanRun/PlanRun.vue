@@ -20,6 +20,7 @@
     :loader="listLoader"
     :columns="listColumns"
     :data="lastThreeVerificationRuns"
+    :dataPreviousItemShow="true"
     />
 
     <div class="content">
@@ -128,12 +129,9 @@ export default {
         ])
     },
     methods: {
-        xxx() {
-            console.log('router xxx')
-        },
         getLastVerificationRuns() {
             const filteredList = this.list
-                .filter(item => (item.type === 'verification' || item.type === 'competition') && (!this.selectedDistance || item.distance > this.selectedDistance))
+                .filter(item => (item.type === 'verification' || item.type === 'competition') && (!this.selectedDistance || item.distance >= this.selectedDistance))
                 .sort((a, b) => new Date(b.date) - new Date(a.date))
                 .slice(0, 3)
 

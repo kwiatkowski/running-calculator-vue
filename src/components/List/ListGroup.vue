@@ -45,6 +45,8 @@
                         v-for="(item, itemIndex) in data.items"
                         :key="itemIndex"
                         :item="item"
+                        :itemPrevious="getItemPrevious(itemIndex)"
+                        :itemPreviousShow="dataPreviousItemShow"
                         :index="globalIndex(itemIndex, groupIndex)"
                         />
                     </table>
@@ -75,6 +77,10 @@ export default {
             type: Object,
             default: null
         },
+        dataPreviousItemShow: {
+            type: Boolean,
+            default: false
+        },
         groupIndex: {
             type: Number,
             default: null
@@ -95,6 +101,13 @@ export default {
         },
         clickTreningToggle() {
             this.showTraining = !this.showTraining
+        },
+        getItemPrevious(currentIndex) {
+            if (currentIndex < this.data.items.length) {
+                return this.data.items[currentIndex + 1]
+            } else {
+                return null
+            }
         }
     }
 }
