@@ -14,7 +14,7 @@
                 isExpandable: data.head ? true : null,
                 isExpand: false, // groupIndex > 0 ? false : true,
                 basic: ['trainingSessions', 'totalDuration', 'totalDistance', 'longestDistance', 'fastestAveragePace'],
-                advanced: ['averageSpeed', 'averageStrideLength', 'averageHeartRate', 'averageCadence', 'averageVO2Max'],
+                advanced: ['averageSpeed', 'averageStrideLength', 'averageHeartRate', 'averageCadence', 'averageVO2Max']
             }"
             :data="data.items"
             :dataPrevious="dataPrevious && dataPrevious.items ? dataPrevious.items : null"

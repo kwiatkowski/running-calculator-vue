@@ -188,7 +188,6 @@ export default {
                 difference.percent = percentageDifference.toFixed(2)
                 difference.display = current - previous
 
-                result.isProgress = percentageDifference <= 0 ? false : true
                 result.difference = difference
 
                 if (percentageDifference > 0) {

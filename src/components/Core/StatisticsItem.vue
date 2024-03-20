@@ -7,26 +7,33 @@
         ></div>
 
         <div
-        class="data-box__value"
-        v-html="data && data.value ? (data.value && data.valueDisplay ? data.valueDisplay : data.value) : '-'"
-        ></div>
+        class="data-box__value-wrap"
+        v-tooltip
+        :title="getTooltip"
+        data-bs-trigger="hover"
+        data-bs-html="true"
+        >
+            <div
+            class="data-box__value"
+            v-html="data && data.value ? (data.value && data.valueDisplay ? data.valueDisplay : data.value) : '-'"
+            ></div>
 
-        <div
-        v-if="data && data.value && data.unit"
-        class="data-box__unit"
-        v-html="data.unit"
-        ></div>
+            <div
+            v-if="data && data.value && data.unit"
+            class="data-box__unit"
+            v-html="data.unit"
+            ></div>
 
-        <div
-        v-if="showDifference && percentageDifference != null"
-        :class="[
-            'data-box__previous',
-            'percent',
-            percentageDifference > 0 ? 'percent--increase' : null,
-            percentageDifference < 0 ? 'percent--decrease' : null
-        ]"
-        v-html="(percentageDifference > 0 ? '+' : '') + percentageDifference + '%'"
-        ></div>
+            <div
+            v-if="showDifference && data && data.difference && data.difference.percent"
+            :class="[
+                'data-box__previous',
+                data.isProgress ? 'progress' : null,
+                data.isProgress === false ? 'regress' : null
+            ]"
+            v-html="(data.difference.percent > 0 ? '+' : '') + data.difference.percent + '%'"
+            ></div>
+        </div>
     </div>
 </template>
 
@@ -47,18 +54,15 @@ export default {
         }
     },
     computed: {
-        percentageDifference() {
-            if (this.data && this.data.valuePrevious != null) {
-                const previous = this.data.valuePrevious
-                const current = this.data.value
+        getTooltip() {
+            if (this.data && this.data.difference && this.data.difference.percent !== 0) {
+                let displayString = this.data.difference.display
 
-                if (previous === 0) {
-                    return 100
+                if (this.data.unit) {
+                    displayString += ' ' + this.data.unit
                 }
 
-                const result = (((current - previous) / previous) * 100).toFixed(2)
-
-                return result === '0.00' ? 0 : result
+                return displayString
             } else {
                 return null
             }

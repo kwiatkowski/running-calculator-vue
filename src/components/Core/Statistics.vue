@@ -240,6 +240,7 @@ import moment from 'moment'
 
 import StatisticsItem from '~/components/Core/StatisticsItem.vue'
 import StatisticsItemTitle from '~/components/Core/StatisticsItemTitle.vue'
+import { compileScript } from '@vue/compiler-sfc'
 
 export default {
     components: {
@@ -298,7 +299,22 @@ export default {
             }
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
-                result.valuePrevious = this.dataPrevious.length
+                const difference = {}
+
+                const valuePrevious = this.dataPrevious.length
+
+                const percentageDifference = ((result.value - valuePrevious) / valuePrevious) * 100
+
+                difference.percent = percentageDifference.toFixed(2)
+                difference.display = result.value - valuePrevious
+
+                result.difference = difference
+
+                if (percentageDifference > 0) {
+                    result.isProgress = true
+                } else if (percentageDifference < 0) {
+                    result.isProgress = false
+                }
             }
 
             return result
@@ -314,7 +330,22 @@ export default {
             }
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
-                result.valuePrevious = this.calculateTotalDuration(this.dataPrevious)
+                const difference = {}
+
+                const valuePrevious = this.calculateTotalDuration(this.dataPrevious)
+
+                const percentageDifference = ((result.value - valuePrevious) / valuePrevious) * 100
+
+                difference.percent = percentageDifference.toFixed(2)
+                difference.display = (result.value - valuePrevious).toFixed(2)
+
+                result.difference = difference
+
+                if (percentageDifference > 0) {
+                    result.isProgress = true
+                } else if (percentageDifference < 0) {
+                    result.isProgress = false
+                }
             }
 
             return result
@@ -328,14 +359,25 @@ export default {
                 unit: 'km'
             }
 
-            const distance = this.data.reduce((sum, item) => sum + item.distance, 0)
-
-            result.value = (distance / 1000).toFixed(2)
+            result.value = (this.data.reduce((sum, item) => sum + item.distance, 0) / 1000).toFixed(2)
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const distancePrevious = this.dataPrevious.reduce((sum, item) => sum + item.distance, 0)
+                const difference = {}
 
-                result.valuePrevious = (distancePrevious / 1000).toFixed(2)
+                const valuePrevious = (this.dataPrevious.reduce((sum, item) => sum + item.distance, 0) / 1000).toFixed(2)
+
+                const percentageDifference = ((result.value - valuePrevious) / valuePrevious) * 100
+
+                difference.percent = percentageDifference.toFixed(2)
+                difference.display = (result.value - valuePrevious).toFixed(2)
+
+                result.difference = difference
+
+                if (percentageDifference > 0) {
+                    result.isProgress = true
+                } else if (percentageDifference < 0) {
+                    result.isProgress = false
+                }
             }
 
             return result
@@ -349,14 +391,25 @@ export default {
                 unit: 'km'
             }
 
-            const distance = Math.max(...this.data.map(entry => entry.distance))
-
-            result.value = (distance / 1000).toFixed(2)
+            result.value = (Math.max(...this.data.map(entry => entry.distance)) / 1000).toFixed(2)
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const distancePrevious = Math.max(...this.dataPrevious.map(entry => entry.distance))
+                const difference = {}
 
-                result.valuePrevious = (distancePrevious / 1000).toFixed(2)
+                const valuePrevious = (Math.max(...this.dataPrevious.map(entry => entry.distance)) / 1000).toFixed(2)
+
+                const percentageDifference = ((result.value - valuePrevious) / valuePrevious) * 100
+
+                difference.percent = percentageDifference.toFixed(2)
+                difference.display = (result.value - valuePrevious).toFixed(2)
+
+                result.difference = difference
+
+                if (percentageDifference > 0) {
+                    result.isProgress = true
+                } else if (percentageDifference < 0) {
+                    result.isProgress = false
+                }
             }
 
             return result
@@ -376,100 +429,47 @@ export default {
 
             result.valueDisplay = fastestAveragePace.average_pace
 
-            const [hours, minutes] = result.valueDisplay.split(':').map(Number)
-            const timeInSeconds = hours * 3600 + minutes * 60
+            const [minutes, seconds] = result.valueDisplay.split(':').map(Number)
+            const timeInSeconds = minutes * 60 + seconds
 
             result.value = timeInSeconds
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const difference = {}
+
                 const fastestAveragePacePrevious = this.dataPrevious.reduce((fastest, current) => {
                     return current.average_pace < fastest.average_pace ? current : fastest
                 })
 
                 result.valueDisplayPrevious = fastestAveragePacePrevious.average_pace
 
-                const [hoursPrevious, minutesPrevious] = result.valueDisplayPrevious.split(':').map(Number)
-                const timeInSecondsPrevious = hoursPrevious * 3600 + minutesPrevious * 60
+                const [minutesPrevious, secondsPrevious] = result.valueDisplayPrevious.split(':').map(Number)
+                const timeInSecondsPrevious = minutesPrevious * 60 + secondsPrevious
 
-                result.valuePrevious = timeInSecondsPrevious
-            }
+                const valuePrevious = timeInSecondsPrevious
 
-            return result
-        },
-        averageStrideLength() {
-            if (!this.data || this.data.length === 0) {
-                return null
-            }
+                result.valuePrevious = valuePrevious
 
-            const result = {
-                unit: 'cm'
-            }
+                const percentageDifference = ((result.value - valuePrevious) / valuePrevious) * 100
 
-            const totalStrideLength = this.data.reduce((acc, activity) => acc + activity.stride_length, 0)
+                difference.percent = percentageDifference.toFixed(2)
 
-            result.value = (totalStrideLength / this.data.length).toFixed(2)
+                const diffSeconds = timeInSeconds - timeInSecondsPrevious
 
-            if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const totalStrideLengthPrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.stride_length, 0)
+                const diffMinutes = Math.floor(Math.abs(diffSeconds) / 60)
+                const diffSecondsRemainder = Math.abs(diffSeconds) % 60
 
-                result.valuePrevious = (totalStrideLengthPrevious / this.dataPrevious.length).toFixed(2)
-            }
+                const diffDisplay = (diffSeconds < 0 ? "-" : "") + (diffMinutes < 10 ? "0" : "") + diffMinutes + ":" + (diffSecondsRemainder < 10 ? "0" : "") + Math.abs(diffSecondsRemainder)
 
-            return result
-        },
-        averageVO2Max() {
-            if (!this.data || this.data.length === 0) {
-                return null
-            }
+                difference.display = diffDisplay
 
-            const result = {}
+                result.difference = difference
 
-            const totalVO2Max = this.data.reduce((acc, activity) => acc + activity.v02max, 0)
-
-            result.value = (totalVO2Max / this.data.length).toFixed(2)
-
-            if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const totalVO2MaxPrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.v02max, 0)
-
-                result.valuePrevious = (totalVO2MaxPrevious / this.dataPrevious.length).toFixed(2)
-            }
-
-            return result
-        },
-        averageCadence() {
-            if (!this.data || this.data.length === 0) {
-                return null
-            }
-
-            const result = {}
-
-            const totalCadence = this.data.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
-
-            result.value = (totalCadence / this.data.length).toFixed(2)
-
-            if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const totalCadencePrevious = this.dataPrevious.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
-
-                result.valuePrevious = (totalCadencePrevious / this.dataPrevious.length).toFixed(2)
-            }
-
-            return result
-        },
-        averageHeartRate() {
-            if (!this.data || this.data.length === 0) {
-                return null
-            }
-
-            const result = {}
-
-            const totalHeartRate = this.data.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
-
-            result.value = (totalHeartRate / this.data.length).toFixed(2)
-
-            if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const totalHeartRatePrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
-
-                result.valuePrevious = (totalHeartRatePrevious / this.dataPrevious.length).toFixed(2)
+                if (percentageDifference > 0) {
+                    result.isProgress = false
+                } else if (percentageDifference < 0) {
+                    result.isProgress = true
+                }
             }
 
             return result
@@ -483,14 +483,167 @@ export default {
                 unit: 'km/h'
             }
 
-            const totalSpeed = this.data.reduce((acc, activity) => acc + parseFloat(activity.average_speed), 0)
+            const total = this.data.reduce((acc, activity) => acc + parseFloat(activity.average_speed), 0)
+            const average = (total / this.data.length).toFixed(2)
 
-            result.value = (totalSpeed / this.data.length).toFixed(2)
+            result.value = average
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const totalSpeedPrevious = this.dataPrevious.reduce((acc, activity) => acc + parseFloat(activity.average_speed), 0)
+                const difference = {}
 
-                result.valuePrevious = (totalSpeedPrevious / this.dataPrevious.length).toFixed(2)
+                const totalPrevious = this.dataPrevious.reduce((acc, activity) => acc + parseFloat(activity.average_speed), 0)
+                const averagePrevious = (totalPrevious / this.dataPrevious.length).toFixed(2)
+
+                const percentageDifference = ((average - averagePrevious) / averagePrevious) * 100
+
+                difference.percent = percentageDifference.toFixed(2)
+                difference.display = (average - averagePrevious).toFixed(2)
+
+                result.difference = difference
+
+                if (percentageDifference > 0) {
+                    result.isProgress = true
+                } else if (percentageDifference < 0) {
+                    result.isProgress = false
+                }
+            }
+
+            return result
+        },
+        averageStrideLength() {
+            if (!this.data || this.data.length === 0) {
+                return null
+            }
+
+            const result = {
+                unit: 'cm'
+            }
+
+            const total = this.data.reduce((acc, activity) => acc + activity.stride_length, 0)
+            const average = (total / this.data.length).toFixed(2)
+
+            result.value = average
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const difference = {}
+
+                const totalPrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.stride_length, 0)
+                const averagePrevious = (totalPrevious / this.dataPrevious.length).toFixed(2)
+
+                const percentageDifference = ((average - averagePrevious) / averagePrevious) * 100
+
+                difference.percent = percentageDifference.toFixed(2)
+                difference.display = (average - averagePrevious).toFixed(2)
+
+                result.difference = difference
+
+                if (percentageDifference > 0) {
+                    result.isProgress = true
+                } else if (percentageDifference < 0) {
+                    result.isProgress = false
+                }
+            }
+
+            return result
+        },
+        averageHeartRate() {
+            if (!this.data || this.data.length === 0) {
+                return null
+            }
+
+            const result = {}
+
+            const total = this.data.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
+            const average = (total / this.data.length).toFixed(2)
+
+            result.value = average
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const difference = {}
+
+                const totalPrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
+                const averagePrevious = (totalPrevious / this.dataPrevious.length).toFixed(2)
+
+                const percentageDifference = ((average - averagePrevious) / averagePrevious) * 100
+
+                difference.percent = percentageDifference.toFixed(2)
+                difference.display = (average - averagePrevious).toFixed(2)
+
+                result.difference = difference
+
+                if (percentageDifference > 0) {
+                    result.isProgress = false
+                } else if (percentageDifference < 0) {
+                    result.isProgress = true
+                }
+            }
+
+            return result
+        },
+        averageCadence() {
+            if (!this.data || this.data.length === 0) {
+                return null
+            }
+
+            const result = {}
+
+            const total = this.data.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
+            const average = (total / this.data.length).toFixed(2)
+
+            result.value = average
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const difference = {}
+
+                const totalPrevious = this.dataPrevious.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
+                const averagePrevious = (totalPrevious / this.dataPrevious.length).toFixed(2)
+
+                const percentageDifference = ((average - averagePrevious) / averagePrevious) * 100
+
+                difference.percent = percentageDifference.toFixed(2)
+                difference.display = (average - averagePrevious).toFixed(2)
+
+                result.difference = difference
+
+                if (percentageDifference > 0) {
+                    result.isProgress = true
+                } else if (percentageDifference < 0) {
+                    result.isProgress = false
+                }
+            }
+
+            return result
+        },
+        averageVO2Max() {
+            if (!this.data || this.data.length === 0) {
+                return null
+            }
+
+            const result = {}
+
+            const total = this.data.reduce((acc, activity) => acc + activity.v02max, 0)
+            const average = (total / this.data.length).toFixed(2)
+
+            result.value = average
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const difference = {}
+
+                const totalPrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.v02max, 0)
+                const averagePrevious = (totalPrevious / this.dataPrevious.length).toFixed(2)
+
+                const percentageDifference = ((average - averagePrevious) / averagePrevious) * 100
+
+                difference.percent = percentageDifference.toFixed(2)
+                difference.display = (average - averagePrevious).toFixed(2)
+
+                result.difference = difference
+
+                if (percentageDifference > 0) {
+                    result.isProgress = true
+                } else if (percentageDifference < 0) {
+                    result.isProgress = false
+                }
             }
 
             return result
