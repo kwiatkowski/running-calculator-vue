@@ -14,11 +14,13 @@
                 class="statistics__items statistics__items--inline"
                 v-if="!statisticsExpand && config.basic"
                 >
-                    <StatisticsItem
+                    <Value
                     v-for="(item, itemKey) in config.basic"
                     :key="itemKey"
                     :data="this[item]"
-                    @click.stop
+                    :tooltipPercent="true"
+                    :tooltipValue="true"
+                    :tooltipValueCustom="item === 'fastestAveragePace' ? 'getFastestAveragePace' : null"
                     />
                 </div>
             </Transition>
@@ -55,34 +57,31 @@
                     class="statistics__items"
                     v-if="config.basic"
                     >
-                        <div
-                        class="statistics__item"
+                        <Value
                         v-for="(item, itemKey) in config.basic"
                         :key="itemKey"
-                        >
-                            <StatisticsItem
-                            :data="this[item]"
-                            :showDifference="true"
-                            :label="item"
-                            />
-                        </div>
+                        :label="$t(`statistics.${camelToSnake(item)}`)"
+                        :data="this[item]"
+                        :showDifference="true"
+                        :progressReverse="item === 'fastestAveragePace' ? true : false"
+                        :tooltipValue="true"
+                        :tooltipValueCustom="item === 'fastestAveragePace' ? 'getFastestAveragePace' : null"
+                        />
                     </div>
 
                     <div
                     class="statistics__items"
                     v-if="config.advanced"
                     >
-                        <div
-                        class="statistics__item"
+                        <Value
                         v-for="(item, itemKey) in config.advanced"
                         :key="itemKey"
-                        >
-                            <StatisticsItem
-                            :data="this[item]"
-                            :showDifference="true"
-                            :label="item"
-                            />
-                        </div>
+                        :label="$t(`statistics.${camelToSnake(item)}`)"
+                        :data="this[item]"
+                        :showDifference="true"
+                        :progressReverse="item === 'averageHeartRate' ? true : false"
+                        :tooltipValue="true"
+                        />
                     </div>
                 </template>
             </div>
@@ -141,13 +140,14 @@
                             </td>
 
                             <td class="td-statistics--fastest-average-pace-for-distance">
-                                <StatisticsItem
+                                <Value
                                 :data="fastestAveragePaceForDistance(distance.value)"
+                                :showUnit="true"
                                 />
                             </td>
 
                             <td class="td-statistics-fastest-time-for-distance">
-                                <StatisticsItem
+                                <Value
                                 :data="fastestTimeForDistance(distance.value)"
                                 />
                             </td>
@@ -216,14 +216,16 @@
                             </td>
 
                             <td class="td-statistics--total-distance-for-shoes">
-                                <StatisticsItem
+                                <Value
                                 :data="totalDistanceForShoes(shoe.id)"
+                                :showUnit="true"
                                 />
                             </td>
 
                             <td class="td-statistics-wear">
-                                <StatisticsItem
+                                <Value
                                 :data="wearForShoes(shoe)"
+                                :showUnit="true"
                                 />
                             </td>
                         </tr>
@@ -238,13 +240,12 @@
 import 'moment-duration-format'
 import moment from 'moment'
 
-import StatisticsItem from '~/components/Core/StatisticsItem.vue'
+import Value from '~/components/Core/Value.vue'
 import StatisticsItemTitle from '~/components/Core/StatisticsItemTitle.vue'
-import { compileScript } from '@vue/compiler-sfc'
 
 export default {
     components: {
-        StatisticsItem, StatisticsItemTitle
+        StatisticsItemTitle, Value
     },
     props: {
         title: {
@@ -291,29 +292,22 @@ export default {
     computed: {
         trainingSessions() {
             if (!this.data || this.data.length === 0) {
-                return null
+                return {
+                    current: {
+                        value: '-'
+                    }
+                }
             }
 
             const result = {
-                value: this.data.length
+                current: {
+                    value: this.data.length
+                }
             }
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const difference = {}
-
-                const valuePrevious = this.dataPrevious.length
-
-                const percentageDifference = ((result.value - valuePrevious) / valuePrevious) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = result.value - valuePrevious
-
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = true
-                } else if (percentageDifference < 0) {
-                    result.isProgress = false
+                result.previous = {
+                    value: this.dataPrevious.length
                 }
             }
 
@@ -321,30 +315,23 @@ export default {
         },
         totalDuration() {
             if (!this.data || this.data.length === 0) {
-                return null
+                return {
+                    current: {
+                        value: '-'
+                    }
+                }
             }
 
             const result = {
-                value: this.calculateTotalDuration(this.data),
-                unit: 'godz.'
+                unit: 'godz.',
+                current: {
+                    value: this.calculateTotalDuration(this.data)
+                }
             }
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const difference = {}
-
-                const valuePrevious = this.calculateTotalDuration(this.dataPrevious)
-
-                const percentageDifference = ((result.value - valuePrevious) / valuePrevious) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = (result.value - valuePrevious).toFixed(2)
-
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = true
-                } else if (percentageDifference < 0) {
-                    result.isProgress = false
+                result.previous = {
+                    value: this.calculateTotalDuration(this.dataPrevious)
                 }
             }
 
@@ -352,31 +339,23 @@ export default {
         },
         totalDistance() {
             if (!this.data || this.data.length === 0) {
-                return null
+                return {
+                    current: {
+                        value: '-'
+                    }
+                }
             }
 
             const result = {
-                unit: 'km'
+                unit: 'km',
+                current: {
+                    value: (this.data.reduce((sum, item) => sum + item.distance, 0) / 1000).toFixed(2)
+                }
             }
 
-            result.value = (this.data.reduce((sum, item) => sum + item.distance, 0) / 1000).toFixed(2)
-
             if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const difference = {}
-
-                const valuePrevious = (this.dataPrevious.reduce((sum, item) => sum + item.distance, 0) / 1000).toFixed(2)
-
-                const percentageDifference = ((result.value - valuePrevious) / valuePrevious) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = (result.value - valuePrevious).toFixed(2)
-
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = true
-                } else if (percentageDifference < 0) {
-                    result.isProgress = false
+                result.previous = {
+                    value: (this.dataPrevious.reduce((sum, item) => sum + item.distance, 0) / 1000).toFixed(2)
                 }
             }
 
@@ -384,31 +363,23 @@ export default {
         },
         longestDistance() {
             if (!this.data || this.data.length === 0) {
-                return null
+                return {
+                    current: {
+                        value: '-'
+                    }
+                }
             }
 
             const result = {
-                unit: 'km'
+                unit: 'km',
+                current: {
+                    value: (Math.max(...this.data.map(entry => entry.distance)) / 1000).toFixed(2)
+                }
             }
 
-            result.value = (Math.max(...this.data.map(entry => entry.distance)) / 1000).toFixed(2)
-
             if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const difference = {}
-
-                const valuePrevious = (Math.max(...this.dataPrevious.map(entry => entry.distance)) / 1000).toFixed(2)
-
-                const percentageDifference = ((result.value - valuePrevious) / valuePrevious) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = (result.value - valuePrevious).toFixed(2)
-
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = true
-                } else if (percentageDifference < 0) {
-                    result.isProgress = false
+                result.previous = {
+                    value: (Math.max(...this.dataPrevious.map(entry => entry.distance)) / 1000).toFixed(2)
                 }
             }
 
@@ -416,242 +387,103 @@ export default {
         },
         fastestAveragePace() {
             if (!this.data || this.data.length === 0) {
-                return null
+                return {
+                    current: {
+                        value: '-'
+                    }
+                }
             }
 
             const result = {
-                unit: 'min/km'
+                unit: 'min/km',
+                current: {
+                    value: (Math.max(...this.data.map(entry => entry.distance)) / 1000).toFixed(2)
+                }
             }
 
             const fastestAveragePace = this.data.reduce((fastest, current) => {
                 return current.average_pace < fastest.average_pace ? current : fastest
             })
 
-            result.valueDisplay = fastestAveragePace.average_pace
-
-            const [minutes, seconds] = result.valueDisplay.split(':').map(Number)
+            const [minutes, seconds] = fastestAveragePace.average_pace.split(':').map(Number)
             const timeInSeconds = minutes * 60 + seconds
 
-            result.value = timeInSeconds
+            result.current = {
+                value: timeInSeconds,
+                display: fastestAveragePace.average_pace
+            }
 
             if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const difference = {}
-
                 const fastestAveragePacePrevious = this.dataPrevious.reduce((fastest, current) => {
                     return current.average_pace < fastest.average_pace ? current : fastest
                 })
 
-                result.valueDisplayPrevious = fastestAveragePacePrevious.average_pace
-
-                const [minutesPrevious, secondsPrevious] = result.valueDisplayPrevious.split(':').map(Number)
+                const [minutesPrevious, secondsPrevious] = fastestAveragePacePrevious.average_pace.split(':').map(Number)
                 const timeInSecondsPrevious = minutesPrevious * 60 + secondsPrevious
 
-                const valuePrevious = timeInSecondsPrevious
-
-                result.valuePrevious = valuePrevious
-
-                const percentageDifference = ((result.value - valuePrevious) / valuePrevious) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-
-                const diffSeconds = timeInSeconds - timeInSecondsPrevious
-
-                const diffMinutes = Math.floor(Math.abs(diffSeconds) / 60)
-                const diffSecondsRemainder = Math.abs(diffSeconds) % 60
-
-                const diffDisplay = (diffSeconds < 0 ? "-" : "") + (diffMinutes < 10 ? "0" : "") + diffMinutes + ":" + (diffSecondsRemainder < 10 ? "0" : "") + Math.abs(diffSecondsRemainder)
-
-                difference.display = diffDisplay
-
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = false
-                } else if (percentageDifference < 0) {
-                    result.isProgress = true
+                result.previous = {
+                    value: timeInSecondsPrevious,
+                    display: fastestAveragePacePrevious.average_pace
                 }
             }
 
             return result
         },
         averageSpeed() {
-            if (!this.data || this.data.length === 0) {
-                return null
-            }
-
-            const result = {
-                unit: 'km/h'
-            }
-
-            const total = this.data.reduce((acc, activity) => acc + parseFloat(activity.average_speed), 0)
-            const average = (total / this.data.length).toFixed(2)
-
-            result.value = average
-
-            if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const difference = {}
-
-                const totalPrevious = this.dataPrevious.reduce((acc, activity) => acc + parseFloat(activity.average_speed), 0)
-                const averagePrevious = (totalPrevious / this.dataPrevious.length).toFixed(2)
-
-                const percentageDifference = ((average - averagePrevious) / averagePrevious) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = (average - averagePrevious).toFixed(2)
-
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = true
-                } else if (percentageDifference < 0) {
-                    result.isProgress = false
-                }
-            }
-
-            return result
+            return this.calculateMetric(this.data, 'average_speed', 'km/h')
         },
         averageStrideLength() {
-            if (!this.data || this.data.length === 0) {
-                return null
-            }
-
-            const result = {
-                unit: 'cm'
-            }
-
-            const total = this.data.reduce((acc, activity) => acc + activity.stride_length, 0)
-            const average = (total / this.data.length).toFixed(2)
-
-            result.value = average
-
-            if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const difference = {}
-
-                const totalPrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.stride_length, 0)
-                const averagePrevious = (totalPrevious / this.dataPrevious.length).toFixed(2)
-
-                const percentageDifference = ((average - averagePrevious) / averagePrevious) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = (average - averagePrevious).toFixed(2)
-
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = true
-                } else if (percentageDifference < 0) {
-                    result.isProgress = false
-                }
-            }
-
-            return result
+            return this.calculateMetric(this.data, 'stride_length', 'cm')
         },
         averageHeartRate() {
-            if (!this.data || this.data.length === 0) {
-                return null
-            }
-
-            const result = {}
-
-            const total = this.data.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
-            const average = (total / this.data.length).toFixed(2)
-
-            result.value = average
-
-            if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const difference = {}
-
-                const totalPrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.average_heart_rate, 0)
-                const averagePrevious = (totalPrevious / this.dataPrevious.length).toFixed(2)
-
-                const percentageDifference = ((average - averagePrevious) / averagePrevious) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = (average - averagePrevious).toFixed(2)
-
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = false
-                } else if (percentageDifference < 0) {
-                    result.isProgress = true
-                }
-            }
-
-            return result
+            return this.calculateMetric(this.data, 'average_heart_rate')
         },
         averageCadence() {
-            if (!this.data || this.data.length === 0) {
-                return null
-            }
-
-            const result = {}
-
-            const total = this.data.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
-            const average = (total / this.data.length).toFixed(2)
-
-            result.value = average
-
-            if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const difference = {}
-
-                const totalPrevious = this.dataPrevious.reduce((acc, activity) => acc + parseInt(activity.cadence || 0), 0)
-                const averagePrevious = (totalPrevious / this.dataPrevious.length).toFixed(2)
-
-                const percentageDifference = ((average - averagePrevious) / averagePrevious) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = (average - averagePrevious).toFixed(2)
-
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = true
-                } else if (percentageDifference < 0) {
-                    result.isProgress = false
-                }
-            }
-
-            return result
+            return this.calculateMetric(this.data, 'cadence')
         },
         averageVO2Max() {
-            if (!this.data || this.data.length === 0) {
-                return null
-            }
-
-            const result = {}
-
-            const total = this.data.reduce((acc, activity) => acc + activity.v02max, 0)
-            const average = (total / this.data.length).toFixed(2)
-
-            result.value = average
-
-            if (this.dataPrevious && this.dataPrevious.length > 0) {
-                const difference = {}
-
-                const totalPrevious = this.dataPrevious.reduce((acc, activity) => acc + activity.v02max, 0)
-                const averagePrevious = (totalPrevious / this.dataPrevious.length).toFixed(2)
-
-                const percentageDifference = ((average - averagePrevious) / averagePrevious) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = (average - averagePrevious).toFixed(2)
-
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = true
-                } else if (percentageDifference < 0) {
-                    result.isProgress = false
-                }
-            }
-
-            return result
+            return this.calculateMetric(this.data, 'v02max')
         }
     },
     methods: {
+        camelToSnake(str) {
+            if (typeof str !== 'string') {
+                return str
+            }
+
+            return str.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()
+        },
         clickStatisticsExpandToggle() {
             this.statisticsExpand = !this.statisticsExpand
+        },
+        calculateMetric(data, key, unit = null) {
+            if (!data || data.length === 0) {
+                return { current: { value: '-' }, ...(unit && { unit }) }
+            }
+
+            const total = data.reduce((acc, activity) => {
+                const value = parseFloat(activity[key]) || 0
+
+                return acc + value
+            }, 0)
+
+            const average = (total / data.length).toFixed(2)
+
+            const result = { current: { value: average }, ...(unit && { unit }) }
+
+            if (this.dataPrevious && this.dataPrevious.length > 0) {
+                const totalPrevious = this.dataPrevious.reduce((acc, activity) => {
+                    const value = parseFloat(activity[key]) || 0
+
+                    return acc + value
+                }, 0)
+
+                const averagePrevious = (totalPrevious / this.dataPrevious.length).toFixed(2)
+
+                result.previous = { value: averagePrevious }
+            }
+
+            return result
         },
         calculateTotalDuration(data) {
             if (!data || data.length === 0) {
@@ -693,11 +525,11 @@ export default {
         },
         fastestAveragePaceForDistance(minDistance) {
             if (!this.data || this.data.length === 0) {
-                return null
-            }
-
-            const result = {
-                unit: 'min/km'
+                return {
+                    current: {
+                        value: '-'
+                    }
+                }
             }
 
             // filter runs above minimum distance
@@ -715,13 +547,20 @@ export default {
                 return paceInSeconds < minPaceInSeconds ? entry.average_pace : minPace
             }, runsAboveMinDistance[0].average_pace)
 
-            result.value = fastestPace
-
-            return result
+            return {
+                unit: 'min/km',
+                current: {
+                    value: fastestPace
+                }
+            }
         },
         fastestTimeForDistance(minDistance) {
             if (!this.data || this.data.length === 0) {
-                return null
+                return {
+                    current: {
+                        value: '-'
+                    }
+                }
             }
 
             const result = {}
@@ -751,9 +590,11 @@ export default {
             // Use moment.js to format the time
             const formattedTime = moment.utc(duration.asMilliseconds()).format('HH:mm:ss')
 
-            result.value = formattedTime
-
-            return result
+            return {
+                current: {
+                    value: formattedTime
+                }
+            }
         },
         trainingSessionsForShoes(count) {
             if (!this.shoes || this.shoes.length === 0) {
@@ -770,52 +611,54 @@ export default {
         },
         totalDistanceForShoes(shoeId) {
             if (!this.data || this.data.length === 0) {
-                return null
+                return {
+                    current: {
+                        value: '-'
+                    }
+                }
             }
+
+            const totalDistance = this.data.reduce((acc, item) => {
+                if (item.shoe === shoeId) {
+                    return acc + item.distance
+                } else {
+                    return acc
+                }
+            }, 0)
 
             const result = {
-                unit: 'km'
-            }
-
-            let totalDistance = null
-
-            this.data.forEach((item) => {
-                if (item.shoe === shoeId) {
-                    totalDistance += item.distance
+                unit: 'km',
+                current: {
+                    value: (totalDistance / 1000).toFixed(2)
                 }
-            })
-
-            result.value = (totalDistance / 1000).toFixed(2)
+            }
 
             return result
         },
         wearForShoes(shoe) {
             if (!this.data || this.data.length === 0) {
-                return null
-            }
-
-            const result = {
-                unit: '%'
+                return {
+                    current: {
+                        value: '-'
+                    }
+                }
             }
 
             const maxDistance = 1000
-
-            const totalDistance = this.totalDistanceForShoes(shoe.id).value
-
-            if (totalDistance >= maxDistance) {
-                result.value = 100
-            }
-
+            const totalDistance = this.totalDistanceForShoes(shoe.id).current.value
             const completedDistance = Math.min(totalDistance, maxDistance)
+            const totalUsage = Math.min((completedDistance / maxDistance) * 100, 100)
 
-            let totalUsage = (completedDistance / maxDistance) * 100
-
-            totalUsage = Math.min(100, totalUsage).toFixed(0)
-
-            result.value = totalUsage
+            const result = {
+                unit: '%',
+                current: {
+                    value: Math.round(totalUsage)
+                }
+            }
 
             return result
         }
     }
 }
+// 850
 </script>

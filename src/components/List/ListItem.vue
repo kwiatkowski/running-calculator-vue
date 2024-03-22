@@ -6,8 +6,10 @@
         ></td>
 
         <td class="list-td--date_run">
-            <ListItemValue
+            <Value
             :data="getDate"
+            :tooltipValue="true"
+            :tooltipValueCustom="'getDate'"
             />
         </td>
 
@@ -22,55 +24,87 @@
         ></td>
 
         <td class="list-td--duration">
-            <ListItemValue
+            <Value
             :data="getDuration"
+            :valueColor="true"
+            :showUnit="false"
+            :progressReverse="true"
+            :tooltipPercent="true"
+            :tooltipValue="true"
+            :tooltipValueCustom="'getDuration'"
             />
         </td>
 
         <td class="list-td--stride_length">
-            <ListItemValue
+            <Value
             :data="getStrideLength"
+            :valueColor="true"
+            :showUnit="false"
+            :tooltipPercent="true"
+            :tooltipValue="true"
             />
         </td>
 
         <td class="list-td--cadence">
-            <ListItemValue
+            <Value
             :data="getCadence"
+            :valueColor="true"
+            :showUnit="false"
+            :tooltipPercent="true"
+            :tooltipValue="true"
             />
         </td>
 
         <td class="list-td--average_heart_rate">
-            <ListItemValue
+            <Value
             :data="getAverageHeartRate"
+            :valueColor="true"
+            :showUnit="false"
+            :tooltipPercent="true"
+            :tooltipValue="true"
             />
         </td>
 
         <td class="list-td--v02max">
-            <ListItemValue
+            <Value
             :data="getV02max"
+            :valueColor="true"
+            :showUnit="false"
+            :tooltipPercent="true"
+            :tooltipValue="true"
             />
         </td>
 
         <td class="list-td--average_pace">
-            <ListItemValue
+            <Value
             :data="getAveragePace"
+            :valueColor="true"
+            :showUnit="false"
+            :progressReverse="true"
+            :tooltipPercent="true"
+            :tooltipValue="true"
+            :tooltipValueCustom="'getAveragePace'"
             />
         </td>
 
         <td class="list-td--average_speed">
-            <ListItemValue
+            <Value
             :data="getAverageSpeed"
+            :valueColor="true"
+            :showUnit="false"
+            :tooltipPercent="true"
+            :tooltipValue="true"
             />
         </td>
     </tr>
 </template>
 
 <script>
-import ListItemValue from '~/components/Core/ListItemValue.vue'
+import Value from '~/components/Core/Value.vue'
 
 export default {
     components: {
-        ListItemValue
+        Value
     },
     props: {
         index: {
@@ -100,23 +134,17 @@ export default {
             }
 
             const result = {
-                value: {
+                current: {
+                    value: new Date(this.item.date),
                     display: this.$formatDate(this.item.date)
                 }
             }
 
-            if (this.itemPreviousShow && this.itemPrevious && this.itemPrevious.date) {
-                const difference = {}
-
-                const currentDate = new Date(this.item.date)
-                const previousDate = new Date(this.itemPrevious.date)
-
-                const timeDifference = Math.abs(currentDate.getTime() - previousDate.getTime())
-                const daysDifference = Math.ceil(timeDifference / (1000 * 3600 * 24))
-
-                difference.display = daysDifference === 1 ? this.$t('plan_run.previous_verification_singular', { count: daysDifference }) : this.$t('plan_run.previous_verification_plural', { count: daysDifference });
-
-                result.difference = difference
+            if (this.itemPreviousShow && this.itemPrevious && this.itemPrevious.stride_length) {
+                result.previous = {
+                    value: new Date(this.itemPrevious.date),
+                    display: this.$formatDate(this.itemPrevious.date)
+                }
             }
 
             return result
@@ -126,40 +154,23 @@ export default {
                 return null;
             }
 
+            const current = this.item.duration.split(":").map(part => parseInt(part))
+            const currentSeconds = (current[0] * 60 * 60) + (current[1] * 60) + current[2]
+
             const result = {
-                value: {
+                current: {
+                    value: currentSeconds,
                     display: this.item.duration
                 }
             }
 
             if (this.itemPreviousShow && this.itemPrevious && this.itemPrevious.duration) {
-                const difference = {}
-
-                const current = this.item.duration.split(":").map(part => parseInt(part))
                 const previous = this.itemPrevious.duration.split(":").map(part => parseInt(part))
-
-                const currentSeconds = (current[0] * 60 * 60) + (current[1] * 60) + current[2]
                 const previousSeconds = (previous[0] * 60 * 60) + (previous[1] * 60) + previous[2]
-                const diffSeconds = currentSeconds - previousSeconds
 
-                const percentageDifference = (diffSeconds / previousSeconds) * 100
-
-                const diffHours = Math.floor(Math.abs(diffSeconds) / 3600)
-                const diffMinutes = Math.floor((Math.abs(diffSeconds) % 3600) / 60)
-                const diffSecondsRemainder = Math.abs(diffSeconds) % 60
-
-                const diffDisplay = (diffSeconds < 0 ? "-" : "") +  (diffHours < 10 ? "0" : "") + diffHours + ":" +  (diffMinutes < 10 ? "0" : "") + diffMinutes + ":" +  (diffSecondsRemainder < 10 ? "0" : "") + Math.abs(diffSecondsRemainder)
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = diffDisplay
-
-                result.isProgress = percentageDifference >= 0 ? false : true
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = false
-                } else if (percentageDifference < 0) {
-                    result.isProgress = true
+                result.previous = {
+                    value: previousSeconds,
+                    display: this.item.duration
                 }
             }
 
@@ -171,29 +182,15 @@ export default {
             }
 
             const result = {
-                value: {
-                    display: this.item.stride_length
-                },
-                unit: 'cm'
+                unit: 'cm',
+                current: {
+                    value: parseFloat(this.item.stride_length)
+                }
             }
 
             if (this.itemPreviousShow && this.itemPrevious && this.itemPrevious.stride_length) {
-                const difference = {}
-
-                const current = parseFloat(this.item.stride_length)
-                const previous = parseFloat(this.itemPrevious.stride_length)
-
-                const percentageDifference = ((current - previous) / previous) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = current - previous
-
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = true
-                } else if (percentageDifference < 0) {
-                    result.isProgress = false
+                result.previous = {
+                    value: parseFloat(this.itemPrevious.stride_length)
                 }
             }
 
@@ -205,62 +202,15 @@ export default {
             }
 
             const result = {
-                value: {
-                    display: this.item.cadence
+                current: {
+                    value: parseFloat(this.item.cadence)
                 }
             }
 
             if (this.itemPreviousShow && this.itemPrevious && this.itemPrevious.cadence) {
-                const difference = {}
-
-                const current = parseFloat(this.item.cadence)
-                const previous = parseFloat(this.itemPrevious.cadence)
-
-                const percentageDifference = ((current - previous) / previous) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = current - previous
-
-                if (percentageDifference > 0) {
-                    result.isProgress = true
-                } else if (percentageDifference < 0) {
-                    result.isProgress = false
+                result.previous = {
+                    value: parseFloat(this.itemPrevious.cadence)
                 }
-
-                result.difference = difference
-            }
-
-            return result
-        },
-        getV02max() {
-            if (!this.item || this.item.length === 0) {
-                return null
-            }
-
-            const result = {
-                value: {
-                    display: this.item.v02max
-                }
-            }
-
-            if (this.itemPreviousShow && this.itemPrevious && this.itemPrevious.v02max) {
-                const difference = {}
-
-                const current = parseFloat(this.item.v02max)
-                const previous = parseFloat(this.itemPrevious.v02max)
-
-                const percentageDifference = ((current - previous) / previous) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = current - previous
-
-                if (percentageDifference > 0) {
-                    result.isProgress = true
-                } else if (percentageDifference < 0) {
-                    result.isProgress = false
-                }
-
-                result.difference = difference
             }
 
             return result
@@ -271,29 +221,34 @@ export default {
             }
 
             const result = {
-                value: {
-                    display: this.item.average_heart_rate
+                current: {
+                    value: parseFloat(this.item.average_heart_rate)
                 }
             }
 
             if (this.itemPreviousShow && this.itemPrevious && this.itemPrevious.average_heart_rate) {
-                const difference = {}
-
-                const current = parseFloat(this.item.average_heart_rate)
-                const previous = parseFloat(this.itemPrevious.average_heart_rate)
-
-                const percentageDifference = ((current - previous) / previous) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = current - previous
-
-                if (percentageDifference > 0) {
-                    result.isProgress = false
-                } else if (percentageDifference < 0) {
-                    result.isProgress = true
+                result.previous = {
+                    value: parseFloat(this.itemPrevious.average_heart_rate)
                 }
+            }
 
-                result.difference = difference
+            return result
+        },
+        getV02max() {
+            if (!this.item || this.item.length === 0) {
+                return null
+            }
+
+            const result = {
+                current: {
+                    value: parseFloat(this.item.v02max)
+                }
+            }
+
+            if (this.itemPreviousShow && this.itemPrevious && this.itemPrevious.v02max) {
+                result.previous = {
+                    value: parseFloat(this.itemPrevious.v02max)
+                }
             }
 
             return result
@@ -304,38 +259,24 @@ export default {
             }
 
             const result = {
-                value: {
-                    display: this.item.average_pace
-                }
+                unit: 'min/km',
+            }
+
+            const current = this.item.average_pace.split(":").map(part => parseInt(part))
+            const currentSeconds = current[0] * 60 + current[1]
+
+            result.current = {
+                value: currentSeconds,
+                display: this.item.average_pace
             }
 
             if (this.itemPreviousShow && this.itemPrevious && this.itemPrevious.average_pace) {
-                const difference = {}
-
-                const current = this.item.average_pace.split(":").map(part => parseInt(part))
                 const previous = this.itemPrevious.average_pace.split(":").map(part => parseInt(part))
-
-                const currentSeconds = current[0] * 60 + current[1]
                 const previousSeconds = previous[0] * 60 + previous[1]
-                const diffSeconds = currentSeconds - previousSeconds
 
-                const percentageDifference = (diffSeconds / previousSeconds) * 100
-
-                const diffMinutes = Math.floor(Math.abs(diffSeconds) / 60)
-                const diffSecondsRemainder = Math.abs(diffSeconds) % 60
-
-                const diffDisplay = (diffSeconds < 0 ? "-" : "") + (diffMinutes < 10 ? "0" : "") + diffMinutes + ":" + (diffSecondsRemainder < 10 ? "0" : "") + Math.abs(diffSecondsRemainder)
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = diffDisplay
-
-                result.isProgress = percentageDifference >= 0 ? false : true
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = false
-                } else if (percentageDifference < 0) {
-                    result.isProgress = true
+                result.previous = {
+                    value: previousSeconds,
+                    display: this.itemPrevious.average_pace
                 }
             }
 
@@ -347,30 +288,15 @@ export default {
             }
 
             const result = {
-                value: {
-                    display: this.item.average_speed
-                },
-                unit: 'km/h'
+                unit: 'km/h',
+                current: {
+                    value: parseFloat(this.item.average_speed)
+                }
             }
 
             if (this.itemPreviousShow && this.itemPrevious && this.itemPrevious.average_speed) {
-                const difference = {}
-
-                const current = parseFloat(this.item.average_speed)
-                const previous = parseFloat(this.itemPrevious.average_speed)
-
-                const percentageDifference = ((current - previous) / previous) * 100
-
-                difference.percent = percentageDifference.toFixed(2)
-                difference.display = (current - previous).toFixed(2)
-
-                result.isProgress = percentageDifference <= 0 ? false : true
-                result.difference = difference
-
-                if (percentageDifference > 0) {
-                    result.isProgress = true
-                } else if (percentageDifference < 0) {
-                    result.isProgress = false
+                result.previous = {
+                    value: parseFloat(this.itemPrevious.average_speed)
                 }
             }
 

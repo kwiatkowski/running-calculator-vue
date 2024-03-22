@@ -55,10 +55,11 @@
 import { mapState, mapActions } from 'vuex'
 
 import Statistics from '~/components/Core/Statistics.vue'
+import Value from '~/components/Core/Value.vue'
 
 export default {
     components: {
-        Statistics
+        Statistics, Value
     },
     data() {
         return {

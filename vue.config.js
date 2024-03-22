@@ -21,9 +21,9 @@ module.exports = {
         __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: true,
       }),
     ],
-    module: {
-      unknownContextCritical: false,
-    },
+    // module: {
+    //   unknownContextCritical: false,
+    // },
   },
   css: {
     loaderOptions: {
