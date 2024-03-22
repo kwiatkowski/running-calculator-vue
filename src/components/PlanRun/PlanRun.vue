@@ -68,7 +68,7 @@
         <div class="form__row mt2">
             {{ $t('plan_run.calculate_pace.running_pace') }}
 
-            <strong v-html="result ? result : '-'"></strong>
+            <strong v-html="result ? result : '-'"></strong> min/km
         </div>
 
         <!--
@@ -159,7 +159,7 @@ export default {
                 const paceMinutes = Math.floor(pace)
                 const paceSeconds = Math.round(pace * 60) % 60
 
-                this.result = `${paceMinutes}:${paceSeconds.toString().padStart(2, '0')} min/km`
+                this.result = `${paceMinutes}:${paceSeconds.toString().padStart(2, '0')}`
             }
         }
     },
