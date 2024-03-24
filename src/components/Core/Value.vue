@@ -137,7 +137,7 @@ export default {
         getProgress() {
             const percentValue = this.getPercent()
 
-            if (percentValue === null || isNaN(percentValue) || Math.round(percentValue) === 0) {
+            if (percentValue === null || isNaN(percentValue) || percentValue === 0) {
                 return null
             }
 

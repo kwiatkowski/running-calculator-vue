@@ -135,16 +135,13 @@ export default {
                 .sort((a, b) => new Date(b.date) - new Date(a.date))
                 .slice(0, 3)
 
-            this.lastThreeVerificationRuns = filteredList
+            this.lastThreeVerificationRuns = [{}].concat(filteredList)
         },
         plannedResult() {
             if (this.lastThreeVerificationRuns.length >= 3) {
-                const lastRun = moment.duration(this.lastThreeVerificationRuns[0].duration)
-                const secondLastRun = moment.duration(this.lastThreeVerificationRuns[1].duration)
+                const lastRun = moment.duration(this.lastThreeVerificationRuns[1].duration)
 
-                const timeDifferenceInSeconds = secondLastRun.asSeconds() - lastRun.asSeconds()
-
-                const updatedLastRun = lastRun.subtract(timeDifferenceInSeconds, 'seconds')
+                const updatedLastRun = lastRun.subtract(60, 'seconds')
 
                 this.selectedHour = Math.floor(updatedLastRun.asHours())
                 this.selectedMinutes = Math.floor(updatedLastRun.minutes())
@@ -159,7 +156,29 @@ export default {
                 const paceMinutes = Math.floor(pace)
                 const paceSeconds = Math.round(pace * 60) % 60
 
-                this.result = `${paceMinutes}:${paceSeconds.toString().padStart(2, '0')}`
+                const formattedPace = `${paceMinutes.toString().padStart(2, '0')}:${paceSeconds.toString().padStart(2, '0')}`
+
+                this.result = formattedPace
+
+                const hourString = String(this.selectedHour).padStart(2, '0')
+                const minutesString = String(this.selectedMinutes).padStart(2, '0')
+                const secondsString = String(this.selectedSeconds).padStart(2, '0')
+
+                const newRun = {
+                    date: null,
+                    distance: this.selectedDistance,
+                    duration: `${hourString}:${minutesString}:${secondsString}`,
+                    stride_length: null,
+                    average_heart_rate: null,
+                    v02max: null,
+                    shoe: null,
+                    type: 'planned',
+                    cadence: null,
+                    average_pace: this.result ? this.result : '00:00',
+                    average_speed: null
+                }
+
+                this.lastThreeVerificationRuns[0] = newRun
             }
         }
     },

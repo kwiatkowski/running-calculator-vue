@@ -71,7 +71,8 @@
             "calm": "Spokojny",
             "running_around": "Rozbieganie",
             "verification": "Sprawdzenie",
-            "competition": "Zawody"
+            "competition": "Zawody",
+            "planned": "Zaplanowany"
         }
     },
     "type_run_distance": {

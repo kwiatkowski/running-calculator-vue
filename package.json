@@ -1,6 +1,6 @@
 {
   "name": "vue-training",
-  "version": "1.1.16",
+  "version": "1.1.17",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve --mode development",

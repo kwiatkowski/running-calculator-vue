@@ -135,7 +135,7 @@ export default {
 
             const result = {
                 current: {
-                    value: new Date(this.item.date),
+                    value: this.item.date ? new Date(this.item.date) : this.item.date,
                     display: this.$formatDate(this.item.date)
                 }
             }
@@ -184,7 +184,7 @@ export default {
             const result = {
                 unit: 'cm',
                 current: {
-                    value: parseFloat(this.item.stride_length)
+                    value: this.item.stride_length ? parseFloat(this.item.stride_length) : this.item.stride_length
                 }
             }
 
@@ -203,7 +203,7 @@ export default {
 
             const result = {
                 current: {
-                    value: parseFloat(this.item.cadence)
+                    value: this.item.cadence ? parseFloat(this.item.cadence) : this.item.cadence
                 }
             }
 
@@ -222,7 +222,7 @@ export default {
 
             const result = {
                 current: {
-                    value: parseFloat(this.item.average_heart_rate)
+                    value: this.item.average_heart_rate ? parseFloat(this.item.average_heart_rate) : this.item.average_heart_rate
                 }
             }
 
@@ -241,7 +241,7 @@ export default {
 
             const result = {
                 current: {
-                    value: parseFloat(this.item.v02max)
+                    value: this.item.v02max ? parseFloat(this.item.v02max) : this.item.v02max
                 }
             }
 
@@ -290,7 +290,7 @@ export default {
             const result = {
                 unit: 'km/h',
                 current: {
-                    value: parseFloat(this.item.average_speed)
+                    value: this.item.average_speed ? parseFloat(this.item.average_speed) : this.item.average_speed
                 }
             }
 
