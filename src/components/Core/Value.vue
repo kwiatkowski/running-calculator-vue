@@ -39,7 +39,8 @@
                 'regress': getProgress() === false,
             }"
             v-html="displayPercent"
-            ></div>
+            >
+            </div>
         </div>
     </div>
 </template>
@@ -127,7 +128,7 @@ export default {
         getPercent() {
             if (this.data && this.data.current && this.data.current.value && this.data.previous && this.data.previous.value) {
                 const percent = ((this.data.current.value - this.data.previous.value) / this.data.previous.value) * 100
-                const percentFormat = percent.toFixed(2)
+                const percentFormat = percent != 0 ? percent.toFixed(2) : percent
 
                 return percentFormat
             } else {
