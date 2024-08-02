@@ -35,6 +35,8 @@ export default {
                     delete item._links
 
                     item.isUsed = item.acf.is_used
+                    item.fullName = item.acf.full_name
+                    item.purchaseDate = item.acf.purchase_date
 
                     delete item.acf
                 })
